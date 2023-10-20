@@ -1,6 +1,5 @@
 package com.gmail.dlwk0807.dagotit.config;
 
-import com.gmail.dlwk0807.dagotit.entity.Authority;
 import com.gmail.dlwk0807.dagotit.jwt.JwtAccessDeniedHandler;
 import com.gmail.dlwk0807.dagotit.jwt.JwtAuthenticationEntryPoint;
 import com.gmail.dlwk0807.dagotit.jwt.TokenProvider;
@@ -8,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,16 +30,15 @@ public class SecurityConfig {
             // CSRF 설정 Disable
         http
             .csrf(csrf -> csrf.disable())
-
             .exceptionHandling((exceptionHandling) ->
                 exceptionHandling
                         .authenticationEntryPoint(jwtAuthenticationEntryPoint)
                         .accessDeniedHandler(jwtAccessDeniedHandler)
             )
             .authorizeHttpRequests(a -> {
-                a.requestMatchers(new AntPathRequestMatcher("/h2-console/**")).permitAll();
-                a.requestMatchers(new AntPathRequestMatcher("/favicon.ico")).permitAll();
-                a.requestMatchers(new AntPathRequestMatcher("/auth/**")).permitAll();
+                a.requestMatchers(new AntPathRequestMatcher("/h2-console/**")
+                                , new AntPathRequestMatcher("/favicon.ico")
+                                , new AntPathRequestMatcher("/auth/**")).permitAll();
                 a.anyRequest().authenticated();
             })
             // h2-console 을 위한 설정을 추가
