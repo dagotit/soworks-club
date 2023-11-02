@@ -1,4 +1,4 @@
-package com.gmail.dlwk0807.dagotit.jwt;
+package com.gmail.dlwk0807.dagotit.config.jwt;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

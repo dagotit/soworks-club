@@ -5,12 +5,12 @@ import lombok.*;
 
 @Getter
 @NoArgsConstructor
-@Table(name = "member")
+@Table(name = "MEMBER")
 @Entity
 public class Member {
 
     @Id
-    @Column(name = "member_id")
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

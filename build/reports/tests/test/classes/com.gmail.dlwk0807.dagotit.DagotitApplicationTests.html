@@ -41,7 +41,7 @@
 </td>
 <td>
 <div class="infoBox" id="duration">
-<div class="counter">0.633s</div>
+<div class="counter">0.471s</div>
 <p>duration</p>
 </div>
 </td>
@@ -79,7 +79,7 @@
 </thead>
 <tr>
 <td class="success">contextLoads()</td>
-<td class="success">0.633s</td>
+<td class="success">0.471s</td>
 <td class="success">passed</td>
 </tr>
 </table>
@@ -87,8 +87,8 @@
 <div id="tab1" class="tab">
 <h2>Standard output</h2>
 <span class="code">
-<pre>15:02:13.427 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.gmail.dlwk0807.dagotit.DagotitApplicationTests]: DagotitApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-15:02:13.527 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.gmail.dlwk0807.dagotit.DagotitApplication for test class com.gmail.dlwk0807.dagotit.DagotitApplicationTests
+<pre>17:16:42.120 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.gmail.dlwk0807.dagotit.DagotitApplicationTests]: DagotitApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+17:16:42.215 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.gmail.dlwk0807.dagotit.DagotitApplication for test class com.gmail.dlwk0807.dagotit.DagotitApplicationTests
 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -98,34 +98,50 @@
  =========|_|==============|___/=/_/_/_/
  :: Spring Boot ::                (v3.1.4)
 
-2023-10-19T15:02:13.881+09:00  INFO 30899 --- [    Test worker] c.g.d.dagotit.DagotitApplicationTests    : Starting DagotitApplicationTests using Java 17.0.7 with PID 30899 (started by softworks in /Users/softworks/Documents/github/dagotit)
-2023-10-19T15:02:13.882+09:00  INFO 30899 --- [    Test worker] c.g.d.dagotit.DagotitApplicationTests    : No active profile set, falling back to 1 default profile: &quot;default&quot;
-2023-10-19T15:02:14.431+09:00  INFO 30899 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
-2023-10-19T15:02:14.433+09:00  INFO 30899 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2023-10-19T15:02:14.451+09:00  INFO 30899 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 11 ms. Found 0 JPA repository interfaces.
-2023-10-19T15:02:14.467+09:00  INFO 30899 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
-2023-10-19T15:02:14.468+09:00  INFO 30899 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
-2023-10-19T15:02:14.478+09:00  INFO 30899 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 1 ms. Found 0 Redis repository interfaces.
-2023-10-19T15:02:14.930+09:00  INFO 30899 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2023-10-19T15:02:15.103+09:00  INFO 30899 --- [    Test worker] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:c1914bf8-06ce-4d9d-a7b0-6cb7edbce2be user=SA
-2023-10-19T15:02:15.105+09:00  INFO 30899 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2023-10-19T15:02:15.145+09:00  INFO 30899 --- [    Test worker] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
-2023-10-19T15:02:15.188+09:00  INFO 30899 --- [    Test worker] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.2.9.Final
-2023-10-19T15:02:15.189+09:00  INFO 30899 --- [    Test worker] org.hibernate.cfg.Environment            : HHH000406: Using bytecode reflection optimizer
-2023-10-19T15:02:15.298+09:00  INFO 30899 --- [    Test worker] o.h.b.i.BytecodeProviderInitiator        : HHH000021: Bytecode provider name : bytebuddy
-2023-10-19T15:02:15.405+09:00  INFO 30899 --- [    Test worker] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
-2023-10-19T15:02:15.505+09:00  INFO 30899 --- [    Test worker] o.h.b.i.BytecodeProviderInitiator        : HHH000021: Bytecode provider name : bytebuddy
-2023-10-19T15:02:15.673+09:00  INFO 30899 --- [    Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
-2023-10-19T15:02:15.678+09:00  INFO 30899 --- [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2023-10-19T15:02:15.709+09:00  WARN 30899 --- [    Test worker] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2023-10-19T15:02:15.771+09:00  WARN 30899 --- [    Test worker] .s.s.UserDetailsServiceAutoConfiguration : 
-
-Using generated security password: 319a6b74-baa1-4c3d-bdcc-99082f3c1913
-
-This generated password is for development use only. Your security configuration must be updated before running your application in production.
-
-2023-10-19T15:02:15.850+09:00  INFO 30899 --- [    Test worker] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@39004e4f, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@5f0ca069, org.springframework.security.web.context.SecurityContextHolderFilter@2a504ea7, org.springframework.security.web.header.HeaderWriterFilter@eb695e8, org.springframework.security.web.csrf.CsrfFilter@622ba721, org.springframework.security.web.authentication.logout.LogoutFilter@177068db, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@5d68be4f, org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter@5d77be8e, org.springframework.security.web.authentication.ui.DefaultLogoutPageGeneratingFilter@6a6a2fdd, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@33a3e5db, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@47ffa248, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@552ffa44, org.springframework.security.web.access.ExceptionTranslationFilter@1b841e7d, org.springframework.security.web.access.intercept.AuthorizationFilter@4d5ea776]
-2023-10-19T15:02:16.736+09:00  INFO 30899 --- [    Test worker] c.g.d.dagotit.DagotitApplicationTests    : Started DagotitApplicationTests in 3.071 seconds (process running for 4.066)
+2023-10-20T17:16:42.582+09:00  INFO 85197 --- [    Test worker] c.g.d.dagotit.DagotitApplicationTests    : Starting DagotitApplicationTests using Java 17.0.7 with PID 85197 (started by softworks in /Users/softworks/Documents/github/dagotit)
+2023-10-20T17:16:42.584+09:00  INFO 85197 --- [    Test worker] c.g.d.dagotit.DagotitApplicationTests    : No active profile set, falling back to 1 default profile: &quot;default&quot;
+2023-10-20T17:16:43.180+09:00  INFO 85197 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2023-10-20T17:16:43.182+09:00  INFO 85197 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-10-20T17:16:43.323+09:00  INFO 85197 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 134 ms. Found 2 JPA repository interfaces.
+2023-10-20T17:16:43.337+09:00  INFO 85197 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2023-10-20T17:16:43.339+09:00  INFO 85197 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2023-10-20T17:16:43.352+09:00  INFO 85197 --- [    Test worker] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.gmail.dlwk0807.dagotit.repository.MemberRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2023-10-20T17:16:43.352+09:00  INFO 85197 --- [    Test worker] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.gmail.dlwk0807.dagotit.repository.RefreshTokenRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2023-10-20T17:16:43.353+09:00  INFO 85197 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 6 ms. Found 0 Redis repository interfaces.
+2023-10-20T17:16:43.716+09:00  INFO 85197 --- [    Test worker] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-10-20T17:16:43.757+09:00  INFO 85197 --- [    Test worker] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.2.9.Final
+2023-10-20T17:16:43.759+09:00  INFO 85197 --- [    Test worker] org.hibernate.cfg.Environment            : HHH000406: Using bytecode reflection optimizer
+2023-10-20T17:16:43.867+09:00  INFO 85197 --- [    Test worker] o.h.b.i.BytecodeProviderInitiator        : HHH000021: Bytecode provider name : bytebuddy
+2023-10-20T17:16:43.971+09:00  INFO 85197 --- [    Test worker] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2023-10-20T17:16:43.984+09:00  INFO 85197 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2023-10-20T17:16:44.133+09:00  INFO 85197 --- [    Test worker] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:testdb user=SA
+2023-10-20T17:16:44.134+09:00  INFO 85197 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2023-10-20T17:16:44.300+09:00  INFO 85197 --- [    Test worker] o.h.b.i.BytecodeProviderInitiator        : HHH000021: Bytecode provider name : bytebuddy
+2023-10-20T17:16:44.813+09:00  INFO 85197 --- [    Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+Hibernate: 
+    drop table if exists member cascade 
+Hibernate: 
+    drop table if exists refresh_token cascade 
+Hibernate: 
+    create table member (
+        member_id bigint generated by default as identity,
+        authority varchar(255) check (authority in ('ROLE_USER','ROLE_ADMIN')),
+        email varchar(255),
+        password varchar(255),
+        primary key (member_id)
+    )
+Hibernate: 
+    create table refresh_token (
+        rt_key varchar(255) not null,
+        rt_value varchar(255),
+        primary key (rt_key)
+    )
+2023-10-20T17:16:44.851+09:00  INFO 85197 --- [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-10-20T17:16:45.212+09:00  WARN 85197 --- [    Test worker] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2023-10-20T17:16:45.327+09:00  INFO 85197 --- [    Test worker] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@16a14076, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@65293ca5, org.springframework.security.web.context.SecurityContextHolderFilter@28532753, org.springframework.security.web.header.HeaderWriterFilter@72c29d87, org.springframework.security.web.authentication.logout.LogoutFilter@5605a59b, com.gmail.dlwk0807.dagotit.jwt.JwtFilter@6d70e68b, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@2a6871ad, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@3792fed8, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@2786b644, org.springframework.security.web.session.SessionManagementFilter@42d96745, org.springframework.security.web.access.ExceptionTranslationFilter@192aeae2, org.springframework.security.web.access.intercept.AuthorizationFilter@c5e7696]
+2023-10-20T17:16:45.590+09:00  INFO 85197 --- [    Test worker] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page: class path resource [static/index.html]
+2023-10-20T17:16:45.962+09:00  INFO 85197 --- [    Test worker] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:testdb'
+2023-10-20T17:16:46.023+09:00  INFO 85197 --- [    Test worker] c.g.d.dagotit.DagotitApplicationTests    : Started DagotitApplicationTests in 3.684 seconds (process running for 4.658)
 </pre>
 </span>
 </div>
@@ -137,7 +153,7 @@ This generated password is for development use only. Your security configuration
 <input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
 </label>
 </div>Generated by 
-<a href="http://www.gradle.org">Gradle 8.3</a> at 2023. 10. 19. 오후 3:02:17</p>
+<a href="http://www.gradle.org">Gradle 8.3</a> at 2023. 10. 20. 오후 5:16:46</p>
 </div>
 </div>
 </body>

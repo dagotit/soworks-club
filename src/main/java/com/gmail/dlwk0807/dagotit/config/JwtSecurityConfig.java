@@ -1,7 +1,7 @@
 package com.gmail.dlwk0807.dagotit.config;
 
-import com.gmail.dlwk0807.dagotit.jwt.JwtFilter;
-import com.gmail.dlwk0807.dagotit.jwt.TokenProvider;
+import com.gmail.dlwk0807.dagotit.config.jwt.JwtFilter;
+import com.gmail.dlwk0807.dagotit.config.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

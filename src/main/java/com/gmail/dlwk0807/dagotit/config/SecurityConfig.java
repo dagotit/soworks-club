@@ -1,8 +1,8 @@
 package com.gmail.dlwk0807.dagotit.config;
 
-import com.gmail.dlwk0807.dagotit.jwt.JwtAccessDeniedHandler;
-import com.gmail.dlwk0807.dagotit.jwt.JwtAuthenticationEntryPoint;
-import com.gmail.dlwk0807.dagotit.jwt.TokenProvider;
+import com.gmail.dlwk0807.dagotit.config.jwt.JwtAccessDeniedHandler;
+import com.gmail.dlwk0807.dagotit.config.jwt.JwtAuthenticationEntryPoint;
+import com.gmail.dlwk0807.dagotit.config.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -38,7 +38,8 @@ public class SecurityConfig {
             .authorizeHttpRequests(a -> {
                 a.requestMatchers(new AntPathRequestMatcher("/h2-console/**")
                                 , new AntPathRequestMatcher("/favicon.ico")
-                                , new AntPathRequestMatcher("/auth/**")).permitAll();
+                                , new AntPathRequestMatcher("/auth/**")
+                                ).permitAll();
                 a.anyRequest().authenticated();
             })
             // h2-console 을 위한 설정을 추가

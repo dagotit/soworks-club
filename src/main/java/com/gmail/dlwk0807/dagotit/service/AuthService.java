@@ -6,7 +6,7 @@ import com.gmail.dlwk0807.dagotit.controller.dto.TokenDto;
 import com.gmail.dlwk0807.dagotit.controller.dto.TokenRequestDto;
 import com.gmail.dlwk0807.dagotit.entity.Member;
 import com.gmail.dlwk0807.dagotit.entity.RefreshToken;
-import com.gmail.dlwk0807.dagotit.jwt.TokenProvider;
+import com.gmail.dlwk0807.dagotit.config.jwt.TokenProvider;
 import com.gmail.dlwk0807.dagotit.repository.MemberRepository;
 import com.gmail.dlwk0807.dagotit.repository.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;

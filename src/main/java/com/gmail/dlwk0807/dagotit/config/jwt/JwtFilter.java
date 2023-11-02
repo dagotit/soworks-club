@@ -1,4 +1,4 @@
-package com.gmail.dlwk0807.dagotit.jwt;
+package com.gmail.dlwk0807.dagotit.config.jwt;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

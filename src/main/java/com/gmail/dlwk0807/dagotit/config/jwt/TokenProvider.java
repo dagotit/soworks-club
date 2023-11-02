@@ -1,4 +1,4 @@
-package com.gmail.dlwk0807.dagotit.jwt;
+package com.gmail.dlwk0807.dagotit.config.jwt;
 
 import com.gmail.dlwk0807.dagotit.controller.dto.TokenDto;
 import io.jsonwebtoken.*;
