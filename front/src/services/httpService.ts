@@ -1,12 +1,15 @@
 import axios from 'axios';
 
 const app = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  baseURL: `${process.env.NEXT_PUBLIC_API_URL}/auth`,
   withCredentials: true,
 });
 
 app.interceptors.request.use(
-  (res) => res,
+  (res) => {
+    console.log('res', res);
+    return res;
+  },
   (err) => Promise.reject(err),
 );
 

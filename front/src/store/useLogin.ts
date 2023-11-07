@@ -1,12 +1,12 @@
 import { create } from 'zustand';
 
 interface LoginInfo {
-  id: string;
+  email: string;
   password: string;
   handleInputId: (id: string) => void;
 }
 const useLoginStore = create<LoginInfo>((set) => ({
-  id: '',
+  email: '',
   password: '',
   handleInputId: (id) => set((state) => ({ ...state, id })),
 }));
