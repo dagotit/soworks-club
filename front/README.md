@@ -1,36 +1,34 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## 시작하기
 
-## Getting Started
-
-First, run the development server:
+개발 서버 실행 방법
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+[`next/font`](https://nextjs.org/docs/basic-features/font-optimization)
+Google 글꼴 Inter를 사용
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
+## 더 알아보기
 
 To learn more about Next.js, take a look at the following resources:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- [Next.js Documentation](https://nextjs.org/docs) - Next.js / API.
+- [Learn Next.js](https://nextjs.org/learn) - Next.js 튜토리얼
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+ [the Next.js GitHub repository](https://github.com/vercel/next.js/) - Next.js 깃허브
 
-## Deploy on Vercel
+## env 순서
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+npm run dev
+```
+.env.local > .env
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+```bash
+npm run build
+```
+.env.production > .env.local > .env
+
+
+- [ENV 참고문서](https://velog.io/@milkboy2564/Next.js-env%ED%99%98%EA%B2%BD-%EB%B3%80%EC%88%98-%EC%A0%95%EB%A6%AC#1-envlocal-%EB%A1%9C%EC%BB%AC-%EA%B0%9C%EB%B0%9C-%EC%8B%9C)

@@ -1,10 +1,23 @@
 import { apiLogin, logout } from '@/services/authService';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 export const useGetUser = () =>
   useQuery({
     queryKey: ['get-user'],
-    queryFn: apiLogin,
+    queryFn: logout,
     retry: false,
-    refetchOnWindowFocus: true,
+    staleTime: Infinity,
+    // refetchOnWindowFocus: true,
+    // enabled: false,
   });
+
+export const usePostLogin = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: ['post-login'],
+    mutationFn: apiLogin,
+    onSuccess: (data, variables, context) => {
+      return JSON.stringify(data);
+    },
+  });
+};
