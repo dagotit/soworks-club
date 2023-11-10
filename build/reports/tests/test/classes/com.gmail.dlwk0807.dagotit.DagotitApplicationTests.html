@@ -41,7 +41,7 @@
 </td>
 <td>
 <div class="infoBox" id="duration">
-<div class="counter">0.466s</div>
+<div class="counter">0.502s</div>
 <p>duration</p>
 </div>
 </td>
@@ -79,7 +79,7 @@
 </thead>
 <tr>
 <td class="success">contextLoads()</td>
-<td class="success">0.466s</td>
+<td class="success">0.502s</td>
 <td class="success">passed</td>
 </tr>
 </table>
@@ -87,8 +87,8 @@
 <div id="tab1" class="tab">
 <h2>Standard output</h2>
 <span class="code">
-<pre>13:28:08.573 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.gmail.dlwk0807.dagotit.DagotitApplicationTests]: DagotitApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-13:28:08.667 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.gmail.dlwk0807.dagotit.DagotitApplication for test class com.gmail.dlwk0807.dagotit.DagotitApplicationTests
+<pre>17:29:30.540 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.gmail.dlwk0807.dagotit.DagotitApplicationTests]: DagotitApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+17:29:30.640 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.gmail.dlwk0807.dagotit.DagotitApplication for test class com.gmail.dlwk0807.dagotit.DagotitApplicationTests
 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -98,44 +98,44 @@
  =========|_|==============|___/=/_/_/_/
  :: Spring Boot ::                (v3.1.4)
 
-2023-11-07T13:28:09.030+09:00  INFO 56692 --- [    Test worker] c.g.d.dagotit.DagotitApplicationTests    : Starting DagotitApplicationTests using Java 17.0.7 with PID 56692 (started by softworks in /Users/softworks/Documents/github/dagotit)
-2023-11-07T13:28:09.031+09:00  INFO 56692 --- [    Test worker] c.g.d.dagotit.DagotitApplicationTests    : No active profile set, falling back to 1 default profile: &quot;default&quot;
-2023-11-07T13:28:09.634+09:00  INFO 56692 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
-2023-11-07T13:28:09.636+09:00  INFO 56692 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2023-11-07T13:28:09.782+09:00  INFO 56692 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 139 ms. Found 2 JPA repository interfaces.
-2023-11-07T13:28:09.796+09:00  INFO 56692 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
-2023-11-07T13:28:09.798+09:00  INFO 56692 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
-2023-11-07T13:28:09.811+09:00  INFO 56692 --- [    Test worker] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.gmail.dlwk0807.dagotit.repository.MemberRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
-2023-11-07T13:28:09.812+09:00  INFO 56692 --- [    Test worker] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.gmail.dlwk0807.dagotit.repository.RefreshTokenRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
-2023-11-07T13:28:09.812+09:00  INFO 56692 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 7 ms. Found 0 Redis repository interfaces.
-2023-11-07T13:28:10.039+09:00  INFO 56692 --- [    Test worker] ptablePropertiesBeanFactoryPostProcessor : Post-processing PropertySource instances
-2023-11-07T13:28:10.040+09:00  INFO 56692 --- [    Test worker] c.u.j.EncryptablePropertySourceConverter : Skipping PropertySource configurationProperties [class org.springframework.boot.context.properties.source.ConfigurationPropertySourcesPropertySource
-2023-11-07T13:28:10.042+09:00  INFO 56692 --- [    Test worker] c.u.j.EncryptablePropertySourceConverter : Converting PropertySource test [org.springframework.core.env.MapPropertySource] to EncryptableMapPropertySourceWrapper
-2023-11-07T13:28:10.042+09:00  INFO 56692 --- [    Test worker] c.u.j.EncryptablePropertySourceConverter : Converting PropertySource Inlined Test Properties [org.springframework.core.env.MapPropertySource] to EncryptableMapPropertySourceWrapper
-2023-11-07T13:28:10.042+09:00  INFO 56692 --- [    Test worker] c.u.j.EncryptablePropertySourceConverter : Skipping PropertySource servletConfigInitParams [class org.springframework.core.env.PropertySource$StubPropertySource
-2023-11-07T13:28:10.042+09:00  INFO 56692 --- [    Test worker] c.u.j.EncryptablePropertySourceConverter : Converting PropertySource servletContextInitParams [org.springframework.web.context.support.ServletContextPropertySource] to EncryptableEnumerablePropertySourceWrapper
-2023-11-07T13:28:10.042+09:00  INFO 56692 --- [    Test worker] c.u.j.EncryptablePropertySourceConverter : Converting PropertySource systemProperties [org.springframework.core.env.PropertiesPropertySource] to EncryptableMapPropertySourceWrapper
-2023-11-07T13:28:10.043+09:00  INFO 56692 --- [    Test worker] c.u.j.EncryptablePropertySourceConverter : Converting PropertySource systemEnvironment [org.springframework.boot.env.SystemEnvironmentPropertySourceEnvironmentPostProcessor$OriginAwareSystemEnvironmentPropertySource] to EncryptableSystemEnvironmentPropertySourceWrapper
-2023-11-07T13:28:10.043+09:00  INFO 56692 --- [    Test worker] c.u.j.EncryptablePropertySourceConverter : Converting PropertySource random [org.springframework.boot.env.RandomValuePropertySource] to EncryptablePropertySourceWrapper
-2023-11-07T13:28:10.043+09:00  INFO 56692 --- [    Test worker] c.u.j.EncryptablePropertySourceConverter : Converting PropertySource Config resource 'class path resource [application.yml]' via location 'optional:classpath:/' [org.springframework.boot.env.OriginTrackedMapPropertySource] to EncryptableMapPropertySourceWrapper
-2023-11-07T13:28:10.148+09:00  INFO 56692 --- [    Test worker] c.u.j.filter.DefaultLazyPropertyFilter   : Property Filter custom Bean not found with name 'encryptablePropertyFilter'. Initializing Default Property Filter
-2023-11-07T13:28:10.160+09:00  INFO 56692 --- [    Test worker] c.u.j.r.DefaultLazyPropertyResolver      : Property Resolver custom Bean not found with name 'encryptablePropertyResolver'. Initializing Default Property Resolver
-2023-11-07T13:28:10.162+09:00  INFO 56692 --- [    Test worker] c.u.j.d.DefaultLazyPropertyDetector      : Property Detector custom Bean not found with name 'encryptablePropertyDetector'. Initializing Default Property Detector
-2023-11-07T13:28:10.255+09:00  INFO 56692 --- [    Test worker] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
-2023-11-07T13:28:10.302+09:00  INFO 56692 --- [    Test worker] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.2.9.Final
-2023-11-07T13:28:10.304+09:00  INFO 56692 --- [    Test worker] org.hibernate.cfg.Environment            : HHH000406: Using bytecode reflection optimizer
-2023-11-07T13:28:10.421+09:00  INFO 56692 --- [    Test worker] o.h.b.i.BytecodeProviderInitiator        : HHH000021: Bytecode provider name : bytebuddy
-2023-11-07T13:28:10.533+09:00  INFO 56692 --- [    Test worker] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
-2023-11-07T13:28:10.546+09:00  INFO 56692 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2023-11-07T13:28:10.702+09:00  INFO 56692 --- [    Test worker] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:testdb user=SA
-2023-11-07T13:28:10.704+09:00  INFO 56692 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2023-11-07T13:28:10.910+09:00  INFO 56692 --- [    Test worker] o.h.b.i.BytecodeProviderInitiator        : HHH000021: Bytecode provider name : bytebuddy
-2023-11-07T13:28:11.562+09:00  INFO 56692 --- [    Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-11-10T17:29:31.024+09:00  INFO 40993 --- [    Test worker] c.g.d.dagotit.DagotitApplicationTests    : Starting DagotitApplicationTests using Java 17.0.7 with PID 40993 (started by softworks in /Users/softworks/Documents/github/dagotit)
+2023-11-10T17:29:31.025+09:00  INFO 40993 --- [    Test worker] c.g.d.dagotit.DagotitApplicationTests    : No active profile set, falling back to 1 default profile: &quot;default&quot;
+2023-11-10T17:29:31.661+09:00  INFO 40993 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2023-11-10T17:29:31.662+09:00  INFO 40993 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-11-10T17:29:31.806+09:00  INFO 40993 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 137 ms. Found 2 JPA repository interfaces.
+2023-11-10T17:29:31.824+09:00  INFO 40993 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2023-11-10T17:29:31.825+09:00  INFO 40993 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2023-11-10T17:29:31.844+09:00  INFO 40993 --- [    Test worker] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.gmail.dlwk0807.dagotit.repository.MemberRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2023-11-10T17:29:31.844+09:00  INFO 40993 --- [    Test worker] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.gmail.dlwk0807.dagotit.repository.RefreshTokenRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2023-11-10T17:29:31.844+09:00  INFO 40993 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 10 ms. Found 0 Redis repository interfaces.
+2023-11-10T17:29:32.097+09:00  INFO 40993 --- [    Test worker] ptablePropertiesBeanFactoryPostProcessor : Post-processing PropertySource instances
+2023-11-10T17:29:32.097+09:00  INFO 40993 --- [    Test worker] c.u.j.EncryptablePropertySourceConverter : Skipping PropertySource configurationProperties [class org.springframework.boot.context.properties.source.ConfigurationPropertySourcesPropertySource
+2023-11-10T17:29:32.099+09:00  INFO 40993 --- [    Test worker] c.u.j.EncryptablePropertySourceConverter : Converting PropertySource test [org.springframework.core.env.MapPropertySource] to EncryptableMapPropertySourceWrapper
+2023-11-10T17:29:32.099+09:00  INFO 40993 --- [    Test worker] c.u.j.EncryptablePropertySourceConverter : Converting PropertySource Inlined Test Properties [org.springframework.core.env.MapPropertySource] to EncryptableMapPropertySourceWrapper
+2023-11-10T17:29:32.099+09:00  INFO 40993 --- [    Test worker] c.u.j.EncryptablePropertySourceConverter : Skipping PropertySource servletConfigInitParams [class org.springframework.core.env.PropertySource$StubPropertySource
+2023-11-10T17:29:32.100+09:00  INFO 40993 --- [    Test worker] c.u.j.EncryptablePropertySourceConverter : Converting PropertySource servletContextInitParams [org.springframework.web.context.support.ServletContextPropertySource] to EncryptableEnumerablePropertySourceWrapper
+2023-11-10T17:29:32.100+09:00  INFO 40993 --- [    Test worker] c.u.j.EncryptablePropertySourceConverter : Converting PropertySource systemProperties [org.springframework.core.env.PropertiesPropertySource] to EncryptableMapPropertySourceWrapper
+2023-11-10T17:29:32.100+09:00  INFO 40993 --- [    Test worker] c.u.j.EncryptablePropertySourceConverter : Converting PropertySource systemEnvironment [org.springframework.boot.env.SystemEnvironmentPropertySourceEnvironmentPostProcessor$OriginAwareSystemEnvironmentPropertySource] to EncryptableSystemEnvironmentPropertySourceWrapper
+2023-11-10T17:29:32.100+09:00  INFO 40993 --- [    Test worker] c.u.j.EncryptablePropertySourceConverter : Converting PropertySource random [org.springframework.boot.env.RandomValuePropertySource] to EncryptablePropertySourceWrapper
+2023-11-10T17:29:32.101+09:00  INFO 40993 --- [    Test worker] c.u.j.EncryptablePropertySourceConverter : Converting PropertySource Config resource 'class path resource [application.yml]' via location 'optional:classpath:/' [org.springframework.boot.env.OriginTrackedMapPropertySource] to EncryptableMapPropertySourceWrapper
+2023-11-10T17:29:32.211+09:00  INFO 40993 --- [    Test worker] c.u.j.filter.DefaultLazyPropertyFilter   : Property Filter custom Bean not found with name 'encryptablePropertyFilter'. Initializing Default Property Filter
+2023-11-10T17:29:32.222+09:00  INFO 40993 --- [    Test worker] c.u.j.r.DefaultLazyPropertyResolver      : Property Resolver custom Bean not found with name 'encryptablePropertyResolver'. Initializing Default Property Resolver
+2023-11-10T17:29:32.224+09:00  INFO 40993 --- [    Test worker] c.u.j.d.DefaultLazyPropertyDetector      : Property Detector custom Bean not found with name 'encryptablePropertyDetector'. Initializing Default Property Detector
+2023-11-10T17:29:32.320+09:00  INFO 40993 --- [    Test worker] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-11-10T17:29:32.367+09:00  INFO 40993 --- [    Test worker] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.2.9.Final
+2023-11-10T17:29:32.369+09:00  INFO 40993 --- [    Test worker] org.hibernate.cfg.Environment            : HHH000406: Using bytecode reflection optimizer
+2023-11-10T17:29:32.477+09:00  INFO 40993 --- [    Test worker] o.h.b.i.BytecodeProviderInitiator        : HHH000021: Bytecode provider name : bytebuddy
+2023-11-10T17:29:32.587+09:00  INFO 40993 --- [    Test worker] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2023-11-10T17:29:32.600+09:00  INFO 40993 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2023-11-10T17:29:32.757+09:00  INFO 40993 --- [    Test worker] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:testdb user=SA
+2023-11-10T17:29:32.758+09:00  INFO 40993 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2023-11-10T17:29:32.987+09:00  INFO 40993 --- [    Test worker] o.h.b.i.BytecodeProviderInitiator        : HHH000021: Bytecode provider name : bytebuddy
+2023-11-10T17:29:33.635+09:00  INFO 40993 --- [    Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
 Hibernate: 
     drop table if exists alarm cascade 
 Hibernate: 
     drop table if exists group cascade 
-2023-11-07T13:28:11.579+09:00  WARN 56692 --- [    Test worker] o.h.t.s.i.ExceptionHandlerLoggedImpl     : GenerationTarget encountered exception accepting command : Error executing DDL &quot;
+2023-11-10T17:29:33.652+09:00  WARN 40993 --- [    Test worker] o.h.t.s.i.ExceptionHandlerLoggedImpl     : GenerationTarget encountered exception accepting command : Error executing DDL &quot;
     drop table if exists group cascade &quot; via JDBC [Syntax error in SQL statement &quot;\000a    drop table if exists [*]group cascade &quot;; expected &quot;identifier&quot;;]
 
 org.hibernate.tool.schema.spi.CommandAcceptanceException: Error executing DDL &quot;
@@ -327,7 +327,7 @@ Hibernate:
         name varchar(255),
         primary key (id)
     )
-2023-11-07T13:28:11.603+09:00  WARN 56692 --- [    Test worker] o.h.t.s.i.ExceptionHandlerLoggedImpl     : GenerationTarget encountered exception accepting command : Error executing DDL &quot;
+2023-11-10T17:29:33.679+09:00  WARN 40993 --- [    Test worker] o.h.t.s.i.ExceptionHandlerLoggedImpl     : GenerationTarget encountered exception accepting command : Error executing DDL &quot;
     create table group (
         id bigint generated by default as identity,
         name varchar(255),
@@ -545,12 +545,12 @@ Hibernate:
         rt_value varchar(255),
         primary key (rt_key)
     )
-2023-11-07T13:28:11.623+09:00  INFO 56692 --- [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2023-11-07T13:28:12.008+09:00  WARN 56692 --- [    Test worker] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2023-11-07T13:28:12.126+09:00  INFO 56692 --- [    Test worker] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@e0c03bd, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@61e4a072, org.springframework.security.web.context.SecurityContextHolderFilter@4417755b, org.springframework.security.web.header.HeaderWriterFilter@3a75d9a1, org.springframework.web.filter.CorsFilter@32f2de5c, org.springframework.security.web.authentication.logout.LogoutFilter@2fb24ad8, com.gmail.dlwk0807.dagotit.config.jwt.JwtFilter@1a6df932, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@5f0a5848, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@4c7b4a31, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@74120029, org.springframework.security.web.session.SessionManagementFilter@7e305953, org.springframework.security.web.access.ExceptionTranslationFilter@63f16350, org.springframework.security.web.access.intercept.AuthorizationFilter@3fe59f84]
-2023-11-07T13:28:12.392+09:00  INFO 56692 --- [    Test worker] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page: class path resource [static/index.html]
-2023-11-07T13:28:12.761+09:00  INFO 56692 --- [    Test worker] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:testdb'
-2023-11-07T13:28:12.833+09:00  INFO 56692 --- [    Test worker] c.g.d.dagotit.DagotitApplicationTests    : Started DagotitApplicationTests in 4.04 seconds (process running for 5.054)
+2023-11-10T17:29:33.702+09:00  INFO 40993 --- [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-11-10T17:29:34.109+09:00  WARN 40993 --- [    Test worker] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2023-11-10T17:29:34.241+09:00  INFO 40993 --- [    Test worker] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@e0c03bd, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@61e4a072, org.springframework.security.web.context.SecurityContextHolderFilter@4417755b, org.springframework.security.web.header.HeaderWriterFilter@3a75d9a1, org.springframework.web.filter.CorsFilter@32f2de5c, org.springframework.security.web.authentication.logout.LogoutFilter@2fb24ad8, com.gmail.dlwk0807.dagotit.config.jwt.JwtFilter@1a6df932, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@5f0a5848, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@4c7b4a31, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@74120029, org.springframework.security.web.session.SessionManagementFilter@7e305953, org.springframework.security.web.access.ExceptionTranslationFilter@63f16350, org.springframework.security.web.access.intercept.AuthorizationFilter@3fe59f84]
+2023-11-10T17:29:34.528+09:00  INFO 40993 --- [    Test worker] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page: class path resource [static/index.html]
+2023-11-10T17:29:34.909+09:00  INFO 40993 --- [    Test worker] o.s.b.a.h2.H2ConsoleAutoConfiguration    : H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:testdb'
+2023-11-10T17:29:34.996+09:00  INFO 40993 --- [    Test worker] c.g.d.dagotit.DagotitApplicationTests    : Started DagotitApplicationTests in 4.226 seconds (process running for 5.218)
 </pre>
 </span>
 </div>
@@ -562,7 +562,7 @@ Hibernate:
 <input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
 </label>
 </div>Generated by 
-<a href="http://www.gradle.org">Gradle 8.3</a> at 2023. 11. 7. 오후 1:28:13</p>
+<a href="http://www.gradle.org">Gradle 8.3</a> at 2023. 11. 10. 오후 5:29:35</p>
 </div>
 </div>
 </body>
