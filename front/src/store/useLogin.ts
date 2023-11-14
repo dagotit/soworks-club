@@ -1,14 +1,19 @@
 import { create } from 'zustand';
 
-interface LoginInfo {
-  email: string;
-  password: string;
-  handleInputId: (id: string) => void;
+interface TokenInfo {
+  accessToken: string;
+  expires: number;
+  setAccessToken: (token: string) => void;
+  setTokenExpires: (expires: number) => void;
 }
-const useLoginStore = create<LoginInfo>((set) => ({
-  email: '',
-  password: '',
-  handleInputId: (id) => set((state) => ({ ...state, id })),
+const useTokenStore = create<TokenInfo>((set, get) => ({
+  accessToken: '',
+  expires: 0,
+  setAccessToken: (accessToken: string) =>
+    set((state) => ({ ...state, accessToken })),
+  setTokenExpires: (expires: number) => {
+    set((state) => ({ ...state, expires }));
+  },
 }));
 
-export { useLoginStore };
+export { useTokenStore };
