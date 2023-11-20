@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "GROUP")
+@Table(name = "GROUP_MST")
 @Entity
 public class Group {
 

@@ -12,6 +12,7 @@ const Dialog = () => {
       {dialogList.length > 0 && <div className={styles.dimmed}></div>}
       {dialogList.length > 0 && (
         <div className={styles.dialogContents}>
+          <p className={styles.fixTitle}>알림</p>
           {dialogList.length !== 0 &&
             dialogList.map((element, idx) => (
               <div key={idx}>

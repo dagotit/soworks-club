@@ -15,6 +15,10 @@ const devNextConfig = {
   async rewrites() {
     return [
       {
+        source: '/auth/:path*',
+        destination: `${process.env.NEXT_PUBLIC_API_URL}/auth/:path*`,
+      },
+      {
         source: '/cat/:path*',
         destination: `https://cataas.com/cat/:path*`,
       },
