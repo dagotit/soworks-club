@@ -6,6 +6,8 @@ import { useDialogStore } from '@/store/useDialog';
 import React, { useEffect, useState } from 'react';
 import { usePostLogin } from '@/hooks/useAuth';
 
+const key = process.env.NEXT_PUBLIC_API_URL;
+console.log('1', key);
 const Login = () => {
   // const { id } = useLoginStore();
   const router = useRouter();
@@ -89,6 +91,7 @@ const Login = () => {
    * 로그인하기 버튼
    */
   const handlerLoginBtn = (): void => {
+    console.log('2', key);
     if (email.trim() === '') {
       open('alert', '로그인', '이메일을 입력해주세요.', () => {
         // alert('액션!');
