@@ -1,0 +1,255 @@
+.main {
+  width: 95%;
+  margin: 10px auto;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  padding: 10px;
+}
+.main h2 {
+  font-size: 1.24rem;
+  font-weight: 700;
+  padding: 7px 0;
+  border-bottom: 1px solid #ddd;
+}
+.main .joinWrap {
+  margin-top: 15px;
+  display: flex;
+  flex-flow:column;
+}
+.main .joinWrap > div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: 50px;
+  margin-bottom: 15px;
+}
+.main .joinWrap > div .tag_name {
+  display: flex;
+  align-items: center;
+  font-size: 0.85rem;
+  font-weight: 700;
+  width: 20%;
+  height: 100%;
+  letter-spacing: -0.5px;
+  word-break: keep-all;
+}
+.main .joinWrap > div .tag_input {
+  width: 80%;
+  height: 100%;
+}
+.main .joinWrap > div .tag_input input {
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  padding: 7px 14px;
+  box-shadow: 0 0 1px #000;
+}
+.main .joinWrap > div.sn_field .tag_input {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.main .joinWrap > div.sn_field .tag_input input {
+  width: 46%;
+}
+.main .joinWrap > div.sn_field .tag_input .dash {
+  width: 2%;
+  height: 1px;
+  background-color: #000;
+}
+.main .joinWrap .phone_field{
+  display: flex;
+  flex-flow: row nowrap;
+  margin-bottom: 15px;
+  height: 50px;
+  align-items: center;
+}
+.main .joinWrap .phone_field .tag_name {
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  width: 20%;
+  line-height: 50px;
+  height: 100%;
+}
+.main .joinWrap .phone_field .tag_box {
+  width: 80%;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  height: 100%;
+}
+.main .joinWrap .phone_field .tag_box select {
+  width: 20%;
+}
+.main .joinWrap .phone_field .tag_box input {
+  width: 79%;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  padding: 7px 14px;
+  box-shadow: 0 0 1px #000;
+}
+.main .joinWrap .phone_field .tag_box button {
+  margin-top: 10px;
+  width: 40%;
+  padding: 7px 14px;
+  border-radius: 10px;
+  background-color: rgba(128, 239, 60, 0.4);
+}
+.main .joinWrap .company_num_field {
+  height: auto;
+  align-items: flex-start;
+}
+.main .joinWrap .company_num_field .tag_name {
+  width: 20%;
+  height: 50px;
+}
+.main .joinWrap .company_num_field .tag_input{
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  justify-content: space-between;
+  width: 80%;
+}
+.main .joinWrap .company_num_field .tag_input input {
+  width: 50%;
+  height: 50px;
+}
+.main .joinWrap .company_num_field .tag_input button {
+  width: 45%;
+  padding: 7px 14px;
+  background-color: #136A8F;
+  border: none;
+  border-radius: 15px;
+  color: #fff;
+  cursor: pointer;
+  height: 50px;
+}
+.main .joinWrap .company_num_field .tag_input p {
+  display: inline-block;
+  width: 100%;
+}
+.main .joinWrap .company_email_field {
+  display: flex;
+  flex-flow: column;
+  align-items: flex-start;
+  height: 50px;
+}
+.main .joinWrap .company_email_field > div {
+  display: flex;
+  width: 100%;
+  align-items: center;
+}
+.main .joinWrap .company_email_field > div.cef_top {
+  margin-bottom: 15px;
+}
+.main .joinWrap .company_email_field > div .tag_name {
+  width: 20%;
+}
+.main .joinWrap .company_email_field > div .tag_input {
+  width: 80%;
+  height: 50px;
+  display: flex;
+  justify-content: space-between;
+}
+.main .joinWrap .company_email_field > div .tag_input input {
+  width: 70%;
+}
+.main .joinWrap .company_email_field > div .tag_input button {
+  padding: 7px 14px;
+  width: 28%;
+  background-color: #136A8F;
+  border: none;
+  border-radius: 15px;
+  color: #fff;
+  cursor: pointer;
+  height: 50px;
+  line-height: 0.98rem;
+  word-break: keep-all;
+}
+.main .joinWrap .company_password_field {
+  display: flex;
+  flex-flow: column;
+  align-items: flex-start;
+  justify-content: initial;
+  height: 135px;
+  margin-bottom: 15px;
+}
+.main .joinWrap .company_password_field > div {
+  display: flex;
+  width: 100%;
+  height: 50px;
+}
+.main .joinWrap .company_password_field > div.cpf_top {
+  margin-bottom: 15px;
+}
+.main .joinWrap .company_password_field > div.cpf_bottom .tag_input {
+  display: flex;
+  flex-flow: row wrap;
+  height: 50px;
+}
+.main .joinWrap .company_password_field > div.cpf_top .tag_input input {
+  height: 50px;
+}
+.main .joinWrap .company_password_field > div.cpf_bottom .tag_input input {
+  display: inline-block;
+  width: 100%;
+  height: 50px;
+}
+.main .joinWrap .company_password_field > div.cpf_bottom .tag_input span {
+  display: inline-block;
+  margin-top: 10px;
+  font-size: 0.8rem;
+  width: 100%;
+}
+.main .joinWrap .company_password_field > div.cpf_bottom .tag_input span.cpf_true {
+  color: #0BFF7B;
+}
+.main .joinWrap .company_password_field > div.cpf_bottom .tag_input span.cpf_false {
+  color: #f62f2f;
+}
+.main .joinWrap .company_location_field {
+  display: flex;
+  align-items: flex-start;
+  height: 180px;
+}
+.main .joinWrap .company_location_field .tag_name {
+  height: 50px;
+}
+.main .joinWrap .company_location_field .tag_box {
+  width: 80%;
+  display: flex;
+  flex-flow: row wrap;
+}
+.main .joinWrap .company_location_field .tag_box > input {
+  width: 100%;
+  height: 50px;
+  padding: 7px 14px;
+  border-radius: 10px;
+}
+.main .joinWrap .company_location_field .tag_box > input.input_blur {
+  background-color: #ddd;
+}
+.main .joinWrap .company_location_field .tag_box > button {
+  padding: 7px 14px;
+  height: 50px;
+  border-radius: 10px;
+  border: none;
+  background-color: #136A8F;
+  color: #fff;
+  word-break: keep-all;
+  letter-spacing: -0.5px;
+}
+.main .joinWrap .company_location_field .tag_box > input.num_input {
+  width: 30%;
+  margin-right: 20px;
+}
+.main .joinWrap .company_location_field .tag_box > input.address_input {
+  margin: 15px 0;
+}
+.main .joinWrap .company_location_field .tag_box > button {
+}
