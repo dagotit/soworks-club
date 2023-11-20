@@ -1,22 +1,24 @@
 'use client';
 
+import styles from './Login.module.css';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useDialogStore } from '@/store/useDialog';
 import React, { useEffect, useState } from 'react';
-import { usePostLogin } from '@/hooks/useAuth';
+import { useGetLogoImg, usePostLogin } from '@/hooks/useAuth';
+import { APIResponse } from '@/services/api';
 
 const key = process.env.NEXT_PUBLIC_API_URL;
 console.log('1', key);
 const Login = () => {
-  // const { id } = useLoginStore();
   const router = useRouter();
-  const [email, setEmail] = useState('test@test.com');
+  const [email, setEmail] = useState('');
   const [emailValidation, setEmailValidation] = useState(false);
-  const [password, setPassword] = useState('1234');
+  const [password, setPassword] = useState('');
   const [passwordValidation, setPasswordValidation] = useState(false);
   const { open, allClose } = useDialogStore();
-  const { mutate, isError, error, isSuccess } = usePostLogin();
+  const getLogoImg = useGetLogoImg();
+  const postLogin = usePostLogin();
   const EMAILLENGTH = 50;
   const EMAILREX =
     /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
@@ -115,41 +117,88 @@ const Login = () => {
       return;
     }
     // 로그인 완료 홈으로 이동
-    mutate({ email, password });
-    const success = isSuccess;
-    console.log('isSuccess:: ', isSuccess);
-    // router.push('/');
+    postLogin.mutate(
+      { email, password },
+      {
+        onSuccess: handlerLoginSuccess,
+        onError: (error) => {
+          // 요청에 에러가 발생된 경우
+          console.log('onError');
+        },
+        onSettled: () => {
+          // 요청이 성공하든, 에러가 발생되든 실행하고 싶은 경우
+          console.log('onSettled');
+        },
+      },
+    );
+  };
+
+  const handlerLoginSuccess = (data: APIResponse) => {
+    // 요청이 성공한 경우
+    console.log('onSuccess', data);
+    /** 임시 데이터 **/
+
+    // @ts-ignore
+    /*  const { accessToken, expires } = data;
+    if (accessToken && expires) {
+      setAccessToken(accessToken);
+      setTokenExpires(expires);
+      router.push('/');
+    }*/
   };
 
   return (
-    <main>
-      로그인
+    <main className={styles.main}>
+      <h1 className={styles.title}>로그인</h1>
+      <div className={styles.logoimgWrap}>
+        <img src={`https://source.unsplash.com/random`} alt="로고이미지" />
+      </div>
+      <h2 className={styles.name}>다가치</h2>
       <input
+        className={styles.input}
         type="email"
-        placeholder="example@company.com"
+        placeholder="회사 e-mail을 입력해주세요."
         value={email}
         onChange={handleEmailChange}
       />
-      {emailValidation && <p>이메일 형식이 올바르지 않습니다.</p>}
-      <input type="password" value={password} onChange={handlePasswordChange} />
+      {emailValidation && (
+        <p className={styles.errText}>이메일 형식이 올바르지 않습니다.</p>
+      )}
+      <input
+        className={styles.input}
+        type="password"
+        placeholder="password를 입력해주세요."
+        value={password}
+        onChange={handlePasswordChange}
+      />
       {passwordValidation && (
-        <p>비밀번호는 특수문자는 !,@,#,$,%,^,&,*만 사용 가능합니다.</p>
+        <p className={styles.errText}>
+          비밀번호는 특수문자는 !,@,#,$,%,^,&,*만 사용 가능합니다.
+        </p>
       )}
       <Link
+        className={styles.passwordFind}
         href={{
           pathname: '/passfind',
         }}
       >
         비밀번호 찾기
       </Link>
-      <button onClick={handlerLoginBtn}>로그인</button>
+      <button className={styles.loginBtn} onClick={handlerLoginBtn}>
+        로그인
+      </button>
+      <p className={styles.pText}>대표님! 다가치 가 처음이신가요?</p>
       <Link
+        className={styles.signUp}
         href={{
           pathname: '/registration',
         }}
       >
-        회원가입
+        대표자 회원가입
       </Link>
+      <p className={`${styles.pText} ${styles.color}`}>
+        직원들은 대표님이 초대해주셔야 합니다!
+      </p>
     </main>
   );
 };
