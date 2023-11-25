@@ -5,25 +5,34 @@ import styles from '@/app/page.module.css';
 import Image from 'next/image';
 import { useGetUser } from '@/hooks/useAuth';
 import Loading from '@/components/Loading';
+import { useRouter } from 'next/navigation';
+import Header from '@/components/Header';
 
 const Main = () => {
-  const { isLoading, isFetching, data, isError, error, refetch } = useGetUser();
-  const handlerBtn = () => {
-    refetch().then((r) => {
-      console.log('refetch');
-    });
+  const router = useRouter();
+  // const { isLoading, isFetching, data, isError, error, refetch } = useGetUser();
+  // const handlerBtn = () => {
+  //   refetch().then((r) => {
+  //     console.log('refetch');
+  //   });
+  // };
+
+  const testBtn = async () => {
+    router.push('/login');
   };
 
-  if (isLoading) {
-    return <Loading />;
-  }
+  // if (isLoading) {
+  //   return <Loading />;
+  // }
 
   return (
     <Fragment>
+      <Header />
       <main className={styles.main}>
-        <button type="button" onClick={handlerBtn}>
-          refetch
-        </button>
+        {/*<button type="button" onClick={handlerBtn}>*/}
+        {/*  refetch*/}
+        {/*</button>*/}
+        <button onClick={testBtn}>api호출</button>
         <div className={styles.description}>
           <p>
             Get started by editing&nbsp;

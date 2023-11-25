@@ -7,16 +7,16 @@ import { useDialogStore } from '@/store/useDialog';
 import React, { useEffect, useState } from 'react';
 import { useGetLogoImg, usePostLogin } from '@/hooks/useAuth';
 import { APIResponse } from '@/services/api';
+import { useTokenStore } from '@/store/useLogin';
 
-const key = process.env.NEXT_PUBLIC_API_URL;
-console.log('1', key);
 const Login = () => {
   const router = useRouter();
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState('test@test.com');
   const [emailValidation, setEmailValidation] = useState(false);
-  const [password, setPassword] = useState('');
+  const [password, setPassword] = useState('1234');
   const [passwordValidation, setPasswordValidation] = useState(false);
   const { open, allClose } = useDialogStore();
+  const { accessToken } = useTokenStore();
   const getLogoImg = useGetLogoImg();
   const postLogin = usePostLogin();
   const EMAILLENGTH = 50;
@@ -93,7 +93,6 @@ const Login = () => {
    * 로그인하기 버튼
    */
   const handlerLoginBtn = (): void => {
-    console.log('2', key);
     if (email.trim() === '') {
       open('alert', '로그인', '이메일을 입력해주세요.', () => {
         // alert('액션!');
@@ -136,6 +135,7 @@ const Login = () => {
   const handlerLoginSuccess = (data: APIResponse) => {
     // 요청이 성공한 경우
     console.log('onSuccess', data);
+
     /** 임시 데이터 **/
 
     // @ts-ignore
@@ -146,6 +146,12 @@ const Login = () => {
       router.push('/');
     }*/
   };
+  useEffect(() => {
+    console.log('accessToken::', accessToken);
+    if (accessToken !== '') {
+      router.push('/');
+    }
+  }, [accessToken]);
 
   return (
     <main className={styles.main}>
@@ -191,7 +197,7 @@ const Login = () => {
       <Link
         className={styles.signUp}
         href={{
-          pathname: '/registration',
+          pathname: '/join',
         }}
       >
         대표자 회원가입
