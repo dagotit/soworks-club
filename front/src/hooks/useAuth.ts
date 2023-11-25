@@ -1,4 +1,9 @@
-import { apiLogin, getLogoImg, logout } from '@/services/authService';
+import {
+  apiGetAccessToken,
+  apiLogin,
+  getLogoImg,
+  logout,
+} from '@/services/authService';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 export const useGetUser = () =>
@@ -16,6 +21,13 @@ export const usePostLogin = () => {
   return useMutation({
     mutationKey: ['post-login'],
     mutationFn: apiLogin,
+  });
+};
+
+export const useGetAccessToken = () => {
+  return useMutation({
+    mutationKey: ['get-access-token'],
+    mutationFn: apiGetAccessToken,
   });
 };
 

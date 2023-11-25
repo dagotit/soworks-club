@@ -1,12 +1,15 @@
 import axios from 'axios';
 import { NextResponse } from 'next/server';
 import { useTokenStore } from '@/store/useLogin';
+import { Simulate } from 'react-dom/test-utils';
+import error = Simulate.error;
 const response = NextResponse.next();
-
+let timeOut: any = null;
 const app = axios.create({
   // baseURL: `${process.env.NEXT_PUBLIC_API_URL}/auth`,
   baseURL: `/auth`,
   withCredentials: true,
+  timeout: 3000,
 });
 
 app.interceptors.request.use(
@@ -28,41 +31,45 @@ app.interceptors.response.use(
     return res.data;
   },
   async (err) => {
-    const originalConfig = err.config;
+    /*  const originalConfig = err.config;
     if (err.response.status === 401 && !originalConfig._retry) {
       originalConfig._retry = true;
       // 토큰 다시 가져오기
-      /*try {
+      try {
         const { data } = await axios.get(`/auth/reissue`, {
           withCredentials: true,
         });
         if (data) return app(originalConfig);
       } catch (error) {
         return Promise.reject(error);
-      }*/
-    }
+      }
+    }*/
+    console.log('에런데??');
     return Promise.reject(err);
   },
 );
 
 async function setAccessToken(res: any) {
-  if (!res.config.url.includes('login')) {
-    return;
+  const requestUrl = res.config.url;
+  if (requestUrl.includes('login') || requestUrl.includes('reissue')) {
+    const storeAccessToken: string = useTokenStore.getState().accessToken;
+    if (storeAccessToken !== '') {
+      return;
+    }
+    const { accessToken, accessTokenExpiresIn } = res.data;
+    if (!!accessToken && !!accessTokenExpiresIn) {
+      useTokenStore.setState({
+        ...useTokenStore,
+        accessToken: accessToken,
+        expires: accessTokenExpiresIn,
+      });
+      if (timeOut != null) {
+        clearTimeout(timeOut);
+        timeOut = null;
+      }
+      await handlerTokenExpires();
+    }
   }
-
-  const storeAccessToken = useTokenStore.getState().accessToken;
-  if (storeAccessToken !== '') {
-    return;
-  }
-  const { accessToken, accessTokenExpiresIn } = res.data;
-  if (accessToken && accessTokenExpiresIn) {
-    useTokenStore.setState({
-      ...useTokenStore,
-      accessToken: accessToken,
-      expires: accessTokenExpiresIn,
-    });
-  }
-  await handlerTokenExpires();
 }
 /**
  * @function
@@ -72,21 +79,22 @@ const handlerTokenExpires = async () => {
   const date = new Date(useTokenStore.getState().expires * 1000); // 비교할 unix time
   const now = new Date(); // 현재 시간
 
-  const diffMSec = date.getTime() - now.getTime();
-  const timeOut = setTimeout(async () => {
+  const diffMSec: number = date.getTime() - now.getTime();
+  timeOut = setTimeout(async () => {
     try {
-      const { data } = await app.get(`/reissue`, {
+      useTokenStore.setState({
+        ...useTokenStore,
+        accessToken: '',
+        expires: 0,
+      });
+      await app.get(`/reissue`, {
         withCredentials: true,
       });
-      console.log('accessToken settimeout 재발급::', data);
-      // 토큰을 다시 셋팅해줘야한다.
     } catch (e) {
-      console.log('accessToken settimeout error::', e);
-      return Promise.reject(e);
-    } finally {
-      clearTimeout(timeOut);
+      await Promise.reject(e);
     }
-  }, 1000);
+    // 25분으로 해둠.. diffMSec가 초로 들어가지 않는 오류가 있어서 .. ㅜㅜ
+  }, 1500000);
 };
 
 const http = {

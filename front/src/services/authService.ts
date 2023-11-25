@@ -29,3 +29,11 @@ export const apiLogin = async (data: LoginReqType): Promise<any> => {
     return null;
   }
 };
+
+export const apiGetAccessToken = async (data: null): Promise<any> => {
+  try {
+    return await http.get('/reissue');
+  } catch (e) {
+    return null;
+  }
+};
