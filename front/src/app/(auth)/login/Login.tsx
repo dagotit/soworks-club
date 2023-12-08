@@ -11,9 +11,9 @@ import { useTokenStore } from '@/store/useLogin';
 
 const Login = () => {
   const router = useRouter();
-  const [email, setEmail] = useState('test@test.com');
+  const [email, setEmail] = useState('');
   const [emailValidation, setEmailValidation] = useState(false);
-  const [password, setPassword] = useState('1234');
+  const [password, setPassword] = useState('');
   const [passwordValidation, setPasswordValidation] = useState(false);
   const { open, allClose } = useDialogStore();
   const { accessToken } = useTokenStore();
@@ -134,24 +134,8 @@ const Login = () => {
 
   const handlerLoginSuccess = (data: APIResponse) => {
     // 요청이 성공한 경우
-    console.log('onSuccess', data);
-
-    /** 임시 데이터 **/
-
-    // @ts-ignore
-    /*  const { accessToken, expires } = data;
-    if (accessToken && expires) {
-      setAccessToken(accessToken);
-      setTokenExpires(expires);
-      router.push('/');
-    }*/
+    router.push('/');
   };
-  useEffect(() => {
-    console.log('accessToken::', accessToken);
-    if (accessToken !== '') {
-      router.push('/');
-    }
-  }, [accessToken]);
 
   return (
     <main className={styles.main}>
