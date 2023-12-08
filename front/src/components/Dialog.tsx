@@ -15,19 +15,29 @@ const Dialog = () => {
           <p className={styles.fixTitle}>알림</p>
           {dialogList.length !== 0 &&
             dialogList.map((element, idx) => (
-              <div key={idx}>
+              <div key={idx} className={styles.contentsWrap}>
                 <p>{element.title}</p>
                 <p>{element.contents}</p>
-                <button
-                  onClick={() => {
-                    check(element.action);
-                  }}
-                >
-                  확인
-                </button>
-                {element.type === 'confirm' && (
-                  <button onClick={cancel}>취소</button>
-                )}
+                <div className={styles.btnWrap}>
+                  <button
+                    className={`${styles.btn} ${
+                      element.type === 'alert' && styles.alert
+                    }`}
+                    onClick={() => {
+                      check(element.action);
+                    }}
+                  >
+                    확인
+                  </button>
+                  {element.type === 'confirm' && (
+                    <button
+                      className={`${styles.btn} ${styles.cancel}`}
+                      onClick={cancel}
+                    >
+                      취소
+                    </button>
+                  )}
+                </div>
               </div>
             ))}
         </div>
