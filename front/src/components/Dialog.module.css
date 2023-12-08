@@ -4,22 +4,17 @@
     left: 0;
 }
 .dimmed{
-    position: absolute;
+    position: fixed;
     z-index: 1000;
     width: 100vw;
     height: 100vh;
     top: 0;
     background-color: #000;
-    opacity: 0.1;
+    opacity: 0.7;
 }
 .dialogContents{
     position: fixed;
     z-index: 1001;
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
     width: 70%;
     height: 25%;
     background-color: #fff;
@@ -29,13 +24,43 @@
     border-radius: 3px;
     transform: translate(-50%, -50%);
 }
+.contentsWrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    height: calc(100% - 50px);
+}
 .fixTitle {
-    position: absolute;
-    top: 0;
-    left: 0;
     display: block;
     width: 100%;
     padding: 10px;
     font-weight: bold;
     border-bottom: 1px  solid #d9d9d9;
+}
+.btnWrap {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 80%;
+}
+.btn {
+    width: 49%;
+    border-radius: 9px;
+    background-color: #136a8f;
+    border: none;
+    font-size: 16px;
+    padding: 5px 0;
+    cursor: pointer;
+    /*position: absolute;*/
+    /*left: 10%;*/
+    /*bottom: 10px;*/
+}
+.btn.alert{
+    width: 100%;
+}
+.btn.cancel {
+    background-color: transparent;
+    border:1px solid #136a8f;
+    color: #136a8f;
 }
