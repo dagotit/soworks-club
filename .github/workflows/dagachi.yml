@@ -1,0 +1,31 @@
+name: build and Docker Push
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Gradle
+        uses: actions/setup-java@v2
+        with:
+          java-version: 17
+
+      - name: Build with Gradle
+        run: ./gradlew build
+
+      - name: Build Docker image
+        run: docker build -t churihyung/dagachi:latest .
+
+      - name: Tag Docker image
+        run: |
+          current_version=$(cat VERSION)
+          docker tag churihyung/dagachi:latest churihyung/dagachi:${current_version}
+
+      - name: Push Docker image
+        run: docker push churihyung/dagachi:${current_version}
