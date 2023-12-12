@@ -1,8 +1,7 @@
 import axios from 'axios';
 import { NextResponse } from 'next/server';
 import { useTokenStore } from '@/store/useLogin';
-import { Simulate } from 'react-dom/test-utils';
-import error = Simulate.error;
+
 const response = NextResponse.next();
 let timeOut: any = null;
 const app = axios.create({
@@ -44,7 +43,6 @@ app.interceptors.response.use(
         return Promise.reject(error);
       }
     }*/
-    console.log('에러인데??');
     return Promise.reject(err);
   },
 );

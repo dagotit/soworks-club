@@ -24,6 +24,7 @@ export async function withoutAuth(req: NextRequest) {
     }
   } catch (e) {
     console.log('middleware reissue error');
+    throw e;
   }
 }
 /**
