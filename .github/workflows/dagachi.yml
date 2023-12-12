@@ -26,5 +26,8 @@ jobs:
       - name: Build Docker image
         run: docker build -t churihyung/dagachi:latest .
 
+      - name: Log into registry
+        run: docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
+
       - name: Push Docker image
         run: docker push churihyung/dagachi:latest
