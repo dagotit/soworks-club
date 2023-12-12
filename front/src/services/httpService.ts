@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 import { useTokenStore } from '@/store/useLogin';
 
 const response = NextResponse.next();
-let timeOut: any = null;
+let timeOut: undefined | NodeJS.Timeout = undefined;
 const app = axios.create({
   // baseURL: `${process.env.NEXT_PUBLIC_API_URL}/auth`,
   baseURL: `/auth`,
@@ -17,7 +17,6 @@ app.interceptors.request.use(
     if (accessToken) {
       res.headers['Authorization'] = `Bearer ${accessToken}`;
     }
-    console.log('header', res);
     return res;
   },
   (err) => Promise.reject(err),
@@ -61,9 +60,9 @@ async function setAccessToken(res: any) {
         accessToken: accessToken,
         expires: accessTokenExpiresIn,
       });
-      if (timeOut != null) {
+      if (timeOut != undefined) {
         clearTimeout(timeOut);
-        timeOut = null;
+        timeOut = undefined;
       }
       await handlerTokenExpires();
     }

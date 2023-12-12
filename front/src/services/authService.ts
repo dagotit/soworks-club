@@ -18,7 +18,7 @@ export async function getLogoImg(): Promise<any> {
   }
 }
 
-export const apiLogout = async (): Promise<any> => {
+export const apiLogout = async (data: null): Promise<any> => {
   try {
     return http.get('/logout');
   } catch (e) {
