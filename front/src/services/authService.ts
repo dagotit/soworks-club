@@ -18,15 +18,19 @@ export async function getLogoImg(): Promise<any> {
   }
 }
 
-export function logout(): Promise<any> {
-  return http.get('/user/logout');
-}
+export const apiLogout = async (): Promise<any> => {
+  try {
+    return http.get('/logout');
+  } catch (e) {
+    throw e;
+  }
+};
 
 export const apiLogin = async (data: LoginReqType): Promise<any> => {
   try {
     return await http.post('/login', data);
   } catch (e) {
-    return null;
+    throw e;
   }
 };
 
@@ -34,6 +38,6 @@ export const apiGetAccessToken = async (data: null): Promise<any> => {
   try {
     return await http.get('/reissue');
   } catch (e) {
-    return null;
+    throw e;
   }
 };
