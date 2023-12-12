@@ -15,6 +15,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: '20'
+          distribution: 'temurin'
 
       - name: Gradle Wrapper Update (Optional)
         run: ./gradlew wrapper
