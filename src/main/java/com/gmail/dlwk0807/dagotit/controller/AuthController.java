@@ -1,12 +1,13 @@
 package com.gmail.dlwk0807.dagotit.controller;
 
-import com.gmail.dlwk0807.dagotit.controller.dto.MemberRequestDto;
-import com.gmail.dlwk0807.dagotit.controller.dto.MemberResponseDto;
-import com.gmail.dlwk0807.dagotit.controller.dto.TokenDto;
+import com.gmail.dlwk0807.dagotit.dto.MemberRequestDto;
+import com.gmail.dlwk0807.dagotit.dto.MemberResponseDto;
+import com.gmail.dlwk0807.dagotit.dto.TokenDto;
 import com.gmail.dlwk0807.dagotit.service.AuthService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
+@Slf4j
 public class AuthController {
     private final AuthService authService;
 
@@ -26,7 +28,6 @@ public class AuthController {
     public ResponseEntity<TokenDto> login(@RequestBody MemberRequestDto memberRequestDto, HttpServletResponse response) {
 
         TokenDto token = authService.login(memberRequestDto);
-
         setHeaderCookie(response, token);
 
         return ResponseEntity.ok(token);

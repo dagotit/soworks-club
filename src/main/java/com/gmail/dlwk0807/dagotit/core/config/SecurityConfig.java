@@ -1,8 +1,8 @@
-package com.gmail.dlwk0807.dagotit.config;
+package com.gmail.dlwk0807.dagotit.core.config;
 
-import com.gmail.dlwk0807.dagotit.config.jwt.JwtAccessDeniedHandler;
-import com.gmail.dlwk0807.dagotit.config.jwt.JwtAuthenticationEntryPoint;
-import com.gmail.dlwk0807.dagotit.config.jwt.TokenProvider;
+import com.gmail.dlwk0807.dagotit.core.config.jwt.JwtAccessDeniedHandler;
+import com.gmail.dlwk0807.dagotit.core.config.jwt.JwtAuthenticationEntryPoint;
+import com.gmail.dlwk0807.dagotit.core.config.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

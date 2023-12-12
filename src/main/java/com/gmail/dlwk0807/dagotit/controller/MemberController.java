@@ -1,6 +1,6 @@
 package com.gmail.dlwk0807.dagotit.controller;
 
-import com.gmail.dlwk0807.dagotit.controller.dto.MemberResponseDto;
+import com.gmail.dlwk0807.dagotit.dto.MemberResponseDto;
 import com.gmail.dlwk0807.dagotit.service.MemberService;
 import com.gmail.dlwk0807.dagotit.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;

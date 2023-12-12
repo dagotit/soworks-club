@@ -1,11 +1,9 @@
-package com.gmail.dlwk0807.dagotit.config.jwt;
+package com.gmail.dlwk0807.dagotit.core.config.jwt;
 
-import com.gmail.dlwk0807.dagotit.controller.dto.TokenDto;
+import com.gmail.dlwk0807.dagotit.dto.TokenDto;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,7 +13,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
 import java.security.Key;
 import java.util.*;
