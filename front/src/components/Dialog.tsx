@@ -16,8 +16,8 @@ const Dialog = () => {
           {dialogList.length !== 0 &&
             dialogList.map((element, idx) => (
               <div key={idx} className={styles.contentsWrap}>
-                <p>{element.title}</p>
-                <p>{element.contents}</p>
+                <p className={styles.title}>{element.title}</p>
+                <p className={styles.text}>{element.contents}</p>
                 <div className={styles.btnWrap}>
                   <button
                     className={`${styles.btn} ${

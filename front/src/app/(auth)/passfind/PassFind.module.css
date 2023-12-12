@@ -29,6 +29,7 @@
 .input::placeholder {
     color:  #b3b3b3;
 }
+
 .btn {
     width: 50vw;
     border-radius: 9px;
@@ -38,4 +39,54 @@
     padding: 18px 0;
     margin: auto;
     cursor: pointer;
+}
+.codeWrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+}
+.inputWrap.code {
+    width: 70%;
+    margin-bottom: 0;
+}
+.btn.code {
+    width: 18%;
+    padding: 15px 0;
+}
+.time {
+    font-size: 14px;
+    text-align: end;
+    width: 70%;
+    margin-top: 5px;
+    color: #b60808;
+}
+.complete{
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+}
+.completeText {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 5vh;
+}
+.linkBtn {
+    display: block;
+    width: 50vw;
+    border-radius: 9px;
+    background-color: #136a8f;
+    border: none;
+    font-size: 16px;
+    padding: 18px 0;
+    text-align: center;
+}
+.errorText{
+    font-size: 14px;
+    color: #b60808;
+    padding: 0 10px;
+    margin-top: 20px;
+    text-align: center;
 }
