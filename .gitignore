@@ -30,7 +30,6 @@
 # Gradle
 .idea/**/gradle.xml
 .idea/**/libraries
-.gradle
 .build
 build
 build/
@@ -108,6 +107,7 @@ fabric.properties
 
 # Package Files #
 *.jar
+!gradle-wrapper.jar
 *.war
 *.nar
 *.ear
