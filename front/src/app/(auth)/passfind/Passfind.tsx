@@ -31,6 +31,7 @@ const PassFind = () => {
 
   useEffect(() => {
     return () => {
+      allClose();
       clearTime();
     };
   }, []);

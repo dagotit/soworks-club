@@ -1,0 +1,6 @@
+.header {
+    position: fixed;
+    z-index: 1000;
+    height: 8vh;
+    width: 100%;
+}
