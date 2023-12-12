@@ -17,6 +17,9 @@ jobs:
           java-version: 17
           distribution: 'temurin'
 
+      - name: Gradle Wrapper Update (Optional)
+        run: ./gradlew wrapper
+
       - name: Build with Gradle
         run: ./gradlew build
 
