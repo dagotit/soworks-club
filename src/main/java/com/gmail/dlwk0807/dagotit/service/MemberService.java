@@ -1,6 +1,6 @@
 package com.gmail.dlwk0807.dagotit.service;
 
-import com.gmail.dlwk0807.dagotit.controller.dto.MemberResponseDto;
+import com.gmail.dlwk0807.dagotit.dto.MemberResponseDto;
 import com.gmail.dlwk0807.dagotit.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

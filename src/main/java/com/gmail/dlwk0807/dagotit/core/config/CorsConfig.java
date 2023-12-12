@@ -1,4 +1,4 @@
-package com.gmail.dlwk0807.dagotit.config;
+package com.gmail.dlwk0807.dagotit.core.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,15 +1,14 @@
 package com.gmail.dlwk0807.dagotit.service;
 
-import com.gmail.dlwk0807.dagotit.controller.dto.MemberRequestDto;
-import com.gmail.dlwk0807.dagotit.controller.dto.MemberResponseDto;
-import com.gmail.dlwk0807.dagotit.controller.dto.TokenDto;
-import com.gmail.dlwk0807.dagotit.controller.dto.TokenRequestDto;
+import com.gmail.dlwk0807.dagotit.core.exception.DuplicationMember;
+import com.gmail.dlwk0807.dagotit.dto.MemberRequestDto;
+import com.gmail.dlwk0807.dagotit.dto.MemberResponseDto;
+import com.gmail.dlwk0807.dagotit.dto.TokenDto;
 import com.gmail.dlwk0807.dagotit.entity.Member;
 import com.gmail.dlwk0807.dagotit.entity.RefreshToken;
-import com.gmail.dlwk0807.dagotit.config.jwt.TokenProvider;
+import com.gmail.dlwk0807.dagotit.core.config.jwt.TokenProvider;
 import com.gmail.dlwk0807.dagotit.repository.MemberRepository;
 import com.gmail.dlwk0807.dagotit.repository.RefreshTokenRepository;
-import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -17,9 +16,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.Duration;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -33,7 +29,7 @@ public class AuthService {
     @Transactional
     public MemberResponseDto signup(MemberRequestDto memberRequestDto) {
         if (memberRepository.existsByEmail(memberRequestDto.getEmail())) {
-            throw new RuntimeException("이미 가입되어 있는 유저입니다");
+            throw new DuplicationMember("이미 가입되어 있는 유저입니다");
         }
 
         Member member = memberRequestDto.toMember(passwordEncoder);

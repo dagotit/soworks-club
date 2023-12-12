@@ -1,4 +1,4 @@
-package com.gmail.dlwk0807.dagotit.controller.dto;
+package com.gmail.dlwk0807.dagotit.dto;
 
 import com.gmail.dlwk0807.dagotit.entity.Member;
 import lombok.AllArgsConstructor;
