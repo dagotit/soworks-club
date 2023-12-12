@@ -122,7 +122,10 @@ const Login = () => {
         onSuccess: handlerLoginSuccess,
         onError: (error) => {
           // 요청에 에러가 발생된 경우
-          console.log('onError', error);
+          // @ts-ignore
+          const { response } = error;
+          console.log('response', response);
+          open('alert', '로그인', response.data);
         },
         onSettled: () => {
           // 요청이 성공하든, 에러가 발생되든 실행하고 싶은 경우

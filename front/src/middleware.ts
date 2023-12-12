@@ -39,12 +39,14 @@ export async function middleware(request: NextRequest, event: NextFetchEvent) {
     return await withoutAuth(request);
   }
 
-  // 이미 로그인이 되어있다면 로그인 페이지 진입 불가
-  if (
-    request.url === `${process.env.NEXT_PUBLIC_DOMAIN}login/` &&
-    !!refreshToken
-  ) {
-    return NextResponse.redirect(new URL('/', request.url));
+  // 이미 로그인이 되어있다면 로그인, 비밀번호 찾기, 회원가입 페이지 진입 불가
+  if (!!refreshToken) {
+    if (
+      request.url === `${process.env.NEXT_PUBLIC_DOMAIN}login/` ||
+      request.url === `${process.env.NEXT_PUBLIC_DOMAIN}passfind/` ||
+      request.url === `${process.env.NEXT_PUBLIC_DOMAIN}join/`
+    )
+      return NextResponse.redirect(new URL('/', request.url));
   }
 }
 
