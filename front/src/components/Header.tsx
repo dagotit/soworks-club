@@ -15,7 +15,8 @@ const Header = () => {
   useEffect(() => {
     if (!accessToken) {
       getAccessToken.mutate(null, {
-        onError: () => {
+        onError: (err) => {
+          console.log('err:::', err);
           open('alert', '로그아웃', '로그아웃 되었습니다.', () => {
             router.push('/login');
           });

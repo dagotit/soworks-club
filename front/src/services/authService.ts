@@ -1,5 +1,5 @@
 import http from './httpService';
-import axios, { AxiosError } from 'axios';
+import axios from 'axios';
 
 interface LoginReqType {
   email: string;
