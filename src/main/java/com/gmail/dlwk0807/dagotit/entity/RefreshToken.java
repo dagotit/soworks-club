@@ -1,24 +1,19 @@
 package com.gmail.dlwk0807.dagotit.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.redis.core.RedisHash;
 
 @Getter
 @NoArgsConstructor
-@Table(name = "refresh_token")
-@Entity
+@RedisHash(value = "refreshToken", timeToLive = 1000 * 60 * 60 * 24 * 7)
 public class RefreshToken {
 
     @Id
-    @Column(name = "rt_key")
     private String key;
 
-    @Column(name = "rt_value")
     private String value;
 
     @Builder

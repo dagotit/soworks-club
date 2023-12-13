@@ -19,7 +19,7 @@ public class RedisConfig {
         return new LettuceConnectionFactory(host, port);
     }
 
-    @Bean(name = "redisTemplate")
+//    @Bean(name = "redisTemplate")
     public StringRedisTemplate redisTemplate() {
         StringRedisTemplate stringRedisTemplate = new StringRedisTemplate();
         stringRedisTemplate.setConnectionFactory(redisMailConnectionFactory());

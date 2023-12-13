@@ -17,9 +17,6 @@ jobs:
           java-version: '20'
           distribution: 'temurin'
 
-      - name: Gradle Wrapper Update (Optional)
-        run: ./gradlew wrapper
-
       - name: Build with Gradle
         run: ./gradlew build -x test
 

@@ -26,9 +26,9 @@ public class CommonExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> unknowError(Exception e) {
         String respBody = "";
-        if (getProfile()) {
+//        if (getProfile()) {
             respBody = e.getMessage();
-        }
+//        }
         log.error(this.getClass().getName(), e);
         return new ResponseEntity<ApiMessageVO>(ApiMessageVO.builder()
                 .respCode("BIZ_001")
@@ -39,9 +39,9 @@ public class CommonExceptionHandler {
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<?> unknowError(RuntimeException e) {
         String respBody = "";
-        if (getProfile()) {
+//        if (getProfile()) {
             respBody = e.getMessage();
-        }
+//        }
         log.error(this.getClass().getName(), e);
 
         if (e.getLocalizedMessage().contains("timed-out and fallback")) {
@@ -61,9 +61,9 @@ public class CommonExceptionHandler {
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public ResponseEntity<?> requiredParamError(MissingServletRequestParameterException e) {
         String respBody = "";
-        if (getProfile()) {
+//        if (getProfile()) {
             respBody = e.getMessage();
-        }
+//        }
         return new ResponseEntity<ApiMessageVO>(ApiMessageVO.builder()
                 .respCode("BIZ_003")
                 .respBody(respBody)
@@ -73,13 +73,13 @@ public class CommonExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<?> invalidParamError(MethodArgumentNotValidException e) {
         StringBuilder respBody = new StringBuilder();
-        if (getProfile()) {
+//        if (getProfile()) {
             e.getBindingResult().getAllErrors().forEach((error) -> {
                 String fieldName = ((FieldError) error).getField();
                 String errorMessage = error.getDefaultMessage();
                 respBody.append("{" + fieldName + "} " + errorMessage);
             });
-        }
+//        }
         return new ResponseEntity<ApiMessageVO>(ApiMessageVO.builder()
                 .respCode("BIZ_004")
                 .respBody(respBody.toString())
@@ -89,9 +89,9 @@ public class CommonExceptionHandler {
     @ExceptionHandler(BindException.class)
     public ResponseEntity<?> validationParamError(BindException e) {
         String respBody = "";
-        if (getProfile()) {
+//        if (getProfile()) {
             respBody = e.getMessage();
-        }
+//        }
         String firstMsg = e.getBindingResult().getAllErrors().get(0).getCodes()[0];
 //        String firstMsg = e.getBindingResult().getAllErrors().get(0).getDefaultMessage();
         return new ResponseEntity<ApiMessageVO>(ApiMessageVO.builder()
@@ -103,9 +103,9 @@ public class CommonExceptionHandler {
     @ExceptionHandler(ResourceAccessException.class)
     public ResponseEntity<?> resourceAccessError(ResourceAccessException e) {
         String respBody = "";
-        if (getProfile()) {
+//        if (getProfile()) {
             respBody = e.getMessage();
-        }
+//        }
         log.error(this.getClass().getName(), e);
         return new ResponseEntity<ApiMessageVO>(ApiMessageVO.builder()
                 .respCode("BIZ_006")
@@ -116,9 +116,9 @@ public class CommonExceptionHandler {
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<?> BadCredentialsException(BadCredentialsException e) {
         String respBody = "";
-        if (getProfile()) {
+//        if (getProfile()) {
             respBody = e.getMessage();
-        }
+//        }
         log.error(this.getClass().getName(), e);
         return new ResponseEntity<ApiMessageVO>(ApiMessageVO.builder()
                 .respCode("BIZ_007")
@@ -129,14 +129,27 @@ public class CommonExceptionHandler {
     @ExceptionHandler(DuplicationMember.class)
     public ResponseEntity<?> resourceAccessError(DuplicationMember e) {
         String respBody = "";
-        if (getProfile()) {
+//        if (getProfile()) {
             respBody = e.getMessage();
-        }
+//        }
         log.error(this.getClass().getName(), e);
         return new ResponseEntity<ApiMessageVO>(ApiMessageVO.builder()
                 .respCode("BIZ_008")
                 .respBody(respBody)
                 .respMsg("중복된 회원정보입니다.").build(), HttpStatus.OK);
+    }
+
+    @ExceptionHandler(InvalidCertificationNumberException.class)
+    public ResponseEntity<?> resourceAccessError(InvalidCertificationNumberException e) {
+        String respBody = "";
+//        if (getProfile()) {
+            respBody = e.getMessage();
+//        }
+        log.error(this.getClass().getName(), e);
+        return new ResponseEntity<ApiMessageVO>(ApiMessageVO.builder()
+                .respCode("BIZ_009")
+                .respBody(respBody)
+                .respMsg("문자가 일치하지 않습니다.").build(), HttpStatus.OK);
     }
 
 
