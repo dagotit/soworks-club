@@ -14,6 +14,7 @@ const app = axios.create({
 app.interceptors.request.use(
   (res) => {
     const accessToken = useTokenStore.getState().accessToken;
+    console.log('accessToken:', accessToken);
     if (accessToken) {
       res.headers['Authorization'] = `Bearer ${accessToken}`;
     }
@@ -42,6 +43,10 @@ app.interceptors.response.use(
         return Promise.reject(error);
       }
     }*/
+    const code = String(err.response.status);
+    if (code.startsWith('5')) {
+      location.href = `${process.env.NEXT_PUBLIC_DOMAIN}error?msg=${err.response.data.respMsg}`;
+    }
     return Promise.reject(err);
   },
 );
@@ -53,13 +58,14 @@ async function setAccessToken(res: any) {
     if (storeAccessToken !== '') {
       return;
     }
-    const { accessToken, accessTokenExpiresIn } = res.data;
+    const { accessToken, accessTokenExpiresIn } = res.data.respBody;
     if (!!accessToken && !!accessTokenExpiresIn) {
       useTokenStore.setState({
         ...useTokenStore,
         accessToken: accessToken,
         expires: accessTokenExpiresIn,
       });
+
       if (timeOut != undefined) {
         clearTimeout(timeOut);
         timeOut = undefined;
