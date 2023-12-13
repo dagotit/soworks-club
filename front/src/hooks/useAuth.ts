@@ -19,7 +19,6 @@ export const useGetUser = () =>
 */
 
 export const usePostLogin = () => {
-  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ['post-login'],
     mutationFn: apiLogin,

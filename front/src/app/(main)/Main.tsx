@@ -3,7 +3,7 @@
 import { Fragment, useEffect } from 'react';
 import styles from '@/app/page.module.css';
 import Image from 'next/image';
-import { useGetUser } from '@/hooks/useAuth';
+// import { useGetUser } from '@/hooks/useAuth';
 import Loading from '@/components/Loading';
 import { useRouter } from 'next/navigation';
 import Header from '@/components/Header';

@@ -8,7 +8,7 @@ const app = axios.create({
   // baseURL: `${process.env.NEXT_PUBLIC_API_URL}/auth`,
   baseURL: `/auth`,
   withCredentials: true,
-  timeout: 3000,
+  timeout: 30000,
 });
 
 app.interceptors.request.use(

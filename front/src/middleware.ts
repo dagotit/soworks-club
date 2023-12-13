@@ -1,29 +1,61 @@
 import { NextResponse, NextFetchEvent } from 'next/server';
 import type { NextRequest } from 'next/server';
 
+type RESPONSE_ERROR = {
+  respCode: string;
+  respMsg: string;
+  respBody: string;
+};
+
 /**
  * @function
  * 메인화면 진입시 로그인을 이미해서 토큰이 있는지 여부를 체크
  */
 export async function withoutAuth(req: NextRequest) {
+  const abortController = new AbortController();
+  const { signal } = abortController;
+  const timer = setTimeout(() => abortController.abort(), 5000);
+
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/reissue`, {
-      method: 'GET',
-      mode: 'cors',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/auth/reissue`,
+      {
+        method: 'GET',
+        mode: 'cors',
+        credentials: 'include',
+        signal,
+        headers: {
+          'Content-Type': 'application/json',
+        },
       },
-    });
-    const state = response.status;
-    if (state === 401) {
+    );
+    // 여기 있는 any는 성공 시 변경 예정
+    const resp: RESPONSE_ERROR | any = await response.json();
+    clearTimeout(timer);
+    if (resp.respCode === 'BIZ_001') {
+      // 서버에러
+      const errorUrl = new URL('/error', req.url);
+      errorUrl.searchParams.set('msg', resp.respMsg);
+
+      return NextResponse.redirect(errorUrl);
+    }
+    if (response.status === 401) {
+      // 인증정보 없음
       return NextResponse.redirect(new URL('/login', req.url));
     }
-    if (state === 200) {
+    if (response.status === 200) {
       return NextResponse.next();
     }
-  } catch (e) {
+  } catch (e: any) {
     console.log('middleware reissue error');
+    clearTimeout(timer);
+    if (e.name === 'AbortError') {
+      // 타임아웃 걸렸을 경우
+      const errorUrl = new URL('/error', req.url);
+      errorUrl.searchParams.set('msg', 'time_out');
+
+      return NextResponse.redirect(errorUrl);
+    }
     throw e;
   }
 }
