@@ -1,7 +1,6 @@
 package com.gmail.dlwk0807.dagotit.controller;
 
 import com.gmail.dlwk0807.dagotit.dto.MemberRequestDto;
-import com.gmail.dlwk0807.dagotit.dto.MemberResponseDto;
 import com.gmail.dlwk0807.dagotit.dto.TokenDto;
 import com.gmail.dlwk0807.dagotit.service.AuthService;
 import com.gmail.dlwk0807.dagotit.vo.ApiMessageVO;
@@ -10,7 +9,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseCookie;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import static com.gmail.dlwk0807.dagotit.global.CommonConstant.OK_RESP_CODE;
@@ -61,7 +59,7 @@ public class AuthController {
 
     private static void setHeaderCookie(HttpServletResponse response, TokenDto reissue, long maxAge) {
         ResponseCookie cookie = ResponseCookie.from("refreshToken", reissue.getRefreshToken())
-                .maxAge(7 * 24 * 60 * 60)
+                .maxAge(maxAge)
                 .path("/")
                 .secure(true)
                 .sameSite("None")
