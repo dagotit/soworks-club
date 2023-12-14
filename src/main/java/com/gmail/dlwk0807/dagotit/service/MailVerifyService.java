@@ -21,7 +21,7 @@ public class MailVerifyService {
 
     private boolean isVerify(String email, String certificationNumber) {
         boolean validatedEmail = isEmailExists(email);
-        if (!isEmailExists(email)) {
+        if (!validatedEmail) {
             throw new EmailNotFoundException();
         }
         return (validatedEmail &&

@@ -71,7 +71,7 @@ public class CommonExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<?> invalidParamError(MethodArgumentNotValidException e) {
+    public ResponseEntity<?> methodArgumentNotValidException(MethodArgumentNotValidException e) {
         StringBuilder respBody = new StringBuilder();
 //        if (getProfile()) {
             e.getBindingResult().getAllErrors().forEach((error) -> {
@@ -87,7 +87,7 @@ public class CommonExceptionHandler {
     }
 
     @ExceptionHandler(BindException.class)
-    public ResponseEntity<?> validationParamError(BindException e) {
+    public ResponseEntity<?> bindException(BindException e) {
         String respBody = "";
 //        if (getProfile()) {
             respBody = e.getMessage();
@@ -114,7 +114,7 @@ public class CommonExceptionHandler {
     }
 
     @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<?> BadCredentialsException(BadCredentialsException e) {
+    public ResponseEntity<?> badCredentialsException(BadCredentialsException e) {
         String respBody = "";
 //        if (getProfile()) {
             respBody = e.getMessage();
@@ -127,7 +127,7 @@ public class CommonExceptionHandler {
     }
 
     @ExceptionHandler(DuplicationMember.class)
-    public ResponseEntity<?> resourceAccessError(DuplicationMember e) {
+    public ResponseEntity<?> duplicationMember(DuplicationMember e) {
         String respBody = "";
 //        if (getProfile()) {
             respBody = e.getMessage();
@@ -140,7 +140,7 @@ public class CommonExceptionHandler {
     }
 
     @ExceptionHandler(InvalidCertificationNumberException.class)
-    public ResponseEntity<?> resourceAccessError(InvalidCertificationNumberException e) {
+    public ResponseEntity<?> invalidCertificationNumberException(InvalidCertificationNumberException e) {
         String respBody = "";
 //        if (getProfile()) {
             respBody = e.getMessage();
@@ -150,6 +150,19 @@ public class CommonExceptionHandler {
                 .respCode("BIZ_009")
                 .respBody(respBody)
                 .respMsg("문자가 일치하지 않습니다.").build(), HttpStatus.OK);
+    }
+
+    @ExceptionHandler(EmailNotFoundException.class)
+    public ResponseEntity<?> emailNotFoundException(EmailNotFoundException e) {
+        String respBody = "";
+//        if (getProfile()) {
+            respBody = e.getMessage();
+//        }
+        log.error(this.getClass().getName(), e);
+        return new ResponseEntity<ApiMessageVO>(ApiMessageVO.builder()
+                .respCode("BIZ_010")
+                .respBody(respBody)
+                .respMsg("이메일을 찾을 수 없습니다.").build(), HttpStatus.OK);
     }
 
 
