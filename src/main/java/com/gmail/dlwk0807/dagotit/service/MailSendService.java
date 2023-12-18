@@ -23,7 +23,7 @@ public class MailSendService {
 
     public EmailCertificationResponse sendEmailForCertification(String email) throws NoSuchAlgorithmException, MessagingException {
 
-        if (!certificationNumberDao.hasKey(email)) {
+        if (certificationNumberDao.hasKey(email)) {
             throw new DuplicationEmailSenderException();
         }
 
