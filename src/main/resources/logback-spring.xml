@@ -33,10 +33,10 @@
     </appender>
 
     <!-- Log Stash 사용시 사용할 TCP 통신 정보 -->
-    <appender name="stash" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
-        <destination>서버ip정보:logstash포트</destination>
-        <encoder class="net.logstash.logback.encoder.LogstashEncoder"></encoder>
-    </appender>
+<!--    <appender name="stash" class="net.logstash.logback.appender.LogstashTcpSocketAppender">-->
+<!--        <destination>서버ip정보:logstash포트</destination>-->
+<!--        <encoder class="net.logstash.logback.encoder.LogstashEncoder"></encoder>-->
+<!--    </appender>-->
 
     <!-- root레벨 설정 -->
     <root level="INFO">
