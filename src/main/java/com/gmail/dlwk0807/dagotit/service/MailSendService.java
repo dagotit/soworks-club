@@ -21,16 +21,15 @@ public class MailSendService {
     private final JavaMailSender mailSender;
     private final CertificationNumberDao certificationNumberDao;
 
-    public EmailCertificationResponse sendEmailForCertification(String email) throws NoSuchAlgorithmException, MessagingException {
+    public EmailCertificationResponse sendEmailForCertification(String email) throws MessagingException {
 
         if (certificationNumberDao.hasKey(email)) {
             throw new DuplicationEmailSenderException();
         }
 
         String certificationNumber = createCode();
-        String content = certificationNumber;
+        sendMail(email, certificationNumber);
         certificationNumberDao.saveCertificationNumber(email, certificationNumber);
-        sendMail(email, content);
         return new EmailCertificationResponse(email, certificationNumber);
     }
 
