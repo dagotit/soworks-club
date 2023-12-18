@@ -1,5 +1,6 @@
 package com.gmail.dlwk0807.dagotit.service;
 
+import com.gmail.dlwk0807.dagotit.core.exception.DuplicationEmailSenderException;
 import com.gmail.dlwk0807.dagotit.dto.EmailCertificationResponse;
 import com.gmail.dlwk0807.dagotit.repository.CertificationNumberDao;
 import jakarta.mail.MessagingException;
@@ -22,6 +23,10 @@ public class MailSendService {
 
     public EmailCertificationResponse sendEmailForCertification(String email) throws NoSuchAlgorithmException, MessagingException {
 
+        if (!certificationNumberDao.hasKey(email)) {
+            throw new DuplicationEmailSenderException();
+        }
+
         String certificationNumber = createCode();
         String content = certificationNumber;
         certificationNumberDao.saveCertificationNumber(email, certificationNumber);
@@ -33,7 +38,7 @@ public class MailSendService {
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage);
         helper.setTo(email);
-        helper.setSubject("이거슨 이메일 인증 번호입니다.");
+        helper.setSubject("다가치 이메일 인증 번호입니다.");
 
         String msgg="";
         msgg+= "<div style='margin:20px;'>";

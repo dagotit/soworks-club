@@ -165,6 +165,19 @@ public class CommonExceptionHandler {
                 .respMsg("이메일을 찾을 수 없습니다.").build(), HttpStatus.OK);
     }
 
+    @ExceptionHandler(DuplicationEmailSenderException.class)
+    public ResponseEntity<?> duplicationEmailSenderException(DuplicationEmailSenderException e) {
+        String respBody = "";
+//        if (getProfile()) {
+            respBody = e.getMessage();
+//        }
+        log.error(this.getClass().getName(), e);
+        return new ResponseEntity<ApiMessageVO>(ApiMessageVO.builder()
+                .respCode("BIZ_011")
+                .respBody(respBody)
+                .respMsg("발송된 메일이 있습니다. 확인해주세요").build(), HttpStatus.OK);
+    }
+
 
     private boolean getProfile() {
         try {

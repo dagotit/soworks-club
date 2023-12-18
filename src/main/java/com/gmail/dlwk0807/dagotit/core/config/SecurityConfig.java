@@ -42,6 +42,7 @@ public class SecurityConfig {
                 a.requestMatchers(new AntPathRequestMatcher("/h2-console/**")
                                 , new AntPathRequestMatcher("/favicon.ico")
                                 , new AntPathRequestMatcher("/auth/**")
+                                , new AntPathRequestMatcher("/api/v1/mails/**")
                                 ).permitAll();
                 a.anyRequest().authenticated();
             })
