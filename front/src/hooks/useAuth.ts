@@ -1,7 +1,9 @@
 import {
   apiGetAccessToken,
+  apiGetEmailCodeVerify,
   apiLogin,
   apiLogout,
+  apiPostCreditsEmail,
   getLogoImg,
 } from '@/services/authService';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -18,6 +20,18 @@ export const useGetUser = () =>
   });
 */
 
+export const usePostCreditsEmail = () => {
+  return useMutation({
+    mutationKey: ['post-creditsEmail'],
+    mutationFn: apiPostCreditsEmail,
+  });
+};
+export const useGetEmailCodeVerfiy = () => {
+  return useMutation({
+    mutationKey: ['get-email-code-verify'],
+    mutationFn: apiGetEmailCodeVerify,
+  });
+};
 export const usePostLogin = () => {
   return useMutation({
     mutationKey: ['post-login'],

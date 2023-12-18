@@ -19,6 +19,10 @@ const devNextConfig = {
         destination: `${process.env.NEXT_PUBLIC_API_URL}/auth/:path*`,
       },
       {
+        source: '/api/:path*',
+        destination: `${process.env.NEXT_PUBLIC_API_URL}/api/:path*`,
+      },
+      {
         source: '/cat/:path*',
         destination: `https://cataas.com/cat/:path*`,
       },

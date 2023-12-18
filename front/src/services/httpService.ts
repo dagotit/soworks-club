@@ -6,7 +6,7 @@ const response = NextResponse.next();
 let timeOut: undefined | NodeJS.Timeout = undefined;
 const app = axios.create({
   // baseURL: `${process.env.NEXT_PUBLIC_API_URL}/auth`,
-  baseURL: `/auth`,
+  // baseURL: `/`,
   withCredentials: true,
   timeout: 30000,
 });
@@ -14,7 +14,6 @@ const app = axios.create({
 app.interceptors.request.use(
   (res) => {
     const accessToken = useTokenStore.getState().accessToken;
-    console.log('accessToken:', accessToken);
     if (accessToken) {
       res.headers['Authorization'] = `Bearer ${accessToken}`;
     }
@@ -30,15 +29,19 @@ app.interceptors.response.use(
     return res.data;
   },
   async (err) => {
-    /*  const originalConfig = err.config;
+    /*   const originalConfig = err.config;
     if (err.response.status === 401 && !originalConfig._retry) {
       originalConfig._retry = true;
       // 토큰 다시 가져오기
       try {
-        const { data } = await axios.get(`/auth/reissue`, {
+        const resp = await axios.get(`/auth/reissue`, {
           withCredentials: true,
         });
-        if (data) return app(originalConfig);
+        if (resp) {
+          // access token 다시 담기
+          await setAccessToken(resp);
+          return app(originalConfig);
+        }
       } catch (error) {
         return Promise.reject(error);
       }

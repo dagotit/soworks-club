@@ -7,15 +7,20 @@ import React, { useEffect, useState } from 'react';
 import useDidMountEffect from '@/utils/useDidMountEffect';
 import { useRouter } from 'next/navigation';
 import { useDialogStore } from '@/store/useDialog';
+import { useGetEmailCodeVerfiy, usePostCreditsEmail } from '@/hooks/useAuth';
 
 let intervalId: undefined | NodeJS.Timeout = undefined;
-const EXPIREDTIME = '04:59';
+const CODEEXPIRED = 3;
+const EXPIREDTIME = '02:59';
 const PassFind = () => {
   const router = useRouter();
+  const creditsEmail = usePostCreditsEmail();
+  const emailCodeVerify = useGetEmailCodeVerfiy();
   const { open, allClose } = useDialogStore();
   const [step, setStep] = useState(1);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [ckEmail, setCkEmail] = useState('');
   const [isEmailCk, setIsEmailCk] = useState(false);
   const [code, setCode] = useState('');
   const [time, setTime] = useState(EXPIREDTIME);
@@ -24,9 +29,9 @@ const PassFind = () => {
   const [passwordCheck, setPasswordCheck] = useState('');
   const [isPasswordErrorMsg, setIsPasswordErrorMsg] = useState(false);
 
-  const EMAILREX =
-    /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
-  // !,@,#,$,%,^,&,*
+  // prettier-ignore
+  const EMAILREX = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
+  // prettier-ignore !,@,#,$,%,^,&,*
   const PASSWORDREX = /[\{\}\[\]\/?.,;:|\)~`\-_+<>\\\=\(\'\"]/g;
 
   useEffect(() => {
@@ -70,7 +75,7 @@ const PassFind = () => {
       return;
     }
     setTime(EXPIREDTIME);
-    const end = DateTime.now().plus({ minute: 5 });
+    const end = DateTime.now().plus({ minute: CODEEXPIRED });
     intervalId = setInterval(() => {
       const now = DateTime.now();
       const remaining = end.diff(now);
@@ -97,21 +102,40 @@ const PassFind = () => {
     intervalId = undefined;
   }
 
+  function emailValidationCheck() {
+    if (email.trim() === '') {
+      open('alert', '패스워드 찾기', '이메일을 입력해주세요.');
+      return false;
+    }
+    if (!EMAILREX.test(email)) {
+      open('alert', '패스워드 찾기', '이메일 형식이 올바르지 않습니다.');
+      return false;
+    }
+
+    return true;
+  }
+
   /**
    * @function
    * 1단계 이메일 인증하기 -> 인증코드 받기
    */
   function handleIsEmailValidation() {
-    if (email.trim() === '') {
-      open('alert', '패스워드 찾기', '이메일을 입력해주세요.');
+    if (!emailValidationCheck()) {
       return;
     }
-    if (!EMAILREX.test(email)) {
-      open('alert', '패스워드 찾기', '이메일 형식이 올바르지 않습니다.');
-      return;
-    }
-    handleTimeInterval();
-    setCodeExpired(true);
+    creditsEmail.mutate(email, {
+      onSuccess: () => {
+        handleTimeInterval();
+        setCodeExpired(true);
+      },
+      onError: (error: any) => {
+        if (error.respCode !== '' && error.respMsg !== '') {
+          open('alert', '비밀번호 찾기', error.respMsg);
+          return;
+        }
+        open('alert', '비밀번호 찾기', '이메일 인증코드 전송 실패');
+      },
+    });
   }
   /**
    *
@@ -122,28 +146,40 @@ const PassFind = () => {
       open('alert', '패스워드 찾기', '인증코드를 입력해주세요.');
       return;
     }
-    clearTime();
-    setCodeExpired(false);
-    // 이메일 인증 성공
-    setIsEmailCk(true);
+    if (!emailValidationCheck()) {
+      return;
+    }
+    emailCodeVerify.mutate(
+      { email, code },
+      {
+        onSuccess: () => {
+          console.log('이메일 인증성공');
+          clearTime();
+          setCodeExpired(false);
+          // 이메일 인증 성공
+          setIsEmailCk(true);
+        },
+        onError: (error: any) => {
+          console.log(error);
+          // clearTime();
+          // setCodeExpired(false);
+        },
+      },
+    );
   }
   /**
    * @function
    * 1단계 이메일 체크
    */
   function handleEmailValidationCheck() {
-    if (email.trim() === '') {
-      open('alert', '패스워드 찾기', '이메일을 입력해주세요.');
+    if (!emailValidationCheck()) {
       return;
     }
     if (name.trim() === '') {
       open('alert', '패스워드 찾기', '이름을 입력해주세요.');
       return;
     }
-    if (!EMAILREX.test(email)) {
-      open('alert', '패스워드 찾기', '이메일 형식이 올바르지 않습니다.');
-      return;
-    }
+
     setStep(2);
   }
 
@@ -270,7 +306,7 @@ const PassFind = () => {
                 </span>
                 <input
                   className={styles.input}
-                  type="number"
+                  type="text"
                   placeholder="인증코드 입력하기"
                   value={code}
                   onChange={handleChangeCode}

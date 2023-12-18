@@ -20,9 +20,9 @@ const Login = () => {
   const getLogoImg = useGetLogoImg();
   const postLogin = usePostLogin();
   const EMAILLENGTH = 50;
-  const EMAILREX =
-    /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
-  // !,@,#,$,%,^,&,*
+  // prettier-ignore
+  const EMAILREX = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
+  // prettier-ignore !,@,#,$,%,^,&,*
   const PASSWORDREX = /[\{\}\[\]\/?.,;:|\)~`\-_+<>\\\=\(\'\"]/g;
 
   /**
@@ -135,7 +135,6 @@ const Login = () => {
   };
 
   const handlerLoginSuccess = (data: APIResponse) => {
-    console.log('data:', data);
     // 요청이 성공한 경우
     router.push('/');
   };
