@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailAuthenticationException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
@@ -176,6 +177,20 @@ public class CommonExceptionHandler {
                 .respCode("BIZ_011")
                 .respBody(respBody)
                 .respMsg("발송된 메일이 있습니다. 확인해주세요").build(), HttpStatus.OK);
+    }
+
+
+    @ExceptionHandler(MailAuthenticationException.class)
+    public ResponseEntity<?> mailAuthenticationException(MailAuthenticationException e) {
+        String respBody = "";
+//        if (getProfile()) {
+            respBody = e.getMessage();
+//        }
+        log.error(this.getClass().getName(), e);
+        return new ResponseEntity<ApiMessageVO>(ApiMessageVO.builder()
+                .respCode("BIZ_012")
+                .respBody(respBody)
+                .respMsg("메일 권한인증 실패입니다.").build(), HttpStatus.OK);
     }
 
 
