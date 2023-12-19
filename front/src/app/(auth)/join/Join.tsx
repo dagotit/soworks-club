@@ -94,7 +94,6 @@ const Join = () => {
     try {
       // const decodedServiceKey = encodeURIComponent(process.env.CONFIRM_COMPANY_NUM_DE_KEY);
       const key = process.env.CONFIRM_COMPANY_NUM_IN_KEY;
-      console.log(key);
       const response = await axios.post(
         `https://api.odcloud.kr/api/nts-businessman/v1/status?serviceKey=${key}`,
         { businesses: [
@@ -120,7 +119,6 @@ const Join = () => {
 
       // 성공적인 응답 처리
       let apiData = response.data.data[0];
-      console.log('response.data', response.data);
       if (apiData.b_stt_cd === "01") {
         setIsValid(true);
       } else {

@@ -8,6 +8,12 @@ import React, { useEffect, useState } from 'react';
 import { useGetLogoImg, usePostLogin } from '@/hooks/useAuth';
 import { APIResponse } from '@/services/api';
 import { useTokenStore } from '@/store/useLogin';
+import BgMoon from "@/components/bgBox/Bg";
+import { Inter, Mochiy_Pop_One } from 'next/font/google';
+
+
+const MochiyPopOne = Mochiy_Pop_One({weight: ["400"], subsets: ['latin']});
+const inter = Inter({ subsets: ['latin'] });
 
 const Login = () => {
   const router = useRouter();
@@ -141,13 +147,10 @@ const Login = () => {
 
   return (
     <main className={styles.main}>
-      <h1 className={styles.title}>로그인</h1>
-      <div className={styles.logoimgWrap}>
-        <img src={`https://source.unsplash.com/random`} alt="로고이미지" />
-      </div>
-      <h2 className={styles.name}>다가치</h2>
+      <BgMoon />
+      <h1 className={styles.titleText}><span>DAGACHI</span></h1>
       <input
-        className={styles.input}
+        className={`${styles.input} ${emailValidation ? styles.inputFail : ''}`}
         type="email"
         placeholder="회사 e-mail을 입력해주세요."
         value={email}
@@ -157,7 +160,7 @@ const Login = () => {
         <p className={styles.errText}>이메일 형식이 올바르지 않습니다.</p>
       )}
       <input
-        className={styles.input}
+        className={`${styles.input} ${passwordValidation ? styles.inputFail : ''}`}
         type="password"
         placeholder="password를 입력해주세요."
         value={password}
@@ -176,17 +179,21 @@ const Login = () => {
       >
         비밀번호 찾기
       </Link>
-      <button className={styles.loginBtn} onClick={handlerLoginBtn}>
-        로그인
+      <button className={`${styles.loginBtn} ${MochiyPopOne.className}`} onClick={handlerLoginBtn}>
+        LOGIN
+        <span />
+        <span />
+        <span />
+        <span />
       </button>
-      <p className={styles.pText}>대표님! 다가치 가 처음이신가요?</p>
+      <p className={`${styles.pText} ${inter.className}`}>대표님! 다가치 가 처음이신가요?</p>
       <Link
         className={styles.signUp}
         href={{
           pathname: '/join',
         }}
       >
-        대표자 회원가입
+        Oner Sign Up
       </Link>
       <p className={`${styles.pText} ${styles.color}`}>
         직원들은 대표님이 초대해주셔야 합니다!
