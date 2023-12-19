@@ -1,28 +1,33 @@
 .main {
     display: flex;
-    flex-wrap: wrap;
+    flex-flow: column nowrap;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 100%;
-    padding: 50px 0;
-}
-.title {
-    display: none;
-}
-.logoimgWrap {
-    width: 44.7vw;
-    height: 44.7vw;
-    border-radius: 50%;
+    position: relative;
     overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #d9d9d9;
+    width: 100%;
 }
 
-.logoimgWrap > img {
-    width: 150%;
+h1.titleText {
+  font-size: 55px;
+  text-align: center;
+  font-weight: bold;
+  color: #fff;
+  margin-top: 100px;
+  margin-bottom: 30px;
+}
+
+.titleText {
+  position: relative;
+}
+
+.titleText span {
+  text-shadow: 0 -1px 0 #fff, 0 1px 10px rgba(255, 255, 255, 0.6),
+    0 6px 1px rgba(255, 255, 255, 0.1), 0 0 5px rgba(255, 255, 255, 0.2),
+    0 1px 3px rgba(255, 255, 255, 0.3), 0 3px 5px rgba(255, 255, 255, 0.2),
+    0 7px 10px rgba(255, 255, 255, 0.25), 0 15px 10px rgba(255, 255, 255, 0.2),
+    0 25px 15px rgba(255, 255, 255, 0.15);
 }
 
 .name{
@@ -33,50 +38,156 @@
 .input {
     width: 70vw;
     padding: 15px 10px;
-    background-color: #eee;
-    border: none;
+    background-color: transparent;
+    border: 1px solid #fff;
     border-radius: 7px;
     margin-bottom: 10px;
-    color: #b3b3b3;
+    color: #fff;
+    box-shadow: 0 -1px 0 #fff, 0 1px 10px rgba(255, 255, 255, 0.6),
+    0 6px 1px rgba(255, 255, 255, 0.1), 0 0 5px rgba(255, 255, 255, 0.2),
+    0 1px 3px rgba(255, 255, 255, 0.3), 0 3px 5px rgba(255, 255, 255, 0.2),
+    0 7px 10px rgba(255, 255, 255, 0.25), 0 15px 10px rgba(255, 255, 255, 0.2),
+    0 25px 15px rgba(255, 255, 255, 0.15);
+}
+.input:focus {
+  outline: none;
+}
+.input.inputFail {
+  border: 1px solid #f00;
+  box-shadow: 0 -1px 0 #f00, 0 1px 10px rgba(255, 0, 0, 0.6),
+  0 6px 1px rgba(255, 0, 0, 0.1), 0 0 5px rgba(255, 0, 0, 0.2),
+  0 1px 3px rgba(255, 0, 0, 0.3), 0 3px 5px rgba(255, 0, 0, 0.2),
+  0 7px 10px rgba(255, 0, 0, 0.25), 0 15px 10px rgba(255, 0, 0, 0.2),
+  0 25px 15px rgba(255, 0, 0, 0.15);
 }
 .input::placeholder {
-    color:  #b3b3b3;
+    color:  #fff;
 }
 
 .errText{
     font-size: 14px;
     margin-bottom: 15px;
-    color: #b60808;
+    color: #fff;
     padding: 0 10px;
 }
 .passwordFind {
     margin: 15px 0 10px;
     font-size: 16px;
+    color: #fff;
+    text-decoration: none;
 }
 .passwordFind:hover,.passwordFind:active {
     color: #A1A1A1;
 }
 .loginBtn {
-    width: 50vw;
-    border-radius: 9px;
-    background-color: #136a8f;
+    width: 220px;
+    background-color: #3529fb;
     border: none;
     font-size: 16px;
-    padding: 18px 0;
+    height: 60px;
+    line-height: 60px;
+    color: #fff;
     cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+.loginBtn span {
+    position: absolute;
+    display: block;
+}
+.loginBtn span:nth-child(1) {
+    height: 3px;
+    width: 220px;
+    top: 0px;
+    left:-220px;
+    background: linear-gradient(to right, rgba(0,0,0,0), #fff);
+    border-top-right-radius: 1px;
+    border-bottom-right-radius: 1px;
+    animation: span1 2s linear infinite;
+    animation-delay: 1s;
+}
+@keyframes span1{
+    0%{
+        left:-220px
+    }
+    100%{
+        left:220px;
+    }
+}
+.loginBtn span:nth-child(2){
+    height: 60px;
+    width: 3px;
+    top:-60px;
+    right:0px;
+    background: linear-gradient(to bottom, rgba(0,0,0,0), #fff);
+    border-bottom-left-radius: 1px;
+    border-bottom-right-radius: 1px;
+    animation: span2 2s linear infinite;
+    animation-delay: 2s;
+}
+@keyframes span2{
+    0%{
+        top:-60px;
+    }
+    100%{
+        top:60px;
+    }
+}
+.loginBtn span:nth-child(3){
+    height:3px;
+    width:220px;
+    right:-220px;
+    bottom: 0px;
+    background: linear-gradient(to left, rgba(0,0,0,0), #fff);
+    border-top-left-radius: 1px;
+    border-bottom-left-radius: 1px;
+    animation: span3 2s linear infinite;
+    animation-delay: 3s;
+}
+@keyframes span3{
+    0%{
+        right:-220px;
+    }
+    100%{
+        right: 220px;
+    }
+}
+
+.loginBtn span:nth-child(4){
+    height:60px;
+    width:3px;
+    bottom:-60px;
+    left:0px;
+    background: linear-gradient(to top, rgba(0,0,0,0), #fff);
+    border-top-right-radius: 1px;
+    border-top-left-radius: 1px;
+    animation: span4 2s linear infinite;
+    animation-delay: 4s;
+}
+@keyframes span4{
+    0%{
+        bottom: -60px;
+    }
+    100%{
+        bottom:60px;
+    }
 }
 .signUp{
     text-align: center;
-    width: 50vw;
+    width: 220px;
+    height: 60px;
     border-radius: 9px;
-    background-color: #04A2BF;
+    background-color: #ad17ff;
     border: none;
     font-size: 16px;
-    padding: 18px 0;
+    line-height: 60px;
+    color: #fff;
+    text-decoration: none;
 }
 .pText{
     font-size: 14px;
     margin: 25px 0 5px;
+    color: #fff;
 }
 .color{
     color: #A1A1A1;

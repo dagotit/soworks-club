@@ -1,0 +1,455 @@
+
+.frame {
+  overflow: hidden;
+  opacity: 0.6;
+  z-index: -9999;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 500px;
+  margin: auto;
+}
+.frame .wolf {
+  background-image: url(../../../public/images/wolf.png);
+  width: 100vw;
+  height: 209px;
+  position: absolute;
+  bottom: 75px;
+  background-position: center 0px;
+}
+.frame .moon {
+  border-radius: 50%;
+  background-color: #FFD453;
+  box-shadow: 0 0 30px 25px rgba(255, 212, 83, 0.1), 0 0 30px 50px rgba(255, 212, 83, 0.1), 0 0 20px 75px rgba(255, 212, 83, 0.09), 0 0 200px rgba(255, 212, 83, 0.5);
+}
+.frame .moon:after {
+  background-image: url(https://raw.githubusercontent.com/interaminense/repository-codepen/master/wolf/imgs/bgMoon.png);
+  content: "";
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  border-radius: 50%;
+  background-size: 100%;
+  opacity: 0.3;
+  box-shadow: 0 0 60px inset;
+}
+.frame .constellation {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}
+.frame .constellation .star {
+  background-color: #fff;
+  box-shadow: 0 0 5px 8px rgba(255, 255, 255, 0.03);
+  border-radius: 50%;
+  position: absolute;
+}
+.frame .constellation.stars-a {
+  animation: rotate360 200s linear infinite;
+}
+.frame .constellation.stars-b {
+  animation: rotate360 100s linear infinite;
+}
+
+
+.moon {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 200px;
+  height: 200px;
+  margin: auto;
+}
+
+.stars-a .star:nth-child(1) {
+  top: 169px;
+  left: 297px;
+  width: 3px;
+  height: 3px;
+  animation: blink 0.1s infinite;
+}
+.stars-a .star:nth-child(2) {
+  top: 228px;
+  left: 434px;
+  width: 2px;
+  height: 2px;
+  animation: blink 0.2s infinite;
+}
+.stars-a .star:nth-child(3) {
+  top: 171px;
+  left: 369px;
+  width: 2px;
+  height: 2px;
+  animation: blink 0.3s infinite;
+}
+.stars-a .star:nth-child(4) {
+  top: 152px;
+  left: 21px;
+  width: 1px;
+  height: 1px;
+  animation: blink 0.4s infinite;
+}
+.stars-a .star:nth-child(5) {
+  top: 234px;
+  left: 436px;
+  width: 1px;
+  height: 1px;
+  animation: blink 0.5s infinite;
+}
+.stars-a .star:nth-child(6) {
+  top: 381px;
+  left: 184px;
+  width: 1px;
+  height: 1px;
+  animation: blink 0.6s infinite;
+}
+.stars-a .star:nth-child(7) {
+  top: 492px;
+  left: 106px;
+  width: 2px;
+  height: 2px;
+  animation: blink 0.7s infinite;
+}
+.stars-a .star:nth-child(8) {
+  top: 233px;
+  left: 190px;
+  width: 2px;
+  height: 2px;
+  animation: blink 0.8s infinite;
+}
+.stars-a .star:nth-child(9) {
+  top: 55px;
+  left: 290px;
+  width: 3px;
+  height: 3px;
+  animation: blink 0.9s infinite;
+}
+.stars-a .star:nth-child(10) {
+  top: 33px;
+  left: 497px;
+  width: 1px;
+  height: 1px;
+  animation: blink 1s infinite;
+}
+.stars-a .star:nth-child(11) {
+  top: 274px;
+  left: 6px;
+  width: 2px;
+  height: 2px;
+  animation: blink 1.1s infinite;
+}
+.stars-a .star:nth-child(12) {
+  top: 386px;
+  left: 143px;
+  width: 1px;
+  height: 1px;
+  animation: blink 1.2s infinite;
+}
+.stars-a .star:nth-child(13) {
+  top: 246px;
+  left: 443px;
+  width: 3px;
+  height: 3px;
+  animation: blink 1.3s infinite;
+}
+.stars-a .star:nth-child(14) {
+  top: 387px;
+  left: 484px;
+  width: 1px;
+  height: 1px;
+  animation: blink 1.4s infinite;
+}
+.stars-a .star:nth-child(15) {
+  top: 89px;
+  left: 413px;
+  width: 3px;
+  height: 3px;
+  animation: blink 1.5s infinite;
+}
+.stars-a .star:nth-child(16) {
+  top: 202px;
+  left: 204px;
+  width: 1px;
+  height: 1px;
+  animation: blink 1.6s infinite;
+}
+.stars-a .star:nth-child(17) {
+  top: 290px;
+  left: 23px;
+  width: 1px;
+  height: 1px;
+  animation: blink 1.7s infinite;
+}
+.stars-a .star:nth-child(18) {
+  top: 33px;
+  left: 197px;
+  width: 3px;
+  height: 3px;
+  animation: blink 1.8s infinite;
+}
+.stars-a .star:nth-child(19) {
+  top: 336px;
+  left: 347px;
+  width: 2px;
+  height: 2px;
+  animation: blink 1.9s infinite;
+}
+.stars-a .star:nth-child(20) {
+  top: 204px;
+  left: 327px;
+  width: 3px;
+  height: 3px;
+  animation: blink 2s infinite;
+}
+.stars-a .star:nth-child(21) {
+  top: 238px;
+  left: 39px;
+  width: 3px;
+  height: 3px;
+  animation: blink 2.1s infinite;
+}
+.stars-a .star:nth-child(22) {
+  top: 466px;
+  left: 20px;
+  width: 1px;
+  height: 1px;
+  animation: blink 2.2s infinite;
+}
+.stars-a .star:nth-child(23) {
+  top: 363px;
+  left: 287px;
+  width: 2px;
+  height: 2px;
+  animation: blink 2.3s infinite;
+}
+.stars-a .star:nth-child(24) {
+  top: 226px;
+  left: 72px;
+  width: 1px;
+  height: 1px;
+  animation: blink 2.4s infinite;
+}
+.stars-a .star:nth-child(25) {
+  top: 92px;
+  left: 330px;
+  width: 2px;
+  height: 2px;
+  animation: blink 2.5s infinite;
+}
+.stars-a .star:nth-child(26) {
+  top: 492px;
+  left: 124px;
+  width: 2px;
+  height: 2px;
+  animation: blink 2.6s infinite;
+}
+
+.stars-b .star:nth-child(1) {
+  top: 357px;
+  left: 459px;
+  width: 3px;
+  height: 3px;
+  animation: blink 0.1s infinite;
+}
+.stars-b .star:nth-child(2) {
+  top: 435px;
+  left: 411px;
+  width: 3px;
+  height: 3px;
+  animation: blink 0.2s infinite;
+}
+.stars-b .star:nth-child(3) {
+  top: 62px;
+  left: 12px;
+  width: 1px;
+  height: 1px;
+  animation: blink 0.3s infinite;
+}
+.stars-b .star:nth-child(4) {
+  top: 167px;
+  left: 106px;
+  width: 3px;
+  height: 3px;
+  animation: blink 0.4s infinite;
+}
+.stars-b .star:nth-child(5) {
+  top: 428px;
+  left: 408px;
+  width: 2px;
+  height: 2px;
+  animation: blink 0.5s infinite;
+}
+.stars-b .star:nth-child(6) {
+  top: 67px;
+  left: 360px;
+  width: 2px;
+  height: 2px;
+  animation: blink 0.6s infinite;
+}
+.stars-b .star:nth-child(7) {
+  top: 132px;
+  left: 280px;
+  width: 2px;
+  height: 2px;
+  animation: blink 0.7s infinite;
+}
+.stars-b .star:nth-child(8) {
+  top: 393px;
+  left: 37px;
+  width: 3px;
+  height: 3px;
+  animation: blink 0.8s infinite;
+}
+.stars-b .star:nth-child(9) {
+  top: 132px;
+  left: 431px;
+  width: 3px;
+  height: 3px;
+  animation: blink 0.9s infinite;
+}
+.stars-b .star:nth-child(10) {
+  top: 204px;
+  left: 172px;
+  width: 2px;
+  height: 2px;
+  animation: blink 1s infinite;
+}
+.stars-b .star:nth-child(11) {
+  top: 80px;
+  left: 125px;
+  width: 3px;
+  height: 3px;
+  animation: blink 1.1s infinite;
+}
+.stars-b .star:nth-child(12) {
+  top: 307px;
+  left: 307px;
+  width: 1px;
+  height: 1px;
+  animation: blink 1.2s infinite;
+}
+.stars-b .star:nth-child(13) {
+  top: 429px;
+  left: 347px;
+  width: 3px;
+  height: 3px;
+  animation: blink 1.3s infinite;
+}
+.stars-b .star:nth-child(14) {
+  top: 415px;
+  left: 181px;
+  width: 2px;
+  height: 2px;
+  animation: blink 1.4s infinite;
+}
+.stars-b .star:nth-child(15) {
+  top: 92px;
+  left: 477px;
+  width: 1px;
+  height: 1px;
+  animation: blink 1.5s infinite;
+}
+.stars-b .star:nth-child(16) {
+  top: 241px;
+  left: 312px;
+  width: 1px;
+  height: 1px;
+  animation: blink 1.6s infinite;
+}
+.stars-b .star:nth-child(17) {
+  top: 72px;
+  left: 467px;
+  width: 1px;
+  height: 1px;
+  animation: blink 1.7s infinite;
+}
+.stars-b .star:nth-child(18) {
+  top: 494px;
+  left: 297px;
+  width: 3px;
+  height: 3px;
+  animation: blink 1.8s infinite;
+}
+.stars-b .star:nth-child(19) {
+  top: 432px;
+  left: 349px;
+  width: 2px;
+  height: 2px;
+  animation: blink 1.9s infinite;
+}
+.stars-b .star:nth-child(20) {
+  top: 198px;
+  left: 229px;
+  width: 2px;
+  height: 2px;
+  animation: blink 2s infinite;
+}
+.stars-b .star:nth-child(21) {
+  top: 79px;
+  left: 370px;
+  width: 2px;
+  height: 2px;
+  animation: blink 2.1s infinite;
+}
+.stars-b .star:nth-child(22) {
+  top: 117px;
+  left: 129px;
+  width: 3px;
+  height: 3px;
+  animation: blink 2.2s infinite;
+}
+.stars-b .star:nth-child(23) {
+  top: 213px;
+  left: 89px;
+  width: 3px;
+  height: 3px;
+  animation: blink 2.3s infinite;
+}
+.stars-b .star:nth-child(24) {
+  top: 118px;
+  left: 440px;
+  width: 1px;
+  height: 1px;
+  animation: blink 2.4s infinite;
+}
+.stars-b .star:nth-child(25) {
+  top: 404px;
+  left: 121px;
+  width: 3px;
+  height: 3px;
+  animation: blink 2.5s infinite;
+}
+.stars-b .star:nth-child(26) {
+  top: 340px;
+  left: 98px;
+  width: 1px;
+  height: 1px;
+  animation: blink 2.6s infinite;
+}
+
+@keyframes rotate360 {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes blink {
+  0% {
+    box-shadow: 0;
+  }
+  50% {
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
+  }
+  100% {
+    box-shadow: 0;
+  }
+}
