@@ -29,11 +29,23 @@ const devNextConfig = {
     ];
   },
   trailingSlash: true,
+  experimental: {
+    appDir: true,
+  },
+  compiler: {
+    styledComponents: true,
+  },
 };
 
 const nextConfig = {
   reactStrictMode: true, // 애플리케이션 내에서 문제가 발생할 수 있는 부분에 대해 경고를 알려주는 기능
   swcMinify: true, //  Minifying 역할
+  experimental: {
+    appDir: true,
+  },
+  compiler: {
+    styledComponents: true,
+  },
 };
 
 module.exports = (phase, { defaultConfig }) => {

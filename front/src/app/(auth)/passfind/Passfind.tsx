@@ -8,6 +8,7 @@ import useDidMountEffect from '@/utils/useDidMountEffect';
 import { useRouter } from 'next/navigation';
 import { useDialogStore } from '@/store/useDialog';
 import { useGetEmailCodeVerfiy, usePostCreditsEmail } from '@/hooks/useAuth';
+import BgMoon from '@/components/bgBox/Bg';
 
 let intervalId: undefined | NodeJS.Timeout = undefined;
 const CODEEXPIRED = 3;
@@ -87,6 +88,7 @@ const PassFind = () => {
           if (!isEmailCk) {
             // 인증코드 확인버튼을 누르지 못 했을 경우만 해당된다.
             setCodeExpired(false);
+            setCkEmail('');
           }
           clearTimeout(timeOut);
         }, 2000);
@@ -125,6 +127,7 @@ const PassFind = () => {
     }
     creditsEmail.mutate(email, {
       onSuccess: () => {
+        setCkEmail(email);
         handleTimeInterval();
         setCodeExpired(true);
       },
@@ -149,15 +152,31 @@ const PassFind = () => {
     if (!emailValidationCheck()) {
       return;
     }
+    if (email !== ckEmail) {
+      open(
+        'alert',
+        '패스워드 찾기',
+        '인증 이메일이 동일하지 않습니다. <br /> 다시 확인해주세요.',
+      );
+      return;
+    }
     emailCodeVerify.mutate(
       { email, code },
       {
-        onSuccess: () => {
-          console.log('이메일 인증성공');
-          clearTime();
-          setCodeExpired(false);
-          // 이메일 인증 성공
-          setIsEmailCk(true);
+        onSuccess: (data) => {
+          if (data?.respCode === '00') {
+            clearTime();
+            setCodeExpired(false);
+            setCkEmail('');
+            // 이메일 인증 성공
+            setIsEmailCk(true);
+            return;
+          }
+          if (data?.respMsg) {
+            open('alert', '패스워드 찾기', data?.respMsg);
+            return;
+          }
+          open('alert', '패스워드 찾기', '인증코드가 일치하지 않습니다.');
         },
         onError: (error: any) => {
           console.log(error);
@@ -253,6 +272,7 @@ const PassFind = () => {
 
   return (
     <main>
+      <BgMoon />
       <h1 className={styles.title}>패스워드 찾기</h1>
       {step === 1 && (
         <div className={styles.contents}>
@@ -262,6 +282,7 @@ const PassFind = () => {
               className={styles.input}
               type="email"
               placeholder="회사 e-mail을 입력해주세요."
+              disabled={isEmailCk}
               value={email}
               onChange={handleChangeEmail}
             />
