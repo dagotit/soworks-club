@@ -17,7 +17,10 @@ const Dialog = () => {
             dialogList.map((element, idx) => (
               <div key={idx} className={styles.contentsWrap}>
                 <p className={styles.title}>{element.title}</p>
-                <p className={styles.text}>{element.contents}</p>
+                <p
+                  className={styles.text}
+                  dangerouslySetInnerHTML={{ __html: element.contents }}
+                ></p>
                 <div className={styles.btnWrap}>
                   <button
                     className={`${styles.btn} ${

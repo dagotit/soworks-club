@@ -5,14 +5,13 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useDialogStore } from '@/store/useDialog';
 import React, { useEffect, useState } from 'react';
-import { useGetLogoImg, usePostLogin } from '@/hooks/useAuth';
+import { usePostLogin } from '@/hooks/useAuth';
 import { APIResponse } from '@/services/api';
 import { useTokenStore } from '@/store/useLogin';
-import BgMoon from "@/components/bgBox/Bg";
+import BgMoon from '@/components/bgBox/Bg';
 import { Inter, Mochiy_Pop_One } from 'next/font/google';
 
-
-const MochiyPopOne = Mochiy_Pop_One({weight: ["400"], subsets: ['latin']});
+const MochiyPopOne = Mochiy_Pop_One({ weight: ['400'], subsets: ['latin'] });
 const inter = Inter({ subsets: ['latin'] });
 
 const Login = () => {
@@ -23,7 +22,6 @@ const Login = () => {
   const [passwordValidation, setPasswordValidation] = useState(false);
   const { open, allClose } = useDialogStore();
   const { accessToken } = useTokenStore();
-  const getLogoImg = useGetLogoImg();
   const postLogin = usePostLogin();
   const EMAILLENGTH = 50;
   // prettier-ignore
@@ -148,7 +146,9 @@ const Login = () => {
   return (
     <main className={styles.main}>
       <BgMoon />
-      <h1 className={styles.titleText}><span>DAGACHI</span></h1>
+      <h1 className={styles.titleText}>
+        <span>DAGACHI</span>
+      </h1>
       <input
         className={`${styles.input} ${emailValidation ? styles.inputFail : ''}`}
         type="email"
@@ -160,7 +160,9 @@ const Login = () => {
         <p className={styles.errText}>이메일 형식이 올바르지 않습니다.</p>
       )}
       <input
-        className={`${styles.input} ${passwordValidation ? styles.inputFail : ''}`}
+        className={`${styles.input} ${
+          passwordValidation ? styles.inputFail : ''
+        }`}
         type="password"
         placeholder="password를 입력해주세요."
         value={password}
@@ -179,14 +181,19 @@ const Login = () => {
       >
         비밀번호 찾기
       </Link>
-      <button className={`${styles.loginBtn} ${MochiyPopOne.className}`} onClick={handlerLoginBtn}>
+      <button
+        className={`${styles.loginBtn} ${MochiyPopOne.className}`}
+        onClick={handlerLoginBtn}
+      >
         LOGIN
         <span />
         <span />
         <span />
         <span />
       </button>
-      <p className={`${styles.pText} ${inter.className}`}>대표님! 다가치 가 처음이신가요?</p>
+      <p className={`${styles.pText} ${inter.className}`}>
+        대표님! 다가치 가 처음이신가요?
+      </p>
       <Link
         className={styles.signUp}
         href={{
