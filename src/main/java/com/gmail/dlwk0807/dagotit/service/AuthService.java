@@ -30,7 +30,6 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
-    private final StringRedisTemplate redisTemplate;
 
     @Transactional
     public MemberResponseDto signup(MemberRequestDto memberRequestDto) {

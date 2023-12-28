@@ -24,8 +24,8 @@ public class MailController {
 
     @PostMapping("/send-certification")
     public ApiMessageVO sendCertificationNumber(@Validated @RequestBody EmailCertificationRequest request)
-            throws MessagingException, NoSuchAlgorithmException {
-        mailSendService.sendEmailForCertification(request.getEmail());
+            throws MessagingException {
+        mailSendService.sendEmailForCertification(request.getEmail(), request.getName());
 
         return ApiMessageVO.builder()
                 .respMsg(OK_RESP_MSG)
@@ -40,6 +40,21 @@ public class MailController {
             @RequestParam(name = "certificationNumber") String certificationNumber
     ) {
         mailVerifyService.verifyEmail(email, certificationNumber);
+
+        return ApiMessageVO.builder()
+                .respMsg(OK_RESP_MSG)
+                .respBody("")
+                .respCode(OK_RESP_CODE)
+                .build();
+    }
+
+    @GetMapping("/verify-update-password")
+    public ApiMessageVO verifyCertificationNumberAndUpdatePassword(
+            @RequestParam(name = "email") String email,
+            @RequestParam(name = "certificationNumber") String certificationNumber
+    ) throws MessagingException {
+
+        mailVerifyService.verifyEmailAndUpdatePassword(email, certificationNumber);
 
         return ApiMessageVO.builder()
                 .respMsg(OK_RESP_MSG)

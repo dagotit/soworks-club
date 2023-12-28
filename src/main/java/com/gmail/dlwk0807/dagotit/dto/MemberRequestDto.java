@@ -14,15 +14,21 @@ public class MemberRequestDto {
     private String email;
     private String password;
     private String address;
-    private String bizno;
+    private String bizNo;
+    private String name;
+    private String companyName;
+    private String companyDate;
 
     public Member toMember(PasswordEncoder passwordEncoder) {
         return Member.builder()
                 .email(email)
                 .password(passwordEncoder.encode(password))
                 .address(address)
-                .bizno(bizno)
-                .authority(Authority.ROLE_USER)
+                .bizNo(bizNo)
+                .name(name)
+                .companyName(companyName)
+                .companyDate(companyDate)
+                .authority(Authority.ROLE_ADMIN)
                 .build();
     }
 

@@ -193,6 +193,17 @@ public class CommonExceptionHandler {
                 .respMsg("메일 권한인증 실패입니다.").build(), HttpStatus.OK);
     }
 
+    @ExceptionHandler(MemberCheckException.class)
+    public ResponseEntity<?> mailAuthenticationException(MemberCheckException e) {
+        String respBody = "";
+        respBody = e.getMessage();
+        log.error(this.getClass().getName(), e);
+        return new ResponseEntity<ApiMessageVO>(ApiMessageVO.builder()
+                .respCode("BIZ_013")
+                .respBody(respBody)
+                .respMsg("회원정보가 존재하지 않습니다.").build(), HttpStatus.OK);
+    }
+
 
     private boolean getProfile() {
         try {

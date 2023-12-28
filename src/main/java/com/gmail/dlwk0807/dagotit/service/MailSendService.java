@@ -1,27 +1,44 @@
 package com.gmail.dlwk0807.dagotit.service;
 
 import com.gmail.dlwk0807.dagotit.core.exception.DuplicationEmailSenderException;
+import com.gmail.dlwk0807.dagotit.core.exception.MemberCheckException;
 import com.gmail.dlwk0807.dagotit.dto.EmailCertificationResponse;
+import com.gmail.dlwk0807.dagotit.entity.Member;
 import com.gmail.dlwk0807.dagotit.repository.CertificationNumberDao;
+import com.gmail.dlwk0807.dagotit.repository.MemberRepository;
+import io.micrometer.common.util.StringUtils;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.security.NoSuchAlgorithmException;
+import org.springframework.transaction.annotation.Transactional;
 
 import static com.gmail.dlwk0807.dagotit.util.CommonUtil.createCode;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class MailSendService {
 
     private final JavaMailSender mailSender;
     private final CertificationNumberDao certificationNumberDao;
+    private final MemberRepository memberRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public EmailCertificationResponse sendEmailForCertification(String email) throws MessagingException {
+    public EmailCertificationResponse sendEmailForCertification(String email, String name) throws MessagingException {
+
+        /**
+         * 이메일 인증 사용 2군데
+         * 1. 회원가입 이메일 인증
+         *      email만 넘김
+         * 2. 비밀번호 변경 이메일 인증
+         *      비밀번호 변경 시에는 회원여부 판단하기 위해 email, name 넘김
+         * 두가지 경우를 checkNameBeforeUpdatePassword 에서  name null 체크로 구분.
+         */
+        checkNameBeforeUpdatePassword(email, name);
 
         if (certificationNumberDao.hasKey(email)) {
             throw new DuplicationEmailSenderException();
@@ -31,6 +48,14 @@ public class MailSendService {
         sendMail(email, certificationNumber);
         certificationNumberDao.saveCertificationNumber(email, certificationNumber);
         return new EmailCertificationResponse(email, certificationNumber);
+    }
+
+    private void checkNameBeforeUpdatePassword(String email, String name) {
+        if (StringUtils.isNotBlank(name)) {
+            if (!memberRepository.existsByEmailAndName(email, name)) {
+                throw new MemberCheckException();
+            }
+        }
     }
 
     private void sendMail(String email, String content) throws MessagingException {
@@ -51,6 +76,39 @@ public class MailSendService {
         msgg+= "<h3 style='color:blue;'>인증 코드입니다.</h3>";
         msgg+= "<div style='font-size:130%'>";
         msgg+= "CODE : <strong>";
+        msgg+= content+"</strong><div><br/> ";
+        msgg+= "</div>";
+        helper.setText(msgg, true);//내용
+
+        mailSender.send(mimeMessage);
+    }
+
+    public void sendEmailForUpdatePassword(String email) throws MessagingException {
+        String password = createCode();
+        sendMailRandomPassword(email, password);
+        Member member = memberRepository.findByEmail(email).orElseThrow();
+        member.setPassword(passwordEncoder.encode(password));
+
+    }
+
+    private void sendMailRandomPassword(String email, String content) throws MessagingException {
+        MimeMessage mimeMessage = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage);
+        helper.setTo(email);
+        helper.setSubject("다가치 변경 패스워드 발송 메일입니다.");
+
+        String msgg="";
+        msgg+= "<div style='margin:20px;'>";
+        msgg+= "<h1> 안녕하세요 다가치입니다. </h1>";
+        msgg+= "<br>";
+        msgg+= "<p>변경된 패스워드는 다음과 같습니다.<p>";
+        msgg+= "<br>";
+        msgg+= "<p>감사합니다.<p>";
+        msgg+= "<br>";
+        msgg+= "<div align='center' style='border:1px solid black; font-family:verdana';>";
+        msgg+= "<h3 style='color:blue;'>패스워드 입니다.</h3>";
+        msgg+= "<div style='font-size:130%'>";
+        msgg+= "PASSWORD : <strong>";
         msgg+= content+"</strong><div><br/> ";
         msgg+= "</div>";
         helper.setText(msgg, true);//내용

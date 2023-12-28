@@ -44,6 +44,7 @@ public class SecurityConfig {
                                 , new AntPathRequestMatcher("/auth/**")
                                 , new AntPathRequestMatcher("/api/v1/mails/**")
                                 ).permitAll();
+                a.requestMatchers(new AntPathRequestMatcher("/api/member/**")).hasRole("ADMIN");
                 a.anyRequest().authenticated();
             })
             // h2-console 을 위한 설정을 추가
