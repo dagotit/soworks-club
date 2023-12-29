@@ -16,6 +16,16 @@ interface EmailCodeVerifyType {
   email: string;
   code: string;
 }
+
+interface  SignUpType {
+  email: string;
+  password: string;
+  address: string;
+  corporateRegiNumber: string;
+  onerName: string;
+  companyName: string;
+  companyDate: string;
+}
 /**
  * @function
  * 로고 이미지 가져오기
@@ -105,6 +115,31 @@ export const apiGetEmailCodeVerify = async (
     });
   } catch (e) {
     if (axios.isAxiosError(e) && e.response) {
+      throw e.response.data;
+    }
+  }
+};
+
+/**
+ * @function
+ * 회원가입 요청
+ */
+export const apiSignup = async (
+  data: SignUpType,
+): Promise<any> => {
+  try {
+    return await http.post('/auth/signup', {
+      email: data.email, // 회사 이메일
+      password: data.password, // 비밀번호
+      address: data.address, // 주소
+      bizno: data.corporateRegiNumber, // 사업자 번호
+      name: data.onerName, // 대표자 성명
+      companyName: data.companyName, // 회사 명
+      companyDate: data.companyDate, // 회사 설립날짜
+    });
+  } catch (e) {
+    if (axios.isAxiosError(e) && e.response) {
+      console.log('회원가입 실패:::', e.response);
       throw e.response.data;
     }
   }

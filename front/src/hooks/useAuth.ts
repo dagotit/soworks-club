@@ -3,7 +3,7 @@ import {
   apiGetEmailCodeVerify,
   apiLogin,
   apiLogout,
-  apiPostCreditsEmail,
+  apiPostCreditsEmail, apiSignup,
   getLogoImg,
 } from '@/services/authService';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -61,3 +61,10 @@ export const useGetLogoImg = () => {
     staleTime: Infinity,
   });
 };
+
+export const usePostSignup = () => {
+  return useMutation({
+    mutationKey: ['post-signup'],
+    mutationFn: apiSignup,
+  });
+}
