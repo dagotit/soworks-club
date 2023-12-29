@@ -1,5 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import { useDaumPostcodePopup } from 'react-daum-postcode';
+import { Jua } from 'next/font/google';
+
+const jua = Jua({weight: ["400"], subsets: ['latin']});
 
 const AddressSearch = ({ onSelectAddress }) => {
   const scriptUrl= 'https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js';
@@ -31,7 +34,7 @@ const AddressSearch = ({ onSelectAddress }) => {
   };
 
   return (
-    <button type='button' onClick={handleClick}>
+    <button className={jua.className} type='button' onClick={handleClick}>
       우편번호 검색
     </button>
   );
