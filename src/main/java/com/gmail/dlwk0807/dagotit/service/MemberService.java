@@ -1,10 +1,15 @@
 package com.gmail.dlwk0807.dagotit.service;
 
+import com.gmail.dlwk0807.dagotit.dto.MemberDeleteDto;
 import com.gmail.dlwk0807.dagotit.dto.MemberResponseDto;
+import com.gmail.dlwk0807.dagotit.dto.MemberUpdateDto;
 import com.gmail.dlwk0807.dagotit.dto.RequestPassword;
+import com.gmail.dlwk0807.dagotit.entity.Authority;
 import com.gmail.dlwk0807.dagotit.entity.Member;
 import com.gmail.dlwk0807.dagotit.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,5 +42,20 @@ public class MemberService {
         Member member = memberRepository.findById(id).orElseThrow();
         member.setPassword(passwordEncoder.encode(requestPassword.getUpdatePassword()));
 
+    }
+
+    public Long memberUpdate(MemberUpdateDto memberUpdateDto) {
+        Long id = getCurrentMemberId();
+        Member member = memberRepository.findById(id).orElseThrow();
+        member.update(memberUpdateDto);
+        return member.getId();
+    }
+
+    public void memberDelete(MemberDeleteDto memberDeleteDto, User user) {
+        boolean adminYn = user.getAuthorities().stream().anyMatch(v -> Authority.ROLE_ADMIN.equals(Authority.valueOf(v.getAuthority())));
+        if (adminYn) {
+            Member member = memberRepository.findByEmail(memberDeleteDto.getEmail()).orElseThrow();
+            memberRepository.delete(member);
+        }
     }
 }
