@@ -7,7 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 @Table(name = "MEMBER")
 @Entity
-public class Member {
+public class Member extends BaseEntity {
 
     @Id
     @Column(name = "id")

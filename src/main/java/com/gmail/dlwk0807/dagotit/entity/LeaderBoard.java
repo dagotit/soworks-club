@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Table(name = "LEADER_BOARD")
 @Entity
-public class LeaderBoard {
+public class LeaderBoard extends BaseEntity {
 
     @Id
     @Column(name = "id")

@@ -19,9 +19,40 @@ public class QGroup extends EntityPathBase<Group> {
 
     public static final QGroup group = new QGroup("group1");
 
+    public final QBaseEntity _super = new QBaseEntity(this);
+
+    public final StringPath attachId = createString("attachId");
+
+    public final StringPath attendCount = createString("attendCount");
+
+    public final StringPath category = createString("category");
+
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
+
+    public final StringPath description = createString("description");
+
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
+    public final StringPath memberId = createString("memberId");
+
     public final StringPath name = createString("name");
+
+    public final StringPath picture = createString("picture");
+
+    public final StringPath status = createString("status");
+
+    //inherited
+    public final StringPath sysRegDbId = _super.sysRegDbId;
+
+    //inherited
+    public final StringPath sysUpdDbId = _super.sysUpdDbId;
+
+    //inherited
+    public final StringPath sysUpdReason = _super.sysUpdReason;
+
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;
 
     public QGroup(String variable) {
         super(Group.class, forVariable(variable));

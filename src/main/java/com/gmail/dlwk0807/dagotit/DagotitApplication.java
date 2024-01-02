@@ -3,8 +3,10 @@ package com.gmail.dlwk0807.dagotit;
 import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 @SpringBootApplication
+@EnableJpaAuditing
 public class DagotitApplication {
 
 	public static void main(String[] args) {

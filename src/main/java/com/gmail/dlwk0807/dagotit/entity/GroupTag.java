@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Table(name = "GROUP_TAG")
 @Entity
-public class GroupTag {
+public class GroupTag extends BaseEntity {
 
     @Id
     @Column(name = "id")

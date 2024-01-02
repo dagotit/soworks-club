@@ -1,4 +1,4 @@
 package com.gmail.dlwk0807.dagotit.entity;
 
-public class CmnCode {
+public class CmnCode extends BaseEntity {
 }

@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Table(name = "ALARM")
 @Entity
-public class Alarm extends CommonEntity{
+public class Alarm extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

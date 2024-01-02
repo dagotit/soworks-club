@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Table(name = "GROUP_ATTACH")
 @Entity
-public class GroupAttach {
+public class GroupAttach extends BaseEntity {
 
     @Id
     @Column(name = "id")

@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Table(name = "GROUP_DTL")
 @Entity
-public class GroupDtl {
+public class GroupDtl extends BaseEntity {
 
     @Id
     @Column(name = "id")

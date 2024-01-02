@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Table(name = "MEMBER")
 @Entity
-public class MemberUpdHist {
+public class MemberUpdHist extends BaseEntity {
 
     @Id
     @Column(name = "id")
