@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Getter
 @EqualsAndHashCode
-public class EmailCertificationRequest {
+public class EmailCertificationRequestDto {
 
     @NotBlank(message = "이메일 입력은 필수입니다.")
     @Email(message = "이메일 형식에 맞게 입력해 주세요.")

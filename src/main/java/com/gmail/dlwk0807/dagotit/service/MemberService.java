@@ -1,26 +1,23 @@
 package com.gmail.dlwk0807.dagotit.service;
 
+import com.gmail.dlwk0807.dagotit.core.exception.AuthenticatoinNotMatchException;
 import com.gmail.dlwk0807.dagotit.dto.MemberDeleteDto;
 import com.gmail.dlwk0807.dagotit.dto.MemberResponseDto;
 import com.gmail.dlwk0807.dagotit.dto.MemberUpdateDto;
-import com.gmail.dlwk0807.dagotit.dto.RequestPassword;
+import com.gmail.dlwk0807.dagotit.dto.RequestPasswordDto;
 import com.gmail.dlwk0807.dagotit.entity.Authority;
 import com.gmail.dlwk0807.dagotit.entity.Member;
 import com.gmail.dlwk0807.dagotit.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 import static com.gmail.dlwk0807.dagotit.util.SecurityUtil.getCurrentMemberId;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional
 public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
@@ -37,25 +34,53 @@ public class MemberService {
                 .orElseThrow(() -> new RuntimeException("유저 정보가 없습니다."));
     }
 
-    public void updatePassword(RequestPassword requestPassword) {
-        Long id = getCurrentMemberId();
-        Member member = memberRepository.findById(id).orElseThrow();
-        member.setPassword(passwordEncoder.encode(requestPassword.getUpdatePassword()));
+    public void updatePassword(RequestPasswordDto requestPasswordDto) {
+
+        if (!isAdmin()) {
+            if (!requestPasswordDto.getEmail().equals(getCurrentMemberEmail())) {
+                throw new AuthenticatoinNotMatchException();
+            }
+        }
+
+        Member member = memberRepository.findByEmail(requestPasswordDto.getEmail()).orElseThrow();
+        member.setPassword(passwordEncoder.encode(requestPasswordDto.getUpdatePassword()));
 
     }
 
+
     public Long memberUpdate(MemberUpdateDto memberUpdateDto) {
-        Long id = getCurrentMemberId();
-        Member member = memberRepository.findById(id).orElseThrow();
+        if (!isAdmin()) {
+            if (!memberUpdateDto.getEmail().equals(getCurrentMemberEmail())) {
+                throw new AuthenticatoinNotMatchException();
+            }
+        }
+        Member member = memberRepository.findByEmail(memberUpdateDto.getEmail()).orElseThrow();
         member.update(memberUpdateDto);
         return member.getId();
     }
 
-    public void memberDelete(MemberDeleteDto memberDeleteDto, User user) {
-        boolean adminYn = user.getAuthorities().stream().anyMatch(v -> Authority.ROLE_ADMIN.equals(Authority.valueOf(v.getAuthority())));
-        if (adminYn) {
-            Member member = memberRepository.findByEmail(memberDeleteDto.getEmail()).orElseThrow();
-            memberRepository.delete(member);
+    public void memberDelete(MemberDeleteDto memberDeleteDto) {
+        if (!isAdmin()) {
+            if (!memberDeleteDto.getEmail().equals(getCurrentMemberEmail())) {
+                throw new AuthenticatoinNotMatchException();
+            }
         }
+        Member member = memberRepository.findByEmail(memberDeleteDto.getEmail()).orElseThrow();
+        memberRepository.delete(member);
+    }
+
+    public Member getCurrentMember() {
+        Long id = getCurrentMemberId();
+        Member member = memberRepository.findById(id).orElseThrow();
+        return member;
+    }
+
+    private String getCurrentMemberEmail() {
+        return getCurrentMember().getEmail();
+    }
+
+    private boolean isAdmin() {
+        Member member = getCurrentMember();
+        return Authority.ROLE_ADMIN.equals(member.getAuthority());
     }
 }

@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class EmailCertificationResponse {
+public class EmailCertificationResponseDto {
     private String email;
     private String certificationNumber;
 }

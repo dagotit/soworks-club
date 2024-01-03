@@ -1,15 +1,12 @@
 package com.gmail.dlwk0807.dagotit.controller;
 
 import com.gmail.dlwk0807.dagotit.dto.MemberDeleteDto;
-import com.gmail.dlwk0807.dagotit.dto.MemberRequestDto;
 import com.gmail.dlwk0807.dagotit.dto.MemberUpdateDto;
-import com.gmail.dlwk0807.dagotit.dto.RequestPassword;
+import com.gmail.dlwk0807.dagotit.dto.RequestPasswordDto;
 import com.gmail.dlwk0807.dagotit.service.MemberService;
 import com.gmail.dlwk0807.dagotit.util.SecurityUtil;
 import com.gmail.dlwk0807.dagotit.vo.ApiMessageVO;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 import static com.gmail.dlwk0807.dagotit.global.CommonConstant.OK_RESP_CODE;
@@ -17,7 +14,7 @@ import static com.gmail.dlwk0807.dagotit.global.CommonConstant.OK_RESP_MSG;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/member")
+@RequestMapping("/api/v1/member")
 public class MemberController {
     private final MemberService memberService;
 
@@ -40,9 +37,9 @@ public class MemberController {
     }
 
     @PostMapping("/update-password")
-    public ApiMessageVO updatePassword(@RequestBody RequestPassword requestPassword) {
+    public ApiMessageVO updatePassword(@RequestBody RequestPasswordDto requestPasswordDto) {
 
-        memberService.updatePassword(requestPassword);
+        memberService.updatePassword(requestPasswordDto);
 
         return ApiMessageVO.builder()
                 .respMsg(OK_RESP_MSG)
@@ -62,9 +59,9 @@ public class MemberController {
     }
 
     @PostMapping("/member-delete")
-    public ApiMessageVO memberDelete(@RequestBody MemberDeleteDto memberDeleteDto, @AuthenticationPrincipal User user) {
+    public ApiMessageVO memberDelete(@RequestBody MemberDeleteDto memberDeleteDto) {
 
-        memberService.memberDelete(memberDeleteDto, user);
+        memberService.memberDelete(memberDeleteDto);
 
         return ApiMessageVO.builder()
                 .respMsg(OK_RESP_MSG)

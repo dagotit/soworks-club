@@ -19,7 +19,24 @@ public class QGroupAttach extends EntityPathBase<GroupAttach> {
 
     public static final QGroupAttach groupAttach = new QGroupAttach("groupAttach");
 
+    public final QBaseEntity _super = new QBaseEntity(this);
+
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
+
     public final NumberPath<Long> id = createNumber("id", Long.class);
+
+    //inherited
+    public final StringPath sysRegDbId = _super.sysRegDbId;
+
+    //inherited
+    public final StringPath sysUpdDbId = _super.sysUpdDbId;
+
+    //inherited
+    public final StringPath sysUpdReason = _super.sysUpdReason;
+
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;
 
     public QGroupAttach(String variable) {
         super(GroupAttach.class, forVariable(variable));
