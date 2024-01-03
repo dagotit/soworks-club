@@ -1,0 +1,21 @@
+.calendar  {
+    background-color: transparent;
+}
+
+.rbcBtnGroup button {
+    border: none;
+    color: #fff;
+}
+.rbcToolbar {
+    display: flex;
+    justify-content: center;
+    margin: 10px 0px 10px 0px;
+}
+.calendar .rbcToolbar .rbcToolbarLabel {
+    font-size: 25px;
+    color: #fff;
+    font-weight: bolder;
+}
+.loadingText {
+    color: #f0f0f0;
+}

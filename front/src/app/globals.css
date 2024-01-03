@@ -9,3 +9,11 @@ body {
   margin: 0;
   padding: 0;
 }
+
+ /* 캘린더 */
+.rbc-calendar .rbc-month-view {
+  background-color: #fff ;
+}
+.rbc-button-link .attendance {
+  color: red;
+}

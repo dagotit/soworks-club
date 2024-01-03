@@ -23,15 +23,12 @@ const devNextConfig = {
         destination: `${process.env.NEXT_PUBLIC_API_URL}/api/:path*`,
       },
       {
-        source: '/cat/:path*',
-        destination: `https://cataas.com/cat/:path*`,
+        source: '/v2/:path*',
+        destination: `https://api.imweb.me/v2/:path*`,
       },
     ];
   },
   trailingSlash: true,
-  experimental: {
-    appDir: true,
-  },
   compiler: {
     styledComponents: true,
   },
@@ -40,9 +37,6 @@ const devNextConfig = {
 const nextConfig = {
   reactStrictMode: true, // 애플리케이션 내에서 문제가 발생할 수 있는 부분에 대해 경고를 알려주는 기능
   swcMinify: true, //  Minifying 역할
-  experimental: {
-    appDir: true,
-  },
   compiler: {
     styledComponents: true,
   },
