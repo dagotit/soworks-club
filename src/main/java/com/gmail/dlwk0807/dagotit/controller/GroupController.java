@@ -1,8 +1,8 @@
 package com.gmail.dlwk0807.dagotit.controller;
 
-import com.gmail.dlwk0807.dagotit.dto.EmailCertificationRequest;
-import com.gmail.dlwk0807.dagotit.service.MailSendService;
-import com.gmail.dlwk0807.dagotit.service.MailVerifyService;
+import com.gmail.dlwk0807.dagotit.dto.EmailCertificationRequestDto;
+import com.gmail.dlwk0807.dagotit.dto.GroupRequestDto;
+import com.gmail.dlwk0807.dagotit.service.GroupService;
 import com.gmail.dlwk0807.dagotit.vo.ApiMessageVO;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
@@ -17,13 +17,12 @@ import static com.gmail.dlwk0807.dagotit.global.CommonConstant.OK_RESP_MSG;
 @RequestMapping("/api/v1/groups")
 public class GroupController {
 
-    private final MailSendService mailSendService;
-    private final MailVerifyService mailVerifyService;
+    private final GroupService groupService;
+
 
     @PostMapping("/save")
-    public ApiMessageVO sendCertificationNumber(@Validated @RequestBody EmailCertificationRequest request)
-            throws MessagingException {
-        mailSendService.sendEmailForCertification(request.getEmail(), request.getName());
+    public ApiMessageVO saveGroup(@RequestBody GroupRequestDto groupRequestDto) {
+        groupService.saveGroup(groupRequestDto);
 
         return ApiMessageVO.builder()
                 .respMsg(OK_RESP_MSG)
@@ -32,32 +31,4 @@ public class GroupController {
                 .build();
     }
 
-    @GetMapping("/verify")
-    public ApiMessageVO verifyCertificationNumber(
-            @RequestParam(name = "email") String email,
-            @RequestParam(name = "certificationNumber") String certificationNumber
-    ) {
-        mailVerifyService.verifyEmail(email, certificationNumber);
-
-        return ApiMessageVO.builder()
-                .respMsg(OK_RESP_MSG)
-                .respBody("")
-                .respCode(OK_RESP_CODE)
-                .build();
-    }
-
-    @GetMapping("/verify-update-password")
-    public ApiMessageVO verifyCertificationNumberAndUpdatePassword(
-            @RequestParam(name = "email") String email,
-            @RequestParam(name = "certificationNumber") String certificationNumber
-    ) throws MessagingException {
-
-        mailVerifyService.verifyEmailAndUpdatePassword(email, certificationNumber);
-
-        return ApiMessageVO.builder()
-                .respMsg(OK_RESP_MSG)
-                .respBody("")
-                .respCode(OK_RESP_CODE)
-                .build();
-    }
 }

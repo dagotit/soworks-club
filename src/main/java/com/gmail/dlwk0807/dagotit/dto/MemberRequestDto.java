@@ -16,6 +16,7 @@ public class MemberRequestDto {
     private String email;
     private String password;
     private String address;
+    private String addressDtl;
     private String bizNo;
     private String name;
     private String companyName;
@@ -31,6 +32,7 @@ public class MemberRequestDto {
                 .email(email)
                 .password(passwordEncoder.encode(password))
                 .address(address)
+                .addressDtl(addressDtl)
                 .bizNo(bizNo)
                 .name(name)
                 .companyName(companyName)

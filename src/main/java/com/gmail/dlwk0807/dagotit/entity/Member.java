@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -21,6 +23,7 @@ public class Member extends BaseEntity {
     private String email;
     private String password;
     private String address;
+    private String addressDtl;
     private String bizNo;
     private String name;
     private String companyName;
@@ -35,11 +38,15 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Authority authority;
 
+    @OneToMany(mappedBy = "member")
+    private List<Attendance> attendanceList = new ArrayList<>();
+
     @Builder
-    public Member(String email, String password, String address, String bizNo, String name, String companyName, String companyDate, String nickname, String birth, LocalDateTime lastLoginDate, LocalDateTime emailAuth, String status, String picture, Authority authority) {
+    public Member(String email, String password, String address, String addressDtl, String bizNo, String name, String companyName, String companyDate, String nickname, String birth, LocalDateTime lastLoginDate, LocalDateTime emailAuth, String status, String picture, Authority authority) {
         this.email = email;
         this.password = password;
         this.address = address;
+        this.addressDtl = addressDtl;
         this.bizNo = bizNo;
         this.name = name;
         this.companyName = companyName;
@@ -60,6 +67,9 @@ public class Member extends BaseEntity {
     public void update(MemberUpdateDto memberUpdateDto) {
         if (StringUtils.isNotBlank(memberUpdateDto.getAddress())) {
             this.address = memberUpdateDto.getAddress();
+        }
+        if (StringUtils.isNotBlank(memberUpdateDto.getAddressDtl())) {
+            this.addressDtl = memberUpdateDto.getAddressDtl();
         }
         if (StringUtils.isNotBlank(memberUpdateDto.getBizNo())) {
             this.bizNo = memberUpdateDto.getBizNo();
@@ -88,5 +98,9 @@ public class Member extends BaseEntity {
         if (StringUtils.isNotBlank(memberUpdateDto.getAuthority())) {
             this.authority = Authority.valueOf(memberUpdateDto.getAuthority());
         }
+    }
+
+    public void addAttendance(Attendance attendance) {
+        attendanceList.add(attendance);
     }
 }
