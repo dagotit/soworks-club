@@ -1,6 +1,6 @@
 package com.gmail.dlwk0807.dagotit.service;
 
-import com.gmail.dlwk0807.dagotit.core.exception.AuthenticatoinNotMatchException;
+import com.gmail.dlwk0807.dagotit.core.exception.AuthenticationNotMatchException;
 import com.gmail.dlwk0807.dagotit.dto.MemberDeleteDto;
 import com.gmail.dlwk0807.dagotit.dto.MemberResponseDto;
 import com.gmail.dlwk0807.dagotit.dto.MemberUpdateDto;
@@ -38,7 +38,7 @@ public class MemberService {
 
         if (!isAdmin()) {
             if (!requestPasswordDto.getEmail().equals(getCurrentMemberEmail())) {
-                throw new AuthenticatoinNotMatchException();
+                throw new AuthenticationNotMatchException();
             }
         }
 
@@ -51,7 +51,7 @@ public class MemberService {
     public Long memberUpdate(MemberUpdateDto memberUpdateDto) {
         if (!isAdmin()) {
             if (!memberUpdateDto.getEmail().equals(getCurrentMemberEmail())) {
-                throw new AuthenticatoinNotMatchException();
+                throw new AuthenticationNotMatchException();
             }
         }
         Member member = memberRepository.findByEmail(memberUpdateDto.getEmail()).orElseThrow();
@@ -62,7 +62,7 @@ public class MemberService {
     public void memberDelete(MemberDeleteDto memberDeleteDto) {
         if (!isAdmin()) {
             if (!memberDeleteDto.getEmail().equals(getCurrentMemberEmail())) {
-                throw new AuthenticatoinNotMatchException();
+                throw new AuthenticationNotMatchException();
             }
         }
         Member member = memberRepository.findByEmail(memberDeleteDto.getEmail()).orElseThrow();
@@ -79,7 +79,7 @@ public class MemberService {
         return getCurrentMember().getEmail();
     }
 
-    private boolean isAdmin() {
+    public boolean isAdmin() {
         Member member = getCurrentMember();
         return Authority.ROLE_ADMIN.equals(member.getAuthority());
     }

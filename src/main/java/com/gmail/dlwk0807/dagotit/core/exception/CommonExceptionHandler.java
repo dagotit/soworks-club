@@ -204,15 +204,15 @@ public class CommonExceptionHandler {
                 .respMsg("회원정보가 존재하지 않습니다.").build(), HttpStatus.OK);
     }
 
-    @ExceptionHandler(AuthenticatoinNotMatchException.class)
-    public ResponseEntity<?> authenticatoinNotMatchException(AuthenticatoinNotMatchException e) {
+    @ExceptionHandler(AuthenticationNotMatchException.class)
+    public ResponseEntity<?> authenticatoinNotMatchException(AuthenticationNotMatchException e) {
         String respBody = "";
         respBody = e.getMessage();
         log.error(this.getClass().getName(), e);
         return new ResponseEntity<ApiMessageVO>(ApiMessageVO.builder()
                 .respCode("BIZ_014")
                 .respBody(respBody)
-                .respMsg("회원정보 변경 권한이 존재하지 않습니다.").build(), HttpStatus.OK);
+                .respMsg("변경 권한이 존재하지 않습니다.").build(), HttpStatus.OK);
     }
 
     @ExceptionHandler(AttendDuplicationException.class)

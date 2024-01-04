@@ -11,6 +11,7 @@ import java.time.format.DateTimeFormatter;
 @Getter
 @NoArgsConstructor
 public class GroupRequestDto {
+    private Long Id;
     private String category;
     private String name;
     private String memberId;

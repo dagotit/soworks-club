@@ -7,6 +7,7 @@ import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.PathMetadata;
 import javax.annotation.processing.Generated;
 import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
@@ -33,6 +34,8 @@ public class QGroup extends EntityPathBase<Group> {
     public final StringPath description = createString("description");
 
     public final DateTimePath<java.time.LocalDateTime> endDateTime = createDateTime("endDateTime", java.time.LocalDateTime.class);
+
+    public final ListPath<GroupAttend, QGroupAttend> groupAttendList = this.<GroupAttend, QGroupAttend>createList("groupAttendList", GroupAttend.class, QGroupAttend.class, PathInits.DIRECT2);
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 

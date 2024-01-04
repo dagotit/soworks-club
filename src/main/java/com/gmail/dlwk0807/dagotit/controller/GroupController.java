@@ -24,9 +24,28 @@ public class GroupController {
 
     @PostMapping("/save")
     public ApiMessageVO saveGroup(@Valid @RequestBody GroupRequestDto groupRequestDto, @AuthenticationPrincipal User user) {
-        String memberId = user.getUsername();
-        groupRequestDto.setCurrentMemberId(memberId);
-        groupService.saveGroup(groupRequestDto);
+
+        return ApiMessageVO.builder()
+                .respMsg(OK_RESP_MSG)
+                .respBody(groupService.saveGroup(groupRequestDto, user))
+                .respCode(OK_RESP_CODE)
+                .build();
+    }
+
+    @PostMapping("/update")
+    public ApiMessageVO updateGroup(@Valid @RequestBody GroupRequestDto groupRequestDto, @AuthenticationPrincipal User user) {
+
+        return ApiMessageVO.builder()
+                .respMsg(OK_RESP_MSG)
+                .respBody(groupService.updateGroup(groupRequestDto, user))
+                .respCode(OK_RESP_CODE)
+                .build();
+    }
+
+    @PostMapping("/delete")
+    public ApiMessageVO deleteGroup(@Valid @RequestBody GroupRequestDto groupRequestDto, @AuthenticationPrincipal User user) {
+
+        groupService.deleteGroup(groupRequestDto, user);
 
         return ApiMessageVO.builder()
                 .respMsg(OK_RESP_MSG)
