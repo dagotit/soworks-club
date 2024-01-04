@@ -28,6 +28,7 @@ const CustomDateHeader = (props: any) => {
       props.date.getMonth() + 1,
       props.date.getDate(),
     );
+
     return interval.contains(dateTimeToCheck);
   });
 

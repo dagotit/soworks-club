@@ -1,15 +1,14 @@
 import { create } from 'zustand';
 
 export interface ListType {
-  id: number;
-  title: string;
-  allDay: boolean;
-  start: any;
-  end: any;
-  attendanceDate?: any;
-  colorEvento?: string;
-  color?: string;
-  attendance?: boolean;
+  id: number; // id
+  title: string; // 모임 제목
+  allDay: boolean; // 종일
+  start: any; // 모임 시작일 new Date('2023-12-13') 이렇게 했지만 YYYY-MM-DD만
+  end: any; // 모임 종료일
+  attendanceDate?: any; // 출석체크한날
+  colorEvento?: string; // 모임 배경색
+  color?: string; // 모임 글자색
 }
 
 interface CalendarState {
