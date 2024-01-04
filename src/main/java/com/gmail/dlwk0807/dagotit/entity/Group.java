@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -25,9 +27,12 @@ public class Group extends BaseEntity {
     private String description;
     private String status;
     private String attachId;
+    private String allDay;
+    private LocalDateTime startDateTime;
+    private LocalDateTime endDateTime;
 
     @Builder
-    public Group(String category, String name, String memberId, String picture, String description, String status, String attachId) {
+    public Group(String category, String name, String memberId, String picture, String description, String status, String attachId, String allDay, LocalDateTime startDateTime, LocalDateTime endDateTime) {
         this.category = category;
         this.name = name;
         this.memberId = memberId;
@@ -35,5 +40,8 @@ public class Group extends BaseEntity {
         this.description = description;
         this.status = status;
         this.attachId = attachId;
+        this.allDay = allDay;
+        this.startDateTime = startDateTime;
+        this.endDateTime = endDateTime;
     }
 }

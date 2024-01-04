@@ -226,6 +226,17 @@ public class CommonExceptionHandler {
                 .respMsg("이미 출석체크 하셨습니다.").build(), HttpStatus.OK);
     }
 
+    @ExceptionHandler(DuplicationGroup.class)
+    public ResponseEntity<?> duplicationGroup(DuplicationGroup e) {
+        String respBody = "";
+        respBody = e.getMessage();
+        log.error(this.getClass().getName(), e);
+        return new ResponseEntity<ApiMessageVO>(ApiMessageVO.builder()
+                .respCode("BIZ_016")
+                .respBody(respBody)
+                .respMsg("이미 생성된 모임이 존재합니다.").build(), HttpStatus.OK);
+    }
+
 
     private boolean getProfile() {
         try {

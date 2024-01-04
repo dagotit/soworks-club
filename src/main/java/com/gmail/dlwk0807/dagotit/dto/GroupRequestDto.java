@@ -1,10 +1,12 @@
 package com.gmail.dlwk0807.dagotit.dto;
 
 import com.gmail.dlwk0807.dagotit.entity.Group;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Getter
 @NoArgsConstructor
@@ -16,10 +18,17 @@ public class GroupRequestDto {
     private String description;
     private String status;
     private String attachId;
-    private LocalDateTime startDateTime;
-    private LocalDateTime endDateTime;
+    @NotBlank(message = "시작일시는 필수입니다.")
+    private String strStartDateTime;
+    @NotBlank(message = "종료일시는 필수입니다.")
+    private String strEndDateTime;
+    private String allDay;
 
     public Group toGroup() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
+        LocalDateTime startDateTime = LocalDateTime.parse(strStartDateTime, formatter);
+        LocalDateTime endDateTime = LocalDateTime.parse(strEndDateTime, formatter);
+
         return Group.builder()
                 .category(category)
                 .name(name)
@@ -28,6 +37,13 @@ public class GroupRequestDto {
                 .description(description)
                 .status(status)
                 .attachId(attachId)
+                .startDateTime(startDateTime)
+                .endDateTime(endDateTime)
+                .allDay(allDay)
                 .build();
+    }
+
+    public void setCurrentMemberId(String memberId) {
+        this.memberId = memberId;
     }
 }

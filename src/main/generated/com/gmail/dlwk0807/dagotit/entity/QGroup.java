@@ -21,9 +21,9 @@ public class QGroup extends EntityPathBase<Group> {
 
     public final QBaseEntity _super = new QBaseEntity(this);
 
-    public final StringPath attachId = createString("attachId");
+    public final StringPath allDay = createString("allDay");
 
-    public final StringPath attendCount = createString("attendCount");
+    public final StringPath attachId = createString("attachId");
 
     public final StringPath category = createString("category");
 
@@ -32,6 +32,8 @@ public class QGroup extends EntityPathBase<Group> {
 
     public final StringPath description = createString("description");
 
+    public final DateTimePath<java.time.LocalDateTime> endDateTime = createDateTime("endDateTime", java.time.LocalDateTime.class);
+
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final StringPath memberId = createString("memberId");
@@ -39,6 +41,8 @@ public class QGroup extends EntityPathBase<Group> {
     public final StringPath name = createString("name");
 
     public final StringPath picture = createString("picture");
+
+    public final DateTimePath<java.time.LocalDateTime> startDateTime = createDateTime("startDateTime", java.time.LocalDateTime.class);
 
     public final StringPath status = createString("status");
 
