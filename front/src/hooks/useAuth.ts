@@ -3,7 +3,9 @@ import {
   apiGetEmailCodeVerify,
   apiLogin,
   apiLogout,
-  apiPostCreditsEmail, apiSignup,
+  apiPostCreditsEmail,
+  apiSignup,
+  apiUpdatePassword,
   getLogoImg,
 } from '@/services/authService';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -30,6 +32,12 @@ export const useGetEmailCodeVerfiy = () => {
   return useMutation({
     mutationKey: ['get-email-code-verify'],
     mutationFn: apiGetEmailCodeVerify,
+  });
+};
+export const usePostChangePassword = () => {
+  return useMutation({
+    mutationKey: ['post-update-password'],
+    mutationFn: apiUpdatePassword,
   });
 };
 export const usePostLogin = () => {
@@ -67,4 +75,4 @@ export const usePostSignup = () => {
     mutationKey: ['post-signup'],
     mutationFn: apiSignup,
   });
-}
+};
