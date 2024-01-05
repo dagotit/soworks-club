@@ -237,6 +237,17 @@ public class CommonExceptionHandler {
                 .respMsg("이미 생성된 모임이 존재합니다.").build(), HttpStatus.OK);
     }
 
+    @ExceptionHandler(DuplicationGroupAttend.class)
+        public ResponseEntity<?> duplicationGroupAttend(DuplicationGroupAttend e) {
+            String respBody = "";
+            respBody = e.getMessage();
+            log.error(this.getClass().getName(), e);
+            return new ResponseEntity<ApiMessageVO>(ApiMessageVO.builder()
+                    .respCode("BIZ_017")
+                    .respBody(respBody)
+                    .respMsg("이미 모임신청을 하셨습니다.").build(), HttpStatus.OK);
+        }
+
 
     private boolean getProfile() {
         try {
