@@ -5,6 +5,8 @@ spring:
   h2:
     console:
       enabled: true
+  profiles:
+    default: local
 
   datasource:
     url: jdbc:h2:mem:testdb
@@ -20,24 +22,10 @@ spring:
       hibernate:
         format_sql: true
         show_sql: true
-  mail:
-    host: smtp.gmail.com
-    port: 587
-    username: ${MAIL-USERNAME} #ENC(EV8C7R3Bbn0OhhOnWK6X4Cqoi8XsXrJgHoq2HirYnKw=)  # 앱 비밀번호 발급받은 google 계정
-    password: ${MAIL-PASSWORD} #ENC(6ou0b1IDWg6VwICHZlYM+pSDXs4lwg0GToCxGp9wuno=)  # 발급받은 앱 비밀번호
-    properties:
-      mail:
-        smtp:
-          starttls:
-            enable: true
-          auth: true
-  data:
-    redis:
-      port: 6379
-      host: localhost
+
 logging:
   level:
-    root: debug
+    root: info
 #  config: classpath:bk_logback-spring.xml
 
 # HS512 알고리즘을 사용할 것이기 때문에 512bit, 즉 64byte 이상의 secret key를 사용해야 한다.

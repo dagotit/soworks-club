@@ -1,6 +1,7 @@
 package com.gmail.dlwk0807.dagotit.entity;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
@@ -25,4 +26,11 @@ public class GroupAttend extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "GROUP_ID")
     private Group group;
+
+    @Builder
+    public GroupAttend(String attendYn, Member member, Group group) {
+        this.attendYn = attendYn;
+        this.member = member;
+        this.group = group;
+    }
 }
