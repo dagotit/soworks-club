@@ -16,8 +16,14 @@ interface EmailCodeVerifyType {
   email: string;
   code: string;
 }
+interface CreditsEmailType {
+  email: string;
+  name: string;
+}
 
-interface  SignUpType {
+interface passwordChangeType {}
+
+interface SignUpType {
   email: string;
   password: string;
   address: string;
@@ -86,11 +92,11 @@ export const apiGetAccessToken = async (data: null): Promise<any> => {
  * @function
  * 이메일 인증 요청
  */
-export const apiPostCreditsEmail = async (email: string): Promise<any> => {
+export const apiPostCreditsEmail = async (
+  data: CreditsEmailType,
+): Promise<any> => {
   try {
-    return await http.post('/api/v1/mails/send-certification', {
-      email: email,
-    });
+    return await http.post('/api/v1/mails/send-certification', data);
   } catch (e) {
     if (axios.isAxiosError(e) && e.response) {
       console.log('이메일 인증 요청 실패:::', e.response);
@@ -122,11 +128,30 @@ export const apiGetEmailCodeVerify = async (
 
 /**
  * @function
+ * 임시 비밀번호 전송
+ * */
+export const apiUpdatePassword = async (
+  data: EmailCodeVerifyType,
+): Promise<any> => {
+  try {
+    return await http.get('/api/v1/mails/verify-update-password', {
+      params: {
+        email: data.email,
+        certificationNumber: data.code,
+      },
+    });
+  } catch (e) {
+    if (axios.isAxiosError(e) && e.response) {
+      throw e.response.data;
+    }
+  }
+};
+
+/**
+ * @function
  * 회원가입 요청
  */
-export const apiSignup = async (
-  data: SignUpType,
-): Promise<any> => {
+export const apiSignup = async (data: SignUpType): Promise<any> => {
   try {
     return await http.post('/auth/signup', {
       email: data.email, // 회사 이메일

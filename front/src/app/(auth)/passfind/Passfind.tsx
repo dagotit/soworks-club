@@ -7,7 +7,7 @@ import React, { useEffect, useState } from 'react';
 import useDidMountEffect from '@/utils/useDidMountEffect';
 import { useRouter } from 'next/navigation';
 import { useDialogStore } from '@/store/useDialog';
-import { useGetEmailCodeVerfiy, usePostCreditsEmail } from '@/hooks/useAuth';
+import { usePostCreditsEmail, usePostChangePassword } from '@/hooks/useAuth';
 import BgMoon from '@/components/bgBox/Bg';
 
 let intervalId: undefined | NodeJS.Timeout = undefined;
@@ -16,19 +16,15 @@ const EXPIREDTIME = '02:59';
 const PassFind = () => {
   const router = useRouter();
   const creditsEmail = usePostCreditsEmail();
-  const emailCodeVerify = useGetEmailCodeVerfiy();
+  const emailCodeVerify = usePostChangePassword();
   const { open, allClose } = useDialogStore();
   const [step, setStep] = useState(1);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [ckEmail, setCkEmail] = useState('');
-  const [isEmailCk, setIsEmailCk] = useState(false);
   const [code, setCode] = useState('');
   const [time, setTime] = useState(EXPIREDTIME);
   const [codeExpired, setCodeExpired] = useState(false);
-  const [password, setPassword] = useState('');
-  const [passwordCheck, setPasswordCheck] = useState('');
-  const [isPasswordErrorMsg, setIsPasswordErrorMsg] = useState(false);
 
   // prettier-ignore
   const EMAILREX = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
@@ -85,10 +81,11 @@ const PassFind = () => {
       if (time === '00:00') {
         clearTime();
         const timeOut = setTimeout(() => {
-          if (!isEmailCk) {
+          if (step === 1) {
             // 인증코드 확인버튼을 누르지 못 했을 경우만 해당된다.
             setCodeExpired(false);
             setCkEmail('');
+            setCode('');
           }
           clearTimeout(timeOut);
         }, 2000);
@@ -125,13 +122,32 @@ const PassFind = () => {
     if (!emailValidationCheck()) {
       return;
     }
-    creditsEmail.mutate(email, {
-      onSuccess: () => {
-        setCkEmail(email);
-        handleTimeInterval();
-        setCodeExpired(true);
+    if (name.trim() === '') {
+      open('alert', '패스워드 찾기', '이름을 입력해주세요.');
+      return;
+    }
+    const reqData = { email, name };
+    setCodeExpired(true);
+    creditsEmail.mutate(reqData, {
+      onSuccess: (resp: any) => {
+        if (resp.respCode === '00' || resp.respCode === 'BIZ_011') {
+          setCkEmail(email);
+          handleTimeInterval();
+          // setCodeExpired(true);
+          if (resp.respCode === 'BIZ_011') {
+            open('alert', '비밀번호 찾기', resp.respMsg);
+          }
+          return;
+        }
+        setCodeExpired(false);
+        if (resp.respMsg !== '') {
+          open('alert', '비밀번호 찾기', resp.respMsg);
+          return;
+        }
+        open('alert', '비밀번호 찾기', '이메일 인증코드 전송 실패');
       },
       onError: (error: any) => {
+        setCodeExpired(false);
         if (error.respCode !== '' && error.respMsg !== '') {
           open('alert', '비밀번호 찾기', error.respMsg);
           return;
@@ -168,8 +184,9 @@ const PassFind = () => {
             clearTime();
             setCodeExpired(false);
             setCkEmail('');
+            setCode('');
             // 이메일 인증 성공
-            setIsEmailCk(true);
+            setStep(2);
             return;
           }
           if (data?.respMsg) {
@@ -186,89 +203,6 @@ const PassFind = () => {
       },
     );
   }
-  /**
-   * @function
-   * 1단계 이메일 체크
-   */
-  function handleEmailValidationCheck() {
-    if (!emailValidationCheck()) {
-      return;
-    }
-    if (name.trim() === '') {
-      open('alert', '패스워드 찾기', '이름을 입력해주세요.');
-      return;
-    }
-
-    setStep(2);
-  }
-
-  /**
-   **************************      **************************************************
-   ************************** 2단계 **************************************************
-   **************************      **************************************************
-   * */
-
-  /**
-   * @function
-   * 2단계 새로운 비밀번호와 비밀번호 확인 비교
-   */
-  useDidMountEffect(() => {
-    console.log(password, passwordCheck);
-    if (password.trim() === '' || passwordCheck.trim() === '') {
-      setIsPasswordErrorMsg(false);
-      return;
-    }
-    if (password !== passwordCheck) {
-      setIsPasswordErrorMsg(true);
-      return;
-    }
-    setIsPasswordErrorMsg(false);
-  }, [password, passwordCheck]);
-  /**
-   * @function
-   * 2단계 새로운 비밀번호 입력
-   */
-  function handleChangeNewPassword(event: React.ChangeEvent<HTMLInputElement>) {
-    const { value } = event.currentTarget;
-    setPassword(value);
-  }
-  /**
-   * @function
-   * 2단계 비밀번호 확인용 입력
-   */
-  function handleChangeCheckPassword(
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) {
-    const { value } = event.currentTarget;
-    setPasswordCheck(value);
-  }
-  /**
-   * @function
-   * 2단계 비밀번호 변경시도하기
-   */
-  function handleChangePassword() {
-    if (password.trim() === '') {
-      open('alert', '패스워드 찾기', '패스워드를 입력해주세요.');
-      return;
-    }
-    if (passwordCheck.trim() === '') {
-      open('alert', '패스워드 찾기', '패스워드를 확인해주세요.');
-      return;
-    }
-    if (PASSWORDREX.test(password)) {
-      open(
-        'alert',
-        '패스워드 찾기',
-        '패스워드는 특수문자는 !,@,#,$,%,^,&,*만 사용 가능합니다.',
-      );
-      return;
-    }
-    if (isPasswordErrorMsg) {
-      open('alert', '패스워드 찾기', '패스워드 확인이 일치하지 않습니다.');
-      return;
-    }
-    setStep(3);
-  }
 
   return (
     <main>
@@ -282,7 +216,6 @@ const PassFind = () => {
               className={styles.input}
               type="email"
               placeholder="회사 e-mail을 입력해주세요."
-              disabled={isEmailCk}
               value={email}
               onChange={handleChangeEmail}
             />
@@ -297,26 +230,14 @@ const PassFind = () => {
               onChange={handleChangeName}
             />
           </label>
-          {!isEmailCk && (
-            <button
-              className={styles.btn}
-              onClick={handleIsEmailValidation}
-              type="button"
-              disabled={codeExpired}
-            >
-              이메일 인증하기
-            </button>
-          )}
-          {isEmailCk && (
-            <button
-              className={styles.btn}
-              onClick={handleEmailValidationCheck}
-              type="button"
-            >
-              찾기
-            </button>
-          )}
-
+          <button
+            className={styles.btn}
+            onClick={handleIsEmailValidation}
+            type="button"
+            disabled={codeExpired}
+          >
+            이메일 인증하기
+          </button>
           {codeExpired && (
             <div className={styles.codeWrap}>
               <label className={`${styles.inputWrap} ${styles.code}`}>
@@ -346,50 +267,10 @@ const PassFind = () => {
         </div>
       )}
       {step === 2 && (
-        <div className={styles.contents}>
-          <label className={styles.inputWrap}>
-            <span className={styles.inputText}>패스워드</span>
-            <input
-              className={styles.input}
-              type="password"
-              placeholder="password를 입력해주세요."
-              value={password}
-              onChange={handleChangeNewPassword}
-            />
-          </label>
-          <label className={styles.inputWrap}>
-            <span className={styles.inputText}>
-              패스워드 <br />
-              확인
-            </span>
-            <input
-              className={styles.input}
-              type="password"
-              placeholder="password를 입력해주세요."
-              value={passwordCheck}
-              onChange={handleChangeCheckPassword}
-            />
-          </label>
-          <button
-            className={styles.btn}
-            onClick={handleChangePassword}
-            type="button"
-          >
-            변경
-          </button>
-          {isPasswordErrorMsg && (
-            <p className={styles.errorText}>
-              새로운 패스워드와 패스워드 확인란이 동일하지 않습니다.
-              <br />
-              다시한번 확인해주세요.
-            </p>
-          )}
-        </div>
-      )}
-      {step === 3 && (
         <div className={styles.complete}>
           <p className={styles.completeText}>
-            패스워드가 성공적으로 변경되었습니다.
+            임시비밀번호가 발급되었습니다. <br />
+            {email}를 확인하세요.
           </p>
           <Link
             className={styles.linkBtn}
