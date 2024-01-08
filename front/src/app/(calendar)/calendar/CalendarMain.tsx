@@ -28,18 +28,16 @@ const CalendarMain = () => {
         end: new Date('2023-12-13'),
         colorEvento: 'green',
         color: 'white',
-        attendance: true,
       },
       {
         id: 1,
         title: '등록된 이벤트',
-        allDay: true,
+        allDay: false,
         start: new Date('2024-01-13'),
         end: new Date('2024-01-13'),
         attendanceDate: new Date('2024-01-13'),
         colorEvento: 'green',
         color: 'white',
-        attendance: true,
       },
     ]);
   }, [data]);
@@ -63,7 +61,6 @@ const CalendarMain = () => {
       : 'blue';
     const color = myEvents.color ? myEvents.color : 'blue';
     return {
-      className: myEvents.attendance ? 'attendance' : '',
       style: { backgroundColor, color },
     };
   }

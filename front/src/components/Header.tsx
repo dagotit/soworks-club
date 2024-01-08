@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { useTokenStore } from '@/store/useLogin';
 import { useDialogStore } from '@/store/useDialog';
-const Header = () => {
+const Header = (props: any) => {
   const getLogout = useGetLogout();
   const router = useRouter();
   const { accessToken, setAccessToken, setTokenExpires } = useTokenStore();
@@ -27,6 +27,12 @@ const Header = () => {
       allClose();
     };
   }, []);
+  useEffect(() => {
+    console.log('accessToken state:', accessToken);
+    if (accessToken !== '') {
+      props.propAttendanceCk(true);
+    }
+  }, [accessToken]);
   /**
    * @function
    * 로그아웃 api 호출
