@@ -1,9 +1,13 @@
 import ListItem from '@/components/calendar/ListItem';
+import { useRouter } from 'next/navigation';
 
 const List = () => {
+  const router = useRouter();
   function onClickFilterPopup() {
     console.log('click');
+    router.push('/'); // test를 위한 임시
   }
+
   return (
     <div>
       <button type="button" onClick={onClickFilterPopup}>

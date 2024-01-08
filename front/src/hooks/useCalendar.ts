@@ -1,5 +1,8 @@
-import { apiGetMonthCalendar } from '@/services/calendarService';
-import { useQuery } from '@tanstack/react-query';
+import {
+  apiGetAttendance,
+  apiGetMonthCalendar,
+} from '@/services/calendarService';
+import { useMutation, useQuery } from '@tanstack/react-query';
 
 export const useGetMonthCalendar = () => {
   return useQuery({
@@ -7,5 +10,12 @@ export const useGetMonthCalendar = () => {
     queryFn: apiGetMonthCalendar,
     retry: false,
     staleTime: Infinity,
+  });
+};
+
+export const useGetAttendance = () => {
+  return useMutation({
+    mutationKey: ['get-attendance'],
+    mutationFn: apiGetAttendance,
   });
 };

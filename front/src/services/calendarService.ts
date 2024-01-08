@@ -1,4 +1,5 @@
 import http from '@/services/httpService';
+import axios from 'axios';
 
 export const apiGetMonthCalendar = async () => {
   try {
@@ -22,4 +23,14 @@ export const apiGetMonthCalendar = async () => {
     //   ];
     // }, 300);
   } catch (e) {}
+};
+
+export const apiGetAttendance = async (data: null) => {
+  try {
+    return http.get('/api/v1/attendance/attend');
+  } catch (e) {
+    if (axios.isAxiosError(e) && e.response) {
+      throw e.response.data;
+    }
+  }
 };
