@@ -1,9 +1,7 @@
 package com.gmail.dlwk0807.dagotit.controller;
 
 import com.gmail.dlwk0807.dagotit.dto.GroupAttendRequestDto;
-import com.gmail.dlwk0807.dagotit.dto.GroupRequestDto;
 import com.gmail.dlwk0807.dagotit.service.GroupAttendService;
-import com.gmail.dlwk0807.dagotit.service.GroupService;
 import com.gmail.dlwk0807.dagotit.vo.ApiMessageVO;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
