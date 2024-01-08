@@ -58,15 +58,4 @@ public class MemberController {
                 .build();
     }
 
-    @PostMapping("/member-delete")
-    public ApiMessageVO memberDelete(@RequestBody MemberDeleteDto memberDeleteDto) {
-
-        memberService.memberDelete(memberDeleteDto);
-
-        return ApiMessageVO.builder()
-                .respMsg(OK_RESP_MSG)
-                .respBody("")
-                .respCode(OK_RESP_CODE)
-                .build();
-    }
 }

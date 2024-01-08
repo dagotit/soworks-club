@@ -54,16 +54,4 @@ public class GroupController {
                 .build();
     }
 
-    @PostMapping("/apply")
-    public ApiMessageVO applyGroup(@Valid @RequestBody GroupRequestDto groupRequestDto, @AuthenticationPrincipal User user) {
-
-        groupService.deleteGroup(groupRequestDto, user);
-
-        return ApiMessageVO.builder()
-                .respMsg(OK_RESP_MSG)
-                .respBody("")
-                .respCode(OK_RESP_CODE)
-                .build();
-    }
-
 }

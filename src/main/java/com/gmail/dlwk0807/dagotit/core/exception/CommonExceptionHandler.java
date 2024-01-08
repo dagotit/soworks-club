@@ -238,15 +238,26 @@ public class CommonExceptionHandler {
     }
 
     @ExceptionHandler(DuplicationGroupAttend.class)
-        public ResponseEntity<?> duplicationGroupAttend(DuplicationGroupAttend e) {
-            String respBody = "";
-            respBody = e.getMessage();
-            log.error(this.getClass().getName(), e);
-            return new ResponseEntity<ApiMessageVO>(ApiMessageVO.builder()
-                    .respCode("BIZ_017")
-                    .respBody(respBody)
-                    .respMsg("이미 모임신청을 하셨습니다.").build(), HttpStatus.OK);
-        }
+    public ResponseEntity<?> duplicationGroupAttend(DuplicationGroupAttend e) {
+        String respBody = "";
+        respBody = e.getMessage();
+        log.error(this.getClass().getName(), e);
+        return new ResponseEntity<ApiMessageVO>(ApiMessageVO.builder()
+                .respCode("BIZ_017")
+                .respBody(respBody)
+                .respMsg("이미 모임신청을 하셨습니다.").build(), HttpStatus.OK);
+    }
+
+    @ExceptionHandler(CustomRespBodyException.class)
+    public ResponseEntity<?> customRespBodyException(CustomRespBodyException e) {
+        String respBody = "";
+        respBody = e.getMessage();
+        log.error(this.getClass().getName(), e);
+        return new ResponseEntity<ApiMessageVO>(ApiMessageVO.builder()
+                .respCode("BIZ_018")
+                .respBody(respBody)
+                .respMsg("오류가 발생했습니다.").build(), HttpStatus.OK);
+    }
 
 
     private boolean getProfile() {

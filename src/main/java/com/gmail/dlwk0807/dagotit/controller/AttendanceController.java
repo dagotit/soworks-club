@@ -19,12 +19,11 @@ public class AttendanceController {
     @GetMapping("/attend")
     public ApiMessageVO attend() {
 
-        attendanceService.attend();
-
         return ApiMessageVO.builder()
                 .respMsg(OK_RESP_MSG)
-                .respBody("")
+                .respBody(attendanceService.attend())
                 .respCode(OK_RESP_CODE)
                 .build();
     }
+
 }

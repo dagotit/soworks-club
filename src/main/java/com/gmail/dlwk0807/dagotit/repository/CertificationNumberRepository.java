@@ -8,7 +8,7 @@ import java.time.Duration;
 
 @Repository
 @RequiredArgsConstructor
-public class CertificationNumberDao {
+public class CertificationNumberRepository {
 
     private final StringRedisTemplate redisTemplate;
     private static final long EMAIL_VERIFICATION_LIMIT_IN_SECONDS = 180;

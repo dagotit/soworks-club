@@ -4,7 +4,7 @@ import com.gmail.dlwk0807.dagotit.core.exception.DuplicationEmailSenderException
 import com.gmail.dlwk0807.dagotit.core.exception.MemberCheckException;
 import com.gmail.dlwk0807.dagotit.dto.EmailCertificationResponseDto;
 import com.gmail.dlwk0807.dagotit.entity.Member;
-import com.gmail.dlwk0807.dagotit.repository.CertificationNumberDao;
+import com.gmail.dlwk0807.dagotit.repository.CertificationNumberRepository;
 import com.gmail.dlwk0807.dagotit.repository.MemberRepository;
 import io.micrometer.common.util.StringUtils;
 import jakarta.mail.MessagingException;
@@ -24,7 +24,7 @@ import static com.gmail.dlwk0807.dagotit.util.CommonUtil.createCode;
 public class MailSendService {
 
     private final JavaMailSender mailSender;
-    private final CertificationNumberDao certificationNumberDao;
+    private final CertificationNumberRepository certificationNumberRepository;
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -40,13 +40,17 @@ public class MailSendService {
          */
         checkNameBeforeUpdatePassword(email, name);
 
-        if (certificationNumberDao.hasKey(email)) {
+        if (certificationNumberRepository.hasKey(email)) {
             throw new DuplicationEmailSenderException();
         }
 
         String certificationNumber = createCode();
-        sendMail(email, certificationNumber);
-        certificationNumberDao.saveCertificationNumber(email, certificationNumber);
+        String sendResult = makeHTMLAndSendMail(email, certificationNumber);
+        //메일 발송결과가 "ok"가 아닐 경우 redis저장 스킵
+        if (!"ok".equals(sendResult)) {
+            return new EmailCertificationResponseDto(email, certificationNumber);
+        }
+        certificationNumberRepository.saveCertificationNumber(email, certificationNumber);
         return new EmailCertificationResponseDto(email, certificationNumber);
     }
 
@@ -58,8 +62,12 @@ public class MailSendService {
         }
     }
 
-    private void sendMail(String email, String content) throws MessagingException {
+    private String makeHTMLAndSendMail(String email, String content) throws MessagingException {
         MimeMessage mimeMessage = mailSender.createMimeMessage();
+        if (mimeMessage == null) {
+            System.out.println("local환경 바로 리턴");
+            return "env => local";
+        }
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage);
         helper.setTo(email);
         helper.setSubject("다가치 이메일 인증 번호입니다.");
@@ -81,18 +89,27 @@ public class MailSendService {
         helper.setText(msgg, true);//내용
 
         mailSender.send(mimeMessage);
+        return "ok";
     }
 
-    public void sendEmailForUpdatePassword(String email) throws MessagingException {
+    public String sendEmailForUpdatePassword(String email) throws MessagingException {
         String password = createCode();
-        sendMailRandomPassword(email, password);
+        String result = makePasswordAndSendMail(email, password);
+        if (!"ok".equals(result)) {
+            return "fail";
+        }
         Member member = memberRepository.findByEmail(email).orElseThrow();
         member.setPassword(passwordEncoder.encode(password));
+        return "ok";
 
     }
 
-    private void sendMailRandomPassword(String email, String content) throws MessagingException {
+    private String makePasswordAndSendMail(String email, String content) throws MessagingException {
         MimeMessage mimeMessage = mailSender.createMimeMessage();
+        if (mimeMessage == null) {
+            System.out.println("local환경 바로 리턴");
+            return "env => local";
+        }
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage);
         helper.setTo(email);
         helper.setSubject("다가치 변경 패스워드 발송 메일입니다.");
@@ -114,5 +131,6 @@ public class MailSendService {
         helper.setText(msgg, true);//내용
 
         mailSender.send(mimeMessage);
+        return "ok";
     }
 }

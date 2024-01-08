@@ -1,5 +1,6 @@
 package com.gmail.dlwk0807.dagotit.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.gmail.dlwk0807.dagotit.dto.GroupRequestDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -36,6 +37,7 @@ public class Group extends BaseEntity {
     private LocalDateTime endDateTime;
 
     @OneToMany(mappedBy = "group")
+    @JsonIgnoreProperties({"group"})
     private List<GroupAttend> groupAttendList = new ArrayList<>();
 
     @Builder

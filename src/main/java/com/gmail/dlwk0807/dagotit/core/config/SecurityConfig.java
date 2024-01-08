@@ -44,8 +44,7 @@ public class SecurityConfig {
                                 , new AntPathRequestMatcher("/auth/**")
                                 , new AntPathRequestMatcher("/api/v1/mails/**")
                                 ).permitAll();
-                a.requestMatchers(new AntPathRequestMatcher("/api/member/**")
-                                , new AntPathRequestMatcher("/api/member/member-delete"))
+                a.requestMatchers(new AntPathRequestMatcher("/api/v1/admin/**"))
                         .hasRole("ADMIN");
                 a.anyRequest().authenticated();
             })

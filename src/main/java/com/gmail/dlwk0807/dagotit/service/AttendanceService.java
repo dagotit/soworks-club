@@ -17,11 +17,11 @@ public class AttendanceService {
     private final AttendanceRepository attendanceRepository;
     private final MemberService memberService;
 
-    public void attend() {
+    public String attend() {
 
         LocalDate now = LocalDate.now();
         if (attendanceRepository.existsByAttendDate(now)) {
-            throw new AttendDuplicationException();
+            return "이미 출석체크 하셨습니다.";
         }
         Member member = memberService.getCurrentMember();
         Attendance attendance = Attendance.builder()
@@ -32,5 +32,6 @@ public class AttendanceService {
 
         member.addAttendance(attendance);
         attendanceRepository.save(attendance);
+        return "출석완료";
     }
 }

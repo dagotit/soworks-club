@@ -1,5 +1,6 @@
 package com.gmail.dlwk0807.dagotit.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.gmail.dlwk0807.dagotit.dto.MemberUpdateDto;
 import io.micrometer.common.util.StringUtils;
 import jakarta.persistence.*;
@@ -38,7 +39,8 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Authority authority;
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", fetch = FetchType.EAGER)
+    @JsonIgnoreProperties({"member"})
     private List<Attendance> attendanceList = new ArrayList<>();
 
     @Builder
