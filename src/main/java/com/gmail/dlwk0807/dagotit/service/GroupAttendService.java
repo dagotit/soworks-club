@@ -12,6 +12,7 @@ import com.gmail.dlwk0807.dagotit.entity.Member;
 import com.gmail.dlwk0807.dagotit.repository.GroupAttendRepository;
 import com.gmail.dlwk0807.dagotit.repository.GroupRepository;
 import com.gmail.dlwk0807.dagotit.repository.MemberRepository;
+import com.gmail.dlwk0807.dagotit.repository.impl.MemberCustomRepositoryImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
