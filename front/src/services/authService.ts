@@ -31,6 +31,7 @@ interface SignUpType {
   onerName: string;
   companyName: string;
   companyDate: string;
+  addressDtl: string;
 }
 /**
  * @function
@@ -157,6 +158,7 @@ export const apiSignup = async (data: SignUpType): Promise<any> => {
       email: data.email, // 회사 이메일
       password: data.password, // 비밀번호
       address: data.address, // 주소
+      addressDtl: data.addressDtl, // 상세주소
       bizno: data.corporateRegiNumber, // 사업자 번호
       name: data.onerName, // 대표자 성명
       companyName: data.companyName, // 회사 명
