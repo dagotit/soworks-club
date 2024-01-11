@@ -14,6 +14,7 @@ public class FileUtil {
     public static String getImage(String imagePath) throws Exception {
         FileInputStream inputStream = null;
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        log.info("imagePath : {}", imagePath);
 
         try {
             inputStream = new FileInputStream(imagePath);
