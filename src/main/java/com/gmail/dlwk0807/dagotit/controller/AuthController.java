@@ -1,7 +1,7 @@
 package com.gmail.dlwk0807.dagotit.controller;
 
-import com.gmail.dlwk0807.dagotit.dto.MemberRequestDto;
-import com.gmail.dlwk0807.dagotit.dto.TokenDto;
+import com.gmail.dlwk0807.dagotit.dto.member.MemberRequestDTO;
+import com.gmail.dlwk0807.dagotit.dto.token.TokenDTO;
 import com.gmail.dlwk0807.dagotit.service.AuthService;
 import com.gmail.dlwk0807.dagotit.vo.ApiMessageVO;
 import jakarta.servlet.http.Cookie;
@@ -22,7 +22,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/signup")
-    public ApiMessageVO signup(@RequestBody MemberRequestDto memberRequestDto) {
+    public ApiMessageVO signup(@RequestBody MemberRequestDTO memberRequestDto) {
         return ApiMessageVO.builder()
                 .respMsg(OK_RESP_MSG)
                 .respBody(authService.signup(memberRequestDto))
@@ -31,9 +31,9 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ApiMessageVO login(@RequestBody MemberRequestDto memberRequestDto, HttpServletResponse response) {
+    public ApiMessageVO login(@RequestBody MemberRequestDTO memberRequestDto, HttpServletResponse response) {
 
-        TokenDto token = authService.login(memberRequestDto);
+        TokenDTO token = authService.login(memberRequestDto);
         setHeaderCookie(response, token, 7 * 24 * 60 * 60);
 
         return ApiMessageVO.builder()
@@ -46,7 +46,7 @@ public class AuthController {
     @GetMapping("/reissue")
     public ApiMessageVO reissue(@CookieValue(value = "refreshToken") Cookie cookie, HttpServletResponse response) {
         String refreshToken = cookie.getValue();
-        TokenDto reissue = authService.reissue(refreshToken);
+        TokenDTO reissue = authService.reissue(refreshToken);
 
         setHeaderCookie(response, reissue, 7 * 24 * 60 * 60);
 
@@ -57,7 +57,7 @@ public class AuthController {
                 .build();
     }
 
-    private static void setHeaderCookie(HttpServletResponse response, TokenDto reissue, long maxAge) {
+    private static void setHeaderCookie(HttpServletResponse response, TokenDTO reissue, long maxAge) {
         ResponseCookie cookie = ResponseCookie.from("refreshToken", reissue.getRefreshToken())
                 .maxAge(maxAge)
                 .path("/")
@@ -71,7 +71,7 @@ public class AuthController {
     @GetMapping("/logout")
     public ApiMessageVO logout(@CookieValue(value = "refreshToken") Cookie cookie, HttpServletResponse response) {
         String refreshToken = cookie.getValue();
-        TokenDto reissue = authService.reissue(refreshToken);
+        TokenDTO reissue = authService.reissue(refreshToken);
 
         authService.logout(cookie.getValue());
 

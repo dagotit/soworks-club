@@ -1,8 +1,7 @@
 package com.gmail.dlwk0807.dagotit.controller;
 
-import com.gmail.dlwk0807.dagotit.dto.MemberDeleteDto;
-import com.gmail.dlwk0807.dagotit.dto.MemberUpdateDto;
-import com.gmail.dlwk0807.dagotit.dto.RequestPasswordDto;
+import com.gmail.dlwk0807.dagotit.dto.member.MemberUpdateDTO;
+import com.gmail.dlwk0807.dagotit.dto.member.RequestPasswordDTO;
 import com.gmail.dlwk0807.dagotit.service.MemberService;
 import com.gmail.dlwk0807.dagotit.util.SecurityUtil;
 import com.gmail.dlwk0807.dagotit.vo.ApiMessageVO;
@@ -37,7 +36,7 @@ public class MemberController {
     }
 
     @PostMapping("/update-password")
-    public ApiMessageVO updatePassword(@RequestBody RequestPasswordDto requestPasswordDto) {
+    public ApiMessageVO updatePassword(@RequestBody RequestPasswordDTO requestPasswordDto) {
 
         memberService.updatePassword(requestPasswordDto);
 
@@ -49,7 +48,7 @@ public class MemberController {
     }
 
     @PostMapping("/member-update")
-    public ApiMessageVO memberUpdate(@RequestBody MemberUpdateDto memberUpdateDto) {
+    public ApiMessageVO memberUpdate(@RequestBody MemberUpdateDTO memberUpdateDto) {
 
         return ApiMessageVO.builder()
                 .respMsg(OK_RESP_MSG)

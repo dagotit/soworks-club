@@ -1,16 +1,13 @@
 package com.gmail.dlwk0807.dagotit.controller;
 
-import com.gmail.dlwk0807.dagotit.dto.GroupRequestDto;
+import com.gmail.dlwk0807.dagotit.dto.group.GroupRequestDTO;
 import com.gmail.dlwk0807.dagotit.service.GroupService;
 import com.gmail.dlwk0807.dagotit.vo.ApiMessageVO;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import static com.gmail.dlwk0807.dagotit.global.CommonConstant.OK_RESP_CODE;
 import static com.gmail.dlwk0807.dagotit.global.CommonConstant.OK_RESP_MSG;
@@ -23,7 +20,7 @@ public class GroupController {
     private final GroupService groupService;
 
     @PostMapping("/save")
-    public ApiMessageVO saveGroup(@Valid @RequestBody GroupRequestDto groupRequestDto, @AuthenticationPrincipal User user) {
+    public ApiMessageVO saveGroup(@Valid @RequestBody GroupRequestDTO groupRequestDto, @AuthenticationPrincipal User user) {
 
         return ApiMessageVO.builder()
                 .respMsg(OK_RESP_MSG)
@@ -33,7 +30,7 @@ public class GroupController {
     }
 
     @PostMapping("/update")
-    public ApiMessageVO updateGroup(@Valid @RequestBody GroupRequestDto groupRequestDto, @AuthenticationPrincipal User user) {
+    public ApiMessageVO updateGroup(@Valid @RequestBody GroupRequestDTO groupRequestDto, @AuthenticationPrincipal User user) {
 
         return ApiMessageVO.builder()
                 .respMsg(OK_RESP_MSG)
@@ -43,7 +40,7 @@ public class GroupController {
     }
 
     @PostMapping("/delete")
-    public ApiMessageVO deleteGroup(@Valid @RequestBody GroupRequestDto groupRequestDto, @AuthenticationPrincipal User user) {
+    public ApiMessageVO deleteGroup(@Valid @RequestBody GroupRequestDTO groupRequestDto, @AuthenticationPrincipal User user) {
 
         groupService.deleteGroup(groupRequestDto, user);
 
@@ -54,14 +51,12 @@ public class GroupController {
                 .build();
     }
 
-    @PostMapping("/apply")
-    public ApiMessageVO applyGroup(@Valid @RequestBody GroupRequestDto groupRequestDto, @AuthenticationPrincipal User user) {
-
-        groupService.deleteGroup(groupRequestDto, user);
+    @GetMapping("/list")
+    public ApiMessageVO listGroup(@RequestParam int month) {
 
         return ApiMessageVO.builder()
                 .respMsg(OK_RESP_MSG)
-                .respBody("")
+                .respBody(groupService.listGroup(month))
                 .respCode(OK_RESP_CODE)
                 .build();
     }

@@ -1,7 +1,7 @@
 package com.gmail.dlwk0807.dagotit.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.gmail.dlwk0807.dagotit.dto.MemberUpdateDto;
+import com.gmail.dlwk0807.dagotit.dto.member.MemberUpdateDTO;
 import io.micrometer.common.util.StringUtils;
 import jakarta.persistence.*;
 import lombok.*;
@@ -34,17 +34,19 @@ public class Member extends BaseEntity {
     private LocalDateTime lastLoginDate;
     private LocalDateTime emailAuth;
     private String status;
-    private String picture;
+
+    @OneToOne(mappedBy = "member", fetch = FetchType.EAGER)
+    private ProfileImage picture;
 
     @Enumerated(EnumType.STRING)
     private Authority authority;
 
-    @OneToMany(mappedBy = "member", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
     @JsonIgnoreProperties({"member"})
     private List<Attendance> attendanceList = new ArrayList<>();
 
     @Builder
-    public Member(String email, String password, String address, String addressDtl, String bizNo, String name, String companyName, String companyDate, String nickname, String birth, LocalDateTime lastLoginDate, LocalDateTime emailAuth, String status, String picture, Authority authority) {
+    public Member(String email, String password, String address, String addressDtl, String bizNo, String name, String companyName, String companyDate, String nickname, String birth, LocalDateTime lastLoginDate, LocalDateTime emailAuth, String status, Authority authority) {
         this.email = email;
         this.password = password;
         this.address = address;
@@ -58,7 +60,6 @@ public class Member extends BaseEntity {
         this.lastLoginDate = lastLoginDate;
         this.emailAuth = emailAuth;
         this.status = status;
-        this.picture = picture;
         this.authority = authority;
     }
 
@@ -66,7 +67,7 @@ public class Member extends BaseEntity {
         this.password = password;
     }
 
-    public void update(MemberUpdateDto memberUpdateDto) {
+    public void update(MemberUpdateDTO memberUpdateDto) {
         if (StringUtils.isNotBlank(memberUpdateDto.getAddress())) {
             this.address = memberUpdateDto.getAddress();
         }
@@ -94,9 +95,6 @@ public class Member extends BaseEntity {
         if (StringUtils.isNotBlank(memberUpdateDto.getStatus())) {
             this.status = memberUpdateDto.getStatus();
         }
-        if (StringUtils.isNotBlank(memberUpdateDto.getPicture())) {
-            this.picture = memberUpdateDto.getPicture();
-        }
         if (StringUtils.isNotBlank(memberUpdateDto.getAuthority())) {
             this.authority = Authority.valueOf(memberUpdateDto.getAuthority());
         }
@@ -105,4 +103,5 @@ public class Member extends BaseEntity {
     public void addAttendance(Attendance attendance) {
         attendanceList.add(attendance);
     }
+
 }

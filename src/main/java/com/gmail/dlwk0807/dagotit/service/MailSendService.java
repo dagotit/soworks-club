@@ -2,7 +2,7 @@ package com.gmail.dlwk0807.dagotit.service;
 
 import com.gmail.dlwk0807.dagotit.core.exception.DuplicationEmailSenderException;
 import com.gmail.dlwk0807.dagotit.core.exception.MemberCheckException;
-import com.gmail.dlwk0807.dagotit.dto.EmailCertificationResponseDto;
+import com.gmail.dlwk0807.dagotit.dto.email.EmailCertificationResponseDTO;
 import com.gmail.dlwk0807.dagotit.entity.Member;
 import com.gmail.dlwk0807.dagotit.repository.CertificationNumberRepository;
 import com.gmail.dlwk0807.dagotit.repository.MemberRepository;
@@ -28,7 +28,7 @@ public class MailSendService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public EmailCertificationResponseDto sendEmailForCertification(String email, String name) throws MessagingException {
+    public EmailCertificationResponseDTO sendEmailForCertification(String email, String name) throws MessagingException {
 
         /**
          * 이메일 인증 사용 2군데
@@ -48,10 +48,10 @@ public class MailSendService {
         String sendResult = makeHTMLAndSendMail(email, certificationNumber);
         //메일 발송결과가 "ok"가 아닐 경우 redis저장 스킵
         if (!"ok".equals(sendResult)) {
-            return new EmailCertificationResponseDto(email, certificationNumber);
+            return new EmailCertificationResponseDTO(email, certificationNumber);
         }
         certificationNumberRepository.saveCertificationNumber(email, certificationNumber);
-        return new EmailCertificationResponseDto(email, certificationNumber);
+        return new EmailCertificationResponseDTO(email, certificationNumber);
     }
 
     private void checkNameBeforeUpdatePassword(String email, String name) {
