@@ -1,6 +1,7 @@
-package com.gmail.dlwk0807.dagotit.dto;
+package com.gmail.dlwk0807.dagotit.dto.group;
 
 import com.gmail.dlwk0807.dagotit.entity.Group;
+import com.gmail.dlwk0807.dagotit.entity.GroupStatus;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,20 +11,18 @@ import java.time.format.DateTimeFormatter;
 
 @Getter
 @NoArgsConstructor
-public class GroupRequestDto {
+public class GroupRequestDTO {
     private Long Id;
     private String category;
     private String name;
     private String memberId;
-    private String picture;
+    private String groupImg;
+    private String groupImgName;
     private String description;
-    private String status;
-    private String attachId;
     @NotBlank(message = "시작일시는 필수입니다.")
     private String strStartDateTime;
     @NotBlank(message = "종료일시는 필수입니다.")
     private String strEndDateTime;
-    private String allDay;
 
     public Group toGroup() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
@@ -34,13 +33,11 @@ public class GroupRequestDto {
                 .category(category)
                 .name(name)
                 .memberId(memberId)
-                .picture(picture)
                 .description(description)
-                .status(status)
-                .attachId(attachId)
+                .status(GroupStatus.WAITING)
                 .startDateTime(startDateTime)
                 .endDateTime(endDateTime)
-                .allDay(allDay)
+                .groupImgName(groupImgName)
                 .build();
     }
 

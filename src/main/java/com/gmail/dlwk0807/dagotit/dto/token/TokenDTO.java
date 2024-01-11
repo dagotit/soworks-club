@@ -1,10 +1,10 @@
-package com.gmail.dlwk0807.dagotit.dto;
+package com.gmail.dlwk0807.dagotit.dto.token;
 
 import lombok.*;
 
 @Getter
 @Builder
-public class TokenDto {
+public class TokenDTO {
 
     private final String grantType;
     private final String accessToken;

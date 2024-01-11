@@ -3,9 +3,9 @@ package com.gmail.dlwk0807.dagotit.service;
 import com.gmail.dlwk0807.dagotit.core.exception.AuthenticationNotMatchException;
 import com.gmail.dlwk0807.dagotit.core.exception.CustomRespBodyException;
 import com.gmail.dlwk0807.dagotit.core.exception.DuplicationGroupAttend;
-import com.gmail.dlwk0807.dagotit.dto.GroupAttendRequestDto;
-import com.gmail.dlwk0807.dagotit.dto.GroupResponseDto;
-import com.gmail.dlwk0807.dagotit.dto.MemberAttendResponseDto;
+import com.gmail.dlwk0807.dagotit.dto.group.GroupAttendRequestDTO;
+import com.gmail.dlwk0807.dagotit.dto.group.GroupResponseDTO;
+import com.gmail.dlwk0807.dagotit.dto.member.MemberAttendResponseDTO;
 import com.gmail.dlwk0807.dagotit.entity.Group;
 import com.gmail.dlwk0807.dagotit.entity.GroupAttend;
 import com.gmail.dlwk0807.dagotit.entity.Member;
@@ -13,6 +13,7 @@ import com.gmail.dlwk0807.dagotit.repository.GroupAttendRepository;
 import com.gmail.dlwk0807.dagotit.repository.GroupRepository;
 import com.gmail.dlwk0807.dagotit.repository.MemberRepository;
 import com.gmail.dlwk0807.dagotit.repository.impl.MemberCustomRepositoryImpl;
+import com.gmail.dlwk0807.dagotit.util.AuthUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
@@ -30,11 +31,13 @@ public class GroupAttendService {
     private final GroupAttendRepository groupAttendRepository;
     private final GroupRepository groupRepository;
     private final MemberRepository memberRepository;
-    private final MemberService memberService;
+    private final AuthUtil authUtil;
     private final MemberCustomRepositoryImpl memberCustomRepository;
+    private final GroupImageService groupImageService;
 
-    public GroupResponseDto applyGroupAttend(GroupAttendRequestDto groupAttendRequestDto, User user) {
-        if (!memberService.isAdmin()) {
+
+    public GroupResponseDTO applyGroupAttend(GroupAttendRequestDTO groupAttendRequestDto, User user) throws Exception {
+        if (!authUtil.isAdmin()) {
             String currentMemberId = user.getUsername();
             if (!currentMemberId.equals(groupAttendRequestDto.getMemberId())) {
                 throw new AuthenticationNotMatchException();
@@ -56,17 +59,19 @@ public class GroupAttendService {
                 .build();
         groupAttendRepository.save(groupAttend);
 
-        return GroupResponseDto.of(group);
+        GroupResponseDTO groupResponseDTO = GroupResponseDTO.of(group);
+        groupResponseDTO.updateGroupImg(groupImageService.findImage(groupId));
+        return GroupResponseDTO.of(group);
     }
 
-    public List<MemberAttendResponseDto> listGroupAttend(Long groupId) {
+    public List<MemberAttendResponseDTO> listGroupAttend(Long groupId) {
         List<Member> memberList = memberCustomRepository.findAllByGroupId(groupId);
-        return memberList.stream().map(v -> MemberAttendResponseDto.of(v))
+        return memberList.stream().map(v -> MemberAttendResponseDTO.of(v))
                 .collect(Collectors.toList());
     }
 
-    public String cancelGroupAttend(GroupAttendRequestDto groupAttendRequestDto, User user) {
-        if (!memberService.isAdmin()) {
+    public String cancelGroupAttend(GroupAttendRequestDTO groupAttendRequestDto, User user) {
+        if (!authUtil.isAdmin()) {
             String currentMemberId = user.getUsername();
             if (!currentMemberId.equals(groupAttendRequestDto.getMemberId())) {
                 throw new AuthenticationNotMatchException();

@@ -33,3 +33,7 @@ spring:
     redis:
       port: 6379
       host: localhost
+
+# file path
+file.profileImagePath: /Users/softworks/tmpImage/ImageUpload/profileImages/
+file.groupImagePath: /Users/softworks/tmpImage/ImageUpload/groupImages/

@@ -1,11 +1,11 @@
-package com.gmail.dlwk0807.dagotit.dto;
+package com.gmail.dlwk0807.dagotit.dto.member;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class RequestPasswordDto {
+public class RequestPasswordDTO {
     private String email;
     private String updatePassword;
 }

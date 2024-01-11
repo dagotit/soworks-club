@@ -1,16 +1,10 @@
 package com.gmail.dlwk0807.dagotit.service;
 
-import com.gmail.dlwk0807.dagotit.core.exception.AuthenticationNotMatchException;
-import com.gmail.dlwk0807.dagotit.dto.*;
-import com.gmail.dlwk0807.dagotit.entity.Authority;
-import com.gmail.dlwk0807.dagotit.entity.Member;
+import com.gmail.dlwk0807.dagotit.dto.admin.AdminSendAlarmDTO;
 import com.gmail.dlwk0807.dagotit.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import static com.gmail.dlwk0807.dagotit.util.SecurityUtil.getCurrentMemberId;
 
 @Service
 @RequiredArgsConstructor
@@ -18,7 +12,7 @@ import static com.gmail.dlwk0807.dagotit.util.SecurityUtil.getCurrentMemberId;
 public class AdminService {
     private final MemberRepository memberRepository;
 
-    public String sendAlarm(AdminSendAlarmDto adminSendAlarmDto) {
+    public String sendAlarm(AdminSendAlarmDTO adminSendAlarmDto) {
 
         return null;
 

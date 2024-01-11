@@ -1,4 +1,4 @@
-package com.gmail.dlwk0807.dagotit.dto;
+package com.gmail.dlwk0807.dagotit.dto.email;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Getter
 @EqualsAndHashCode
-public class EmailCertificationRequestDto {
+public class EmailCertificationRequestDTO {
 
     @NotBlank(message = "이메일 입력은 필수입니다.")
     @Email(message = "이메일 형식에 맞게 입력해 주세요.")

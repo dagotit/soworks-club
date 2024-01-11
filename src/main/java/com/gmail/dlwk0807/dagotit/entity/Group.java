@@ -1,7 +1,7 @@
 package com.gmail.dlwk0807.dagotit.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.gmail.dlwk0807.dagotit.dto.GroupRequestDto;
+import com.gmail.dlwk0807.dagotit.dto.group.GroupRequestDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,10 +28,10 @@ public class Group extends BaseEntity {
     private String category;
     private String name;
     private String memberId;
-    private String picture;
+    private String groupImgName;
     private String description;
-    private String status;
-    private String attachId;
+    @Enumerated(EnumType.STRING)
+    private GroupStatus status;
     private String allDay;
     private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;
@@ -41,20 +41,19 @@ public class Group extends BaseEntity {
     private List<GroupAttend> groupAttendList = new ArrayList<>();
 
     @Builder
-    public Group(String category, String name, String memberId, String picture, String description, String status, String attachId, String allDay, LocalDateTime startDateTime, LocalDateTime endDateTime) {
+    public Group(String category, String name, String memberId, String groupImgName, String description, GroupStatus status, String allDay, LocalDateTime startDateTime, LocalDateTime endDateTime) {
         this.category = category;
         this.name = name;
         this.memberId = memberId;
-        this.picture = picture;
+        this.groupImgName = groupImgName;
         this.description = description;
         this.status = status;
-        this.attachId = attachId;
         this.allDay = allDay;
         this.startDateTime = startDateTime;
         this.endDateTime = endDateTime;
     }
 
-    public void update(GroupRequestDto requestDto) {
+    public void update(GroupRequestDTO requestDto) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
         LocalDateTime startDateTime = LocalDateTime.parse(requestDto.getStrStartDateTime(), formatter);
         LocalDateTime endDateTime = LocalDateTime.parse(requestDto.getStrEndDateTime(), formatter);
@@ -62,12 +61,16 @@ public class Group extends BaseEntity {
         this.category = requestDto.getCategory();
         this.name = requestDto.getName();
         this.memberId = requestDto.getMemberId();
-        this.picture = requestDto.getPicture();
         this.description = requestDto.getDescription();
-        this.status = requestDto.getStatus();
-        this.attachId = requestDto.getAttachId();
-        this.allDay = requestDto.getAllDay();
         this.startDateTime = startDateTime;
         this.endDateTime = endDateTime;
+    }
+
+    public void updateStatus(GroupStatus status) {
+        this.status = status;
+    }
+
+    public void updateImageName(String groupImgName) {
+        this.groupImgName = groupImgName;
     }
 }

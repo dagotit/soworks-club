@@ -1,6 +1,6 @@
 package com.gmail.dlwk0807.dagotit.controller;
 
-import com.gmail.dlwk0807.dagotit.dto.EmailCertificationRequestDto;
+import com.gmail.dlwk0807.dagotit.dto.email.EmailCertificationRequestDTO;
 import com.gmail.dlwk0807.dagotit.service.MailSendService;
 import com.gmail.dlwk0807.dagotit.service.MailVerifyService;
 import com.gmail.dlwk0807.dagotit.vo.ApiMessageVO;
@@ -21,7 +21,7 @@ public class MailController {
     private final MailVerifyService mailVerifyService;
 
     @PostMapping("/send-certification")
-    public ApiMessageVO sendCertificationNumber(@Validated @RequestBody EmailCertificationRequestDto request)
+    public ApiMessageVO sendCertificationNumber(@Validated @RequestBody EmailCertificationRequestDTO request)
             throws MessagingException {
         mailSendService.sendEmailForCertification(request.getEmail(), request.getName());
 
