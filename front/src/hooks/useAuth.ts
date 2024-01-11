@@ -10,17 +10,15 @@ import {
 } from '@/services/authService';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
-/*
-export const useGetUser = () =>
+/*export const useGetUser = () =>
   useQuery({
     queryKey: ['get-user'],
-    queryFn: logout,
+    queryFn: apiGetMonthCalendar,
     retry: false,
     staleTime: Infinity,
     // refetchOnWindowFocus: true,
     // enabled: false,
-  });
-*/
+  });*/
 
 export const usePostCreditsEmail = () => {
   return useMutation({

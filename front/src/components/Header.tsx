@@ -5,6 +5,12 @@ import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { useTokenStore } from '@/store/useLogin';
 import { useDialogStore } from '@/store/useDialog';
+import useDidMountEffect from '@/utils/useDidMountEffect';
+import { isEmptyObj } from '@/utils/common';
+
+interface HeaderProps {
+  propAttendanceCk?: () => void;
+}
 const Header = (props: any) => {
   const getLogout = useGetLogout();
   const router = useRouter();
@@ -27,9 +33,8 @@ const Header = (props: any) => {
       allClose();
     };
   }, []);
-  useEffect(() => {
-    console.log('accessToken state:', accessToken);
-    if (accessToken !== '') {
+  useDidMountEffect(() => {
+    if (accessToken !== '' && !isEmptyObj(props)) {
       props.propAttendanceCk(true);
     }
   }, [accessToken]);
