@@ -59,12 +59,12 @@ public class ProfileImageService {
 
             if (image != null) {
                 // 이미지가 이미 존재하면 url 업데이트
-                image.updateUrl(uploadFolder + imageFileName);
+                image.updateUrl(imageFileName);
             }
             else {
                 image = ProfileImage.builder()
                         .member(member)
-                        .url(uploadFolder + imageFileName)
+                        .url(imageFileName)
                         .build();
             }
             profileImageRepository.save(image);
