@@ -1,17 +1,18 @@
 package com.gmail.dlwk0807.dagotit.service;
 
 import com.gmail.dlwk0807.dagotit.core.exception.DuplicationMember;
-import com.gmail.dlwk0807.dagotit.dto.MemberRequestDto;
-import com.gmail.dlwk0807.dagotit.dto.MemberResponseDto;
-import com.gmail.dlwk0807.dagotit.dto.TokenDto;
+import com.gmail.dlwk0807.dagotit.dto.member.MemberRequestDTO;
+import com.gmail.dlwk0807.dagotit.dto.member.MemberResponseDTO;
+import com.gmail.dlwk0807.dagotit.dto.token.TokenDTO;
 import com.gmail.dlwk0807.dagotit.entity.Member;
+import com.gmail.dlwk0807.dagotit.entity.ProfileImage;
 import com.gmail.dlwk0807.dagotit.entity.RefreshToken;
 import com.gmail.dlwk0807.dagotit.core.config.jwt.TokenProvider;
 import com.gmail.dlwk0807.dagotit.repository.MemberRepository;
+import com.gmail.dlwk0807.dagotit.repository.ProfileImageRepository;
 import com.gmail.dlwk0807.dagotit.repository.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -19,30 +20,37 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class AuthService {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final MemberRepository memberRepository;
+    private final ProfileImageRepository profileImageRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
 
     @Transactional
-    public MemberResponseDto signup(MemberRequestDto memberRequestDto) {
+    public MemberResponseDTO signup(MemberRequestDTO memberRequestDto) {
         if (memberRepository.existsByEmail(memberRequestDto.getEmail())) {
             throw new DuplicationMember("이미 가입되어 있는 유저입니다");
         }
 
         Member member = memberRequestDto.toMember(passwordEncoder);
-        return MemberResponseDto.of(memberRepository.save(member));
+
+        ProfileImage image = ProfileImage.builder()
+                .url("anonymous.png")
+                .member(member)
+                .build();
+
+        profileImageRepository.save(image);
+
+        return MemberResponseDTO.of(memberRepository.save(member));
     }
 
     @Transactional
-    public TokenDto login(MemberRequestDto memberRequestDto) {
+    public TokenDTO login(MemberRequestDTO memberRequestDto) {
         // 1. Login ID/PW 를 기반으로 AuthenticationToken 생성
         UsernamePasswordAuthenticationToken authenticationToken = memberRequestDto.toAuthentication();
 
@@ -51,7 +59,7 @@ public class AuthService {
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
         // 3. 인증 정보를 기반으로 JWT 토큰 생성
-        TokenDto tokenDto = tokenProvider.generateTokenDto(authentication);
+        TokenDTO tokenDto = tokenProvider.generateTokenDto(authentication);
 
         // 4. RefreshToken 저장
         RefreshToken refreshToken = RefreshToken.builder()
@@ -66,7 +74,7 @@ public class AuthService {
     }
 
     @Transactional
-    public TokenDto reissue(String strRefreshToken) {
+    public TokenDTO reissue(String strRefreshToken) {
         // 1. Refresh Token 검증
         this.verifiedRefreshToken(strRefreshToken);
 
@@ -84,7 +92,7 @@ public class AuthService {
         }
 
         // 5. 새로운 토큰 생성
-        TokenDto tokenDto = tokenProvider.generateTokenDto(authentication);
+        TokenDTO tokenDto = tokenProvider.generateTokenDto(authentication);
 
         // 6. 저장소 정보 업데이트
         RefreshToken newRefreshToken = refreshToken.updateValue(tokenDto.getRefreshToken());

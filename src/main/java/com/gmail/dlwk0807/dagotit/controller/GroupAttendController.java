@@ -1,6 +1,6 @@
 package com.gmail.dlwk0807.dagotit.controller;
 
-import com.gmail.dlwk0807.dagotit.dto.GroupAttendRequestDto;
+import com.gmail.dlwk0807.dagotit.dto.group.GroupAttendRequestDTO;
 import com.gmail.dlwk0807.dagotit.service.GroupAttendService;
 import com.gmail.dlwk0807.dagotit.vo.ApiMessageVO;
 import jakarta.validation.Valid;
@@ -20,7 +20,7 @@ public class GroupAttendController {
     private final GroupAttendService groupAttendService;
 
     @PostMapping("/apply")
-    public ApiMessageVO applyGroupAttend(@Valid @RequestBody GroupAttendRequestDto groupAttendRequestDto, @AuthenticationPrincipal User user) {
+    public ApiMessageVO applyGroupAttend(@Valid @RequestBody GroupAttendRequestDTO groupAttendRequestDto, @AuthenticationPrincipal User user) throws Exception {
 
         return ApiMessageVO.builder()
                 .respMsg(OK_RESP_MSG)
@@ -40,7 +40,7 @@ public class GroupAttendController {
     }
 
     @PostMapping("/cancel")
-    public ApiMessageVO cancelGroupAttend(@Valid @RequestBody GroupAttendRequestDto groupAttendRequestDto, @AuthenticationPrincipal User user) {
+    public ApiMessageVO cancelGroupAttend(@Valid @RequestBody GroupAttendRequestDTO groupAttendRequestDto, @AuthenticationPrincipal User user) {
 
         return ApiMessageVO.builder()
                 .respMsg(OK_RESP_MSG)

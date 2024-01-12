@@ -24,16 +24,6 @@ const Main = () => {
   //     console.log('refetch');
   //   });
   // };
-  /**
-   * @function
-   * header component 에서 이벤트 바인딩 > 출석체크 하기
-   * [accessToken] 이 있어야 하기 때문에 이렇게 로직을 작성함..
-   */
-  const handleAttendanceCheck = (e: boolean | null | undefined) => {
-    if (e && accessToken && !isAttend) {
-      handleAttendanceApi();
-    }
-  };
 
   /**
    * @function
@@ -42,16 +32,16 @@ const Main = () => {
   useEffect(() => {
     attendDayCheck();
   }, []);
-
   /**
    * @function
+   * mounted 최초진입시 실행하지 않아 추가
    * 하루가 지났을 때 출석체크 하는 api 를 실행하기 위한 메서드
-   */
-  useDidMountEffect(() => {
-    if (!isAttend && accessToken) {
+   * */
+  useEffect(() => {
+    if (!!accessToken && !isAttend) {
       handleAttendanceApi();
     }
-  }, [isAttend]);
+  }, [accessToken, isAttend]);
 
   const testBtn = async () => {
     router.push('/calendar');
@@ -76,12 +66,12 @@ const Main = () => {
   return (
     <Fragment>
       <Bg />
-      <Header propAttendanceCk={handleAttendanceCheck} />
+      <Header />
       <main className={styles.main}>
         {/*<button type="button" onClick={handlerBtn}>*/}
         {/*  refetch*/}
         {/*</button>*/}
-        <button onClick={testBtn}>api호출</button>
+        <button onClick={testBtn}>캘린더 화면으로 이동</button>
       </main>
     </Fragment>
   );

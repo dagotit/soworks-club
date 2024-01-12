@@ -1,4 +1,4 @@
-package com.gmail.dlwk0807.dagotit.dto;
+package com.gmail.dlwk0807.dagotit.dto.member;
 
 import com.gmail.dlwk0807.dagotit.entity.Authority;
 import com.gmail.dlwk0807.dagotit.entity.Member;
@@ -6,12 +6,10 @@ import lombok.*;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.time.LocalDateTime;
-
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class MemberRequestDto {
+public class MemberRequestDTO {
 
     private String email;
     private String password;
@@ -24,7 +22,6 @@ public class MemberRequestDto {
     private String nickname;
     private String birth;
     private String status;
-    private String picture;
     private String authority;
 
     public Member toMember(PasswordEncoder passwordEncoder) {
@@ -40,7 +37,6 @@ public class MemberRequestDto {
                 .nickname(nickname)
                 .birth(birth)
                 .status(status)
-//                .picture(picture) 사진 저장 보류
                 .authority(Authority.valueOf(authority))
                 .build();
     }

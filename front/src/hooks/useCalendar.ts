@@ -4,12 +4,12 @@ import {
 } from '@/services/calendarService';
 import { useMutation, useQuery } from '@tanstack/react-query';
 
-export const useGetMonthCalendar = () => {
+export const useGetMonthCalendar = (month: number | null) => {
   return useQuery({
-    queryKey: ['get-month-calendar'],
-    queryFn: apiGetMonthCalendar,
-    retry: false,
-    staleTime: Infinity,
+    queryKey: ['get-month-calendar', month],
+    queryFn: () => apiGetMonthCalendar(month),
+    retry: 0,
+    // staleTime: Infinity,
   });
 };
 

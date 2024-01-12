@@ -1,43 +1,62 @@
 package com.gmail.dlwk0807.dagotit.service;
 
 import com.gmail.dlwk0807.dagotit.core.exception.AuthenticationNotMatchException;
-import com.gmail.dlwk0807.dagotit.dto.MemberDeleteDto;
-import com.gmail.dlwk0807.dagotit.dto.MemberResponseDto;
-import com.gmail.dlwk0807.dagotit.dto.MemberUpdateDto;
-import com.gmail.dlwk0807.dagotit.dto.RequestPasswordDto;
-import com.gmail.dlwk0807.dagotit.entity.Authority;
+import com.gmail.dlwk0807.dagotit.dto.image.ProfileImageResponseDTO;
+import com.gmail.dlwk0807.dagotit.dto.member.MemberDeleteDTO;
+import com.gmail.dlwk0807.dagotit.dto.member.MemberResponseDTO;
+import com.gmail.dlwk0807.dagotit.dto.member.MemberUpdateDTO;
+import com.gmail.dlwk0807.dagotit.dto.member.RequestPasswordDTO;
 import com.gmail.dlwk0807.dagotit.entity.Member;
 import com.gmail.dlwk0807.dagotit.repository.MemberRepository;
+import com.gmail.dlwk0807.dagotit.util.AuthUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import static com.gmail.dlwk0807.dagotit.util.SecurityUtil.getCurrentMemberId;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class MemberService {
     private final MemberRepository memberRepository;
+    private final ProfileImageService profileImageService;
     private final PasswordEncoder passwordEncoder;
+    private final AuthUtil authUtil;
 
-    public MemberResponseDto findMemberInfoById(Long memberId) {
+    public MemberResponseDTO findMemberInfoById(Long memberId) {
         return memberRepository.findById(memberId)
-                .map(MemberResponseDto::of)
+                .map(member -> {
+                    MemberResponseDTO memberResponseDTO = MemberResponseDTO.of(member);
+                    try {
+                        ProfileImageResponseDTO image = profileImageService.findImage(member.getId());
+                        memberResponseDTO.setProfileImage(image.getProfileImg());
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                    return memberResponseDTO;
+                })
                 .orElseThrow(() -> new RuntimeException("로그인 유저 정보가 없습니다."));
     }
 
-    public MemberResponseDto findMemberInfoByEmail(String email) {
+    public MemberResponseDTO findMemberInfoByEmail(String email) {
         return memberRepository.findByEmail(email)
-                .map(MemberResponseDto::of)
+                .map(member -> {
+                    MemberResponseDTO memberResponseDTO = MemberResponseDTO.of(member);
+                    try {
+                        ProfileImageResponseDTO image = profileImageService.findImage(member.getId());
+                        memberResponseDTO.setProfileImage(image.getProfileImg());
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                    return memberResponseDTO;
+                })
                 .orElseThrow(() -> new RuntimeException("유저 정보가 없습니다."));
     }
 
-    public void updatePassword(RequestPasswordDto requestPasswordDto) {
+    public void updatePassword(RequestPasswordDTO requestPasswordDto) {
 
-        if (!isAdmin()) {
-            if (!requestPasswordDto.getEmail().equals(getCurrentMemberEmail())) {
+        if (!authUtil.isAdmin()) {
+            if (!requestPasswordDto.getEmail().equals(authUtil.getCurrentMemberEmail())) {
                 throw new AuthenticationNotMatchException();
             }
         }
@@ -48,9 +67,9 @@ public class MemberService {
     }
 
 
-    public Long memberUpdate(MemberUpdateDto memberUpdateDto) {
-        if (!isAdmin()) {
-            if (!memberUpdateDto.getEmail().equals(getCurrentMemberEmail())) {
+    public Long memberUpdate(MemberUpdateDTO memberUpdateDto) {
+        if (!authUtil.isAdmin()) {
+            if (!memberUpdateDto.getEmail().equals(authUtil.getCurrentMemberEmail())) {
                 throw new AuthenticationNotMatchException();
             }
         }
@@ -59,9 +78,9 @@ public class MemberService {
         return member.getId();
     }
 
-    public void memberDelete(MemberDeleteDto memberDeleteDto) {
-        if (!isAdmin()) {
-            if (!memberDeleteDto.getEmail().equals(getCurrentMemberEmail())) {
+    public void memberDelete(MemberDeleteDTO memberDeleteDto) {
+        if (!authUtil.isAdmin()) {
+            if (!memberDeleteDto.getEmail().equals(authUtil.getCurrentMemberEmail())) {
                 throw new AuthenticationNotMatchException();
             }
         }
@@ -69,18 +88,4 @@ public class MemberService {
         memberRepository.delete(member);
     }
 
-    public Member getCurrentMember() {
-        Long id = getCurrentMemberId();
-        Member member = memberRepository.findById(id).orElseThrow();
-        return member;
-    }
-
-    private String getCurrentMemberEmail() {
-        return getCurrentMember().getEmail();
-    }
-
-    public boolean isAdmin() {
-        Member member = getCurrentMember();
-        return Authority.ROLE_ADMIN.equals(member.getAuthority());
-    }
 }

@@ -1,0 +1,19 @@
+.listWrap {
+    border: 1px solid blue;
+    padding: 10px;
+}
+.clubFilter {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: end;
+}
+.clubInfo {
+    display: flex;
+    color: #f0f0f0;
+    font-size: 14px;
+    justify-content: space-between;
+}
+.itembox {
+    border: 1px solid red;
+    color: #f0f0f0;
+}

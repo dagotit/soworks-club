@@ -24,8 +24,6 @@ public class QGroup extends EntityPathBase<Group> {
 
     public final StringPath allDay = createString("allDay");
 
-    public final StringPath attachId = createString("attachId");
-
     public final StringPath category = createString("category");
 
     //inherited
@@ -37,17 +35,17 @@ public class QGroup extends EntityPathBase<Group> {
 
     public final ListPath<GroupAttend, QGroupAttend> groupAttendList = this.<GroupAttend, QGroupAttend>createList("groupAttendList", GroupAttend.class, QGroupAttend.class, PathInits.DIRECT2);
 
+    public final StringPath groupImgName = createString("groupImgName");
+
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final StringPath memberId = createString("memberId");
 
     public final StringPath name = createString("name");
 
-    public final StringPath picture = createString("picture");
-
     public final DateTimePath<java.time.LocalDateTime> startDateTime = createDateTime("startDateTime", java.time.LocalDateTime.class);
 
-    public final StringPath status = createString("status");
+    public final EnumPath<GroupStatus> status = createEnum("status", GroupStatus.class);
 
     //inherited
     public final StringPath sysRegDbId = _super.sysRegDbId;
