@@ -20,7 +20,7 @@ public class GroupController {
     private final GroupService groupService;
 
     @PostMapping("/save")
-    public ApiMessageVO saveGroup(@Valid @RequestBody GroupRequestDTO groupRequestDto, @AuthenticationPrincipal User user) {
+    public ApiMessageVO saveGroup(@Valid @RequestBody GroupRequestDTO groupRequestDto, @AuthenticationPrincipal User user) throws Exception {
 
         return ApiMessageVO.builder()
                 .respMsg(OK_RESP_MSG)

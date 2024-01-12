@@ -20,6 +20,7 @@ import java.io.*;
 import java.util.Base64;
 import java.util.UUID;
 
+import static com.gmail.dlwk0807.dagotit.util.FileUtil.deleteFile;
 import static com.gmail.dlwk0807.dagotit.util.FileUtil.getImage;
 
 @Service
@@ -56,23 +57,22 @@ public class ProfileImageService {
             file.transferTo(destinationFile);
 
             ProfileImage image = profileImageRepository.findByMember(member).orElseThrow();
+            String oldFileName = image.getUrl();
 
-            if (image != null) {
-                // 이미지가 이미 존재하면 url 업데이트
-                image.updateUrl(imageFileName);
+            image.updateUrl(imageFileName);
+
+            //기본이미지일 경우 업데이트만하고 기존이미지 삭제하지 않는다.
+            if (!"anonymous.png".equals(oldFileName)) {
+                // 기존 파일 삭제
+                deleteFile(uploadFolder + oldFileName);
             }
-            else {
-                image = ProfileImage.builder()
-                        .member(member)
-                        .url(imageFileName)
-                        .build();
-            }
+
             profileImageRepository.save(image);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
-        return "ok";
+        return "업로드 성공";
     }
 
     public ProfileImageResponseDTO findImage(Long memberId) throws Exception {

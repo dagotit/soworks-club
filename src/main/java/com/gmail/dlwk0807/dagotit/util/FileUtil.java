@@ -6,6 +6,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Base64;
 
 @Slf4j
@@ -41,5 +44,17 @@ public class FileUtil {
         }
 
         return Base64.getEncoder().withoutPadding().encodeToString(fileArray);
+    }
+
+    public static String deleteFile(String imagePath) {
+        Path filePath = Paths.get(imagePath);
+
+        // 파일을 삭제합니다.
+        try {
+            Files.delete(filePath);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return "ok";
     }
 }

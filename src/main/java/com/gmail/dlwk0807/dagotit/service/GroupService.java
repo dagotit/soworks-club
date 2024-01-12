@@ -14,6 +14,7 @@ import com.gmail.dlwk0807.dagotit.repository.impl.GroupCustomRepositoryImpl;
 import com.gmail.dlwk0807.dagotit.util.AuthUtil;
 import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +22,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
+
+import static com.gmail.dlwk0807.dagotit.util.FileUtil.deleteFile;
+import static com.gmail.dlwk0807.dagotit.util.FileUtil.getImage;
 
 @Service
 @RequiredArgsConstructor
@@ -34,7 +39,10 @@ public class GroupService {
     private final GroupCustomRepositoryImpl groupCustomRepositoryImpl;
     private final GroupImageService groupImageService;
 
-    public GroupResponseDTO saveGroup(GroupRequestDTO requestDto, User user) {
+    @Value("${file.groupImagePath}")
+    private String uploadFolder;
+
+    public GroupResponseDTO saveGroup(GroupRequestDTO requestDto, User user) throws Exception {
         String memberId = user.getUsername();
         requestDto.setCurrentMemberId(memberId);
 
@@ -61,9 +69,9 @@ public class GroupService {
         groupAttendRepository.save(groupAttend);
 
         GroupResponseDTO groupResponseDTO = GroupResponseDTO.of(group);
-        groupResponseDTO.updateGroupImg(StringUtils.isBlank(requestDto.getGroupImg()) ? "anonymous.png" : requestDto.getGroupImg());
+        groupResponseDTO.updateGroupImg(getImage(uploadFolder + imageName));
 
-        return GroupResponseDTO.of(group);
+        return groupResponseDTO;
     }
 
     private LocalDateTime parseToFormatDate(String date) {
@@ -98,6 +106,14 @@ public class GroupService {
             if (!currentMemberId.equals(requestDto.getMemberId())) {
                 throw new AuthenticationNotMatchException();
             }
+        }
+        Group group = groupRepository.findById(requestDto.getId()).orElseThrow();
+
+        String oldFileName = group.getGroupImgName();
+        //기본이미지일 경우 업데이트만하고 삭제하지 않는다.
+        if (!"anonymous.png".equals(oldFileName)) {
+            // 기존 파일 삭제
+            deleteFile(uploadFolder + oldFileName);
         }
 
         groupRepository.deleteById(requestDto.getId());
