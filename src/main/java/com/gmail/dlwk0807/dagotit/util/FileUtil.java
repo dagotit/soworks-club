@@ -1,5 +1,6 @@
 package com.gmail.dlwk0807.dagotit.util;
 
+import com.gmail.dlwk0807.dagotit.entity.Group;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.ByteArrayOutputStream;
@@ -56,5 +57,14 @@ public class FileUtil {
             throw new RuntimeException(e);
         }
         return "ok";
+    }
+
+    public static void deleteGroupImage(Group group) {
+//        String oldFileName = group.getGroupImgName();
+//        //기본이미지일 경우 업데이트만하고 삭제하지 않는다.
+//        if (!"anonymous.png".equals(oldFileName)) {
+//            // 기존 파일 삭제
+//            deleteFile(uploadFolder + oldFileName);
+//        }
     }
 }

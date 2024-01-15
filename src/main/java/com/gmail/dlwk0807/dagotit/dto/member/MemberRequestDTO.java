@@ -37,6 +37,7 @@ public class MemberRequestDTO {
                 .nickname(nickname)
                 .birth(birth)
                 .status(status)
+                .profileImage("https://storage.googleapis.com/dagachi-image-bucket/default/profile_default.png")
                 .authority(Authority.valueOf(authority))
                 .build();
     }

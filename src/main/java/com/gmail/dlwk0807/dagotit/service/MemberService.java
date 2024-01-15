@@ -1,7 +1,6 @@
 package com.gmail.dlwk0807.dagotit.service;
 
 import com.gmail.dlwk0807.dagotit.core.exception.AuthenticationNotMatchException;
-import com.gmail.dlwk0807.dagotit.dto.image.ProfileImageResponseDTO;
 import com.gmail.dlwk0807.dagotit.dto.member.MemberDeleteDTO;
 import com.gmail.dlwk0807.dagotit.dto.member.MemberResponseDTO;
 import com.gmail.dlwk0807.dagotit.dto.member.MemberUpdateDTO;
@@ -19,37 +18,18 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class MemberService {
     private final MemberRepository memberRepository;
-    private final ProfileImageService profileImageService;
     private final PasswordEncoder passwordEncoder;
     private final AuthUtil authUtil;
 
     public MemberResponseDTO findMemberInfoById(Long memberId) {
         return memberRepository.findById(memberId)
-                .map(member -> {
-                    MemberResponseDTO memberResponseDTO = MemberResponseDTO.of(member);
-                    try {
-                        ProfileImageResponseDTO image = profileImageService.findImage(member.getId());
-                        memberResponseDTO.setProfileImage(image.getProfileImg());
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                    return memberResponseDTO;
-                })
+                .map(member -> MemberResponseDTO.of(member))
                 .orElseThrow(() -> new RuntimeException("로그인 유저 정보가 없습니다."));
     }
 
     public MemberResponseDTO findMemberInfoByEmail(String email) {
         return memberRepository.findByEmail(email)
-                .map(member -> {
-                    MemberResponseDTO memberResponseDTO = MemberResponseDTO.of(member);
-                    try {
-                        ProfileImageResponseDTO image = profileImageService.findImage(member.getId());
-                        memberResponseDTO.setProfileImage(image.getProfileImg());
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                    return memberResponseDTO;
-                })
+                .map(member -> MemberResponseDTO.of(member))
                 .orElseThrow(() -> new RuntimeException("유저 정보가 없습니다."));
     }
 

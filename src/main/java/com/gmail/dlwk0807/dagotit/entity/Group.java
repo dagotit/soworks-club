@@ -28,7 +28,7 @@ public class Group extends BaseEntity {
     private String category;
     private String name;
     private String memberId;
-    private String groupImgName;
+    private String groupImage;
     private String description;
     @Enumerated(EnumType.STRING)
     private GroupStatus status;
@@ -41,11 +41,11 @@ public class Group extends BaseEntity {
     private List<GroupAttend> groupAttendList = new ArrayList<>();
 
     @Builder
-    public Group(String category, String name, String memberId, String groupImgName, String description, GroupStatus status, String allDay, LocalDateTime startDateTime, LocalDateTime endDateTime) {
+    public Group(String category, String name, String memberId, String groupImage, String description, GroupStatus status, String allDay, LocalDateTime startDateTime, LocalDateTime endDateTime) {
         this.category = category;
         this.name = name;
         this.memberId = memberId;
-        this.groupImgName = groupImgName;
+        this.groupImage = groupImage;
         this.description = description;
         this.status = status;
         this.allDay = allDay;
@@ -70,7 +70,7 @@ public class Group extends BaseEntity {
         this.status = status;
     }
 
-    public void updateImageName(String groupImgName) {
-        this.groupImgName = groupImgName;
+    public void updateImageName(String groupImage) {
+        this.groupImage = groupImage;
     }
 }

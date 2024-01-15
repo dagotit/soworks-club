@@ -35,5 +35,5 @@ logging:
 #  config: classpath:bk_logback-spring.xml
 
 # file path
-file.profileImagePath: /home/dagachi002/tmpImage/ImageUpload/profileImages/
-file.groupImagePath: /home/dagachi002/tmpImage/ImageUpload/groupImages/
+file.profileImagePath: prod/profileImages/
+file.groupImagePath: prod/groupImages/

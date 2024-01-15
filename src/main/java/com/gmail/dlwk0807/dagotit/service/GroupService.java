@@ -12,20 +12,18 @@ import com.gmail.dlwk0807.dagotit.repository.GroupRepository;
 import com.gmail.dlwk0807.dagotit.repository.MemberRepository;
 import com.gmail.dlwk0807.dagotit.repository.impl.GroupCustomRepositoryImpl;
 import com.gmail.dlwk0807.dagotit.util.AuthUtil;
-import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Optional;
 
-import static com.gmail.dlwk0807.dagotit.util.FileUtil.deleteFile;
-import static com.gmail.dlwk0807.dagotit.util.FileUtil.getImage;
+import static com.gmail.dlwk0807.dagotit.util.FileUtil.*;
 
 @Service
 @RequiredArgsConstructor
@@ -39,10 +37,15 @@ public class GroupService {
     private final GroupCustomRepositoryImpl groupCustomRepositoryImpl;
     private final GroupImageService groupImageService;
 
-    @Value("${file.groupImagePath}")
-    private String uploadFolder;
+    public GroupResponseDTO saveGroup(GroupRequestDTO requestDto, MultipartFile file, User user) throws Exception {
 
-    public GroupResponseDTO saveGroup(GroupRequestDTO requestDto, User user) throws Exception {
+        if (!authUtil.isAdmin()) {
+            String currentMemberId = user.getUsername();
+            if (!currentMemberId.equals(requestDto.getMemberId())) {
+                throw new AuthenticationNotMatchException();
+            }
+        }
+
         String memberId = user.getUsername();
         requestDto.setCurrentMemberId(memberId);
 
@@ -55,7 +58,7 @@ public class GroupService {
             throw new DuplicationGroup();
         }
         //모임 이미지 저장
-        String imageName = groupImageService.uploadGroupImage(requestDto);
+        String imageName = groupImageService.uploadGroupImage(requestDto, file);
         group.updateImageName(imageName);
         groupRepository.save(group);
 
@@ -69,7 +72,6 @@ public class GroupService {
         groupAttendRepository.save(groupAttend);
 
         GroupResponseDTO groupResponseDTO = GroupResponseDTO.of(group);
-        groupResponseDTO.updateGroupImg(getImage(uploadFolder + imageName));
 
         return groupResponseDTO;
     }
@@ -109,15 +111,12 @@ public class GroupService {
         }
         Group group = groupRepository.findById(requestDto.getId()).orElseThrow();
 
-        String oldFileName = group.getGroupImgName();
-        //기본이미지일 경우 업데이트만하고 삭제하지 않는다.
-        if (!"anonymous.png".equals(oldFileName)) {
-            // 기존 파일 삭제
-            deleteFile(uploadFolder + oldFileName);
-        }
+        deleteGroupImage(group);
 
         groupRepository.deleteById(requestDto.getId());
     }
+
+
 
     public List<Group> listGroup(int month) {
         return groupCustomRepositoryImpl.findAllByMonth(month);

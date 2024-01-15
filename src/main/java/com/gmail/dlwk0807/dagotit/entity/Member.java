@@ -34,9 +34,7 @@ public class Member extends BaseEntity {
     private LocalDateTime lastLoginDate;
     private LocalDateTime emailAuth;
     private String status;
-
-    @OneToOne(mappedBy = "member", fetch = FetchType.EAGER)
-    private ProfileImage picture;
+    private String profileImage;
 
     @Enumerated(EnumType.STRING)
     private Authority authority;
@@ -46,7 +44,7 @@ public class Member extends BaseEntity {
     private List<Attendance> attendanceList = new ArrayList<>();
 
     @Builder
-    public Member(String email, String password, String address, String addressDtl, String bizNo, String name, String companyName, String companyDate, String nickname, String birth, LocalDateTime lastLoginDate, LocalDateTime emailAuth, String status, Authority authority) {
+    public Member(String email, String password, String address, String addressDtl, String bizNo, String name, String companyName, String companyDate, String nickname, String birth, LocalDateTime lastLoginDate, LocalDateTime emailAuth, String status, String profileImage, Authority authority) {
         this.email = email;
         this.password = password;
         this.address = address;
@@ -60,6 +58,7 @@ public class Member extends BaseEntity {
         this.lastLoginDate = lastLoginDate;
         this.emailAuth = emailAuth;
         this.status = status;
+        this.profileImage = profileImage;
         this.authority = authority;
     }
 
