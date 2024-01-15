@@ -1,11 +1,15 @@
 package com.gmail.dlwk0807.dagotit.util;
 
+import com.gmail.dlwk0807.dagotit.entity.Group;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Base64;
 
 @Slf4j
@@ -41,5 +45,26 @@ public class FileUtil {
         }
 
         return Base64.getEncoder().withoutPadding().encodeToString(fileArray);
+    }
+
+    public static String deleteFile(String imagePath) {
+        Path filePath = Paths.get(imagePath);
+
+        // 파일을 삭제합니다.
+        try {
+            Files.delete(filePath);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return "ok";
+    }
+
+    public static void deleteGroupImage(Group group) {
+//        String oldFileName = group.getGroupImgName();
+//        //기본이미지일 경우 업데이트만하고 삭제하지 않는다.
+//        if (!"anonymous.png".equals(oldFileName)) {
+//            // 기존 파일 삭제
+//            deleteFile(uploadFolder + oldFileName);
+//        }
     }
 }

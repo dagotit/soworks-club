@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import static com.gmail.dlwk0807.dagotit.global.CommonConstant.OK_RESP_CODE;
 import static com.gmail.dlwk0807.dagotit.global.CommonConstant.OK_RESP_MSG;
@@ -20,11 +21,12 @@ public class GroupController {
     private final GroupService groupService;
 
     @PostMapping("/save")
-    public ApiMessageVO saveGroup(@Valid @RequestBody GroupRequestDTO groupRequestDto, @AuthenticationPrincipal User user) {
-
+    public ApiMessageVO saveGroup(@RequestPart(value = "group") GroupRequestDTO groupRequestDto,
+                                  @RequestPart(value = "file") MultipartFile file,
+                                  @AuthenticationPrincipal User user) throws Exception {
         return ApiMessageVO.builder()
                 .respMsg(OK_RESP_MSG)
-                .respBody(groupService.saveGroup(groupRequestDto, user))
+                .respBody(groupService.saveGroup(groupRequestDto, file, user))
                 .respCode(OK_RESP_CODE)
                 .build();
     }

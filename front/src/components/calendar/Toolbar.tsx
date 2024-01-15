@@ -18,20 +18,21 @@ const Toolbar = (props: any) => {
   return (
     <div className={`${styles.rbcToolbar} rbc-toolbar`}>
       <span className={`${styles.rbcBtnGroup} rbc-btn-group`}>
-        <button onClick={navigate.bind(null, 'PREV')}>＜</button>
-        <button onClick={navigate.bind(null, 'TODAY')}>{month}월</button>
-        <button onClick={navigate.bind(null, 'NEXT')}> ＞</button>
+        <span className={`${styles.rbcToolbarLabel} rbc-toolbar-label`}>
+          {props.view === 'month' &&
+            `${date.getFullYear()}년 ${date.getMonth() + 1}월`}
+          {props.view === 'week' &&
+            `${date.getFullYear()}년 ${date.getMonth() + 1}월`}
+          {props.view === 'day' &&
+            `${date.getMonth() + 1}월 ${date.getDate()}일 ${
+              week[date.getDay()]
+            }요일`}
+        </span>
+        <button onClick={navigate.bind(null, 'PREV')}>↑</button>
+        <button onClick={navigate.bind(null, 'NEXT')}>↓</button>
       </span>
-      <span className={`${styles.rbcToolbarLabel} rbc-toolbar-label`}>
-        {props.view === 'month' &&
-          `${date.getFullYear()}년 ${date.getMonth() + 1}월`}
-        {props.view === 'week' &&
-          `${date.getFullYear()}년 ${date.getMonth() + 1}월`}
-        {props.view === 'day' &&
-          `${date.getMonth() + 1}월 ${date.getDate()}일 ${
-            week[date.getDay()]
-          }요일`}
-      </span>
+
+      <button onClick={navigate.bind(null, 'TODAY')}>{month}월</button>
       {/*<span className="rbc-btn-group">
         <button onClick={onViews.bind(null, 'month')}>월</button>
         <button onClick={onViews.bind(null, 'week')}>주</button>

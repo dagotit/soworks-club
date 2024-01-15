@@ -35,5 +35,5 @@ spring:
       host: localhost
 
 # file path
-file.profileImagePath: /Users/softworks/tmpImage/ImageUpload/profileImages/
-file.groupImagePath: /Users/softworks/tmpImage/ImageUpload/groupImages/
+file.profileImagePath: local/profileImages/
+file.groupImagePath: local/groupImages/

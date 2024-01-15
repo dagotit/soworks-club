@@ -2,6 +2,10 @@ server:
   port: 8090
 
 spring:
+  cloud:
+    gcp:
+      credentials:
+        location: classpath:/solid-justice-407909-6826526ca338.json
   servlet:
     multipart:
       max-file-size: 30MB
@@ -23,3 +27,6 @@ jwt:
 jasypt:
   encryptor:
     bean: jasyptStringEncryptor
+
+file:
+  bucket: dagachi-image-bucket

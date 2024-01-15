@@ -1,15 +1,13 @@
 package com.gmail.dlwk0807.dagotit.service;
 
+import com.gmail.dlwk0807.dagotit.core.config.jwt.TokenProvider;
 import com.gmail.dlwk0807.dagotit.core.exception.DuplicationMember;
 import com.gmail.dlwk0807.dagotit.dto.member.MemberRequestDTO;
 import com.gmail.dlwk0807.dagotit.dto.member.MemberResponseDTO;
 import com.gmail.dlwk0807.dagotit.dto.token.TokenDTO;
 import com.gmail.dlwk0807.dagotit.entity.Member;
-import com.gmail.dlwk0807.dagotit.entity.ProfileImage;
 import com.gmail.dlwk0807.dagotit.entity.RefreshToken;
-import com.gmail.dlwk0807.dagotit.core.config.jwt.TokenProvider;
 import com.gmail.dlwk0807.dagotit.repository.MemberRepository;
-import com.gmail.dlwk0807.dagotit.repository.ProfileImageRepository;
 import com.gmail.dlwk0807.dagotit.repository.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class AuthService {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final MemberRepository memberRepository;
-    private final ProfileImageRepository profileImageRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
@@ -38,13 +35,6 @@ public class AuthService {
         }
 
         Member member = memberRequestDto.toMember(passwordEncoder);
-
-        ProfileImage image = ProfileImage.builder()
-                .url("anonymous.png")
-                .member(member)
-                .build();
-
-        profileImageRepository.save(image);
 
         return MemberResponseDTO.of(memberRepository.save(member));
     }

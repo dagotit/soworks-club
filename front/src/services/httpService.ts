@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { NextResponse } from 'next/server';
 import { useTokenStore } from '@/store/useLogin';
+import { isEmptyObj } from '@/utils/common';
 
 const response = NextResponse.next();
 let timeOut: undefined | NodeJS.Timeout = undefined;
@@ -29,23 +30,29 @@ app.interceptors.response.use(
     return res.data;
   },
   async (err) => {
-    /*   const originalConfig = err.config;
-    if (err.response.status === 401 && !originalConfig._retry) {
-      originalConfig._retry = true;
-      // 토큰 다시 가져오기
-      try {
-        const resp = await axios.get(`/auth/reissue`, {
-          withCredentials: true,
-        });
-        if (resp) {
-          // access token 다시 담기
-          await setAccessToken(resp);
-          return app(originalConfig);
+    if (!isEmptyObj(err.response.data)) {
+      const data = err.response.data;
+      if (data.respCode !== 'BIZ_007') {
+        const originalConfig = err.config;
+        if (err.response.status === 401 && !originalConfig._retry) {
+          originalConfig._retry = true;
+          // 토큰 다시 가져오기 TODO: 오류가 많이 생길 것 같아서 이건 ... 회의 필요
+          try {
+            const resp = await axios.get(`/auth/reissue`, {
+              withCredentials: true,
+            });
+            if (resp) {
+              // access token 다시 담기
+              await setAccessToken(resp);
+              return app(originalConfig);
+            }
+          } catch (error) {
+            return Promise.reject(error);
+          }
         }
-      } catch (error) {
-        return Promise.reject(error);
       }
-    }*/
+    }
+
     const code = String(err.response.status);
     if (code.startsWith('5')) {
       location.href = `${process.env.NEXT_PUBLIC_DOMAIN}error?msg=${err.response.data.respMsg}`;

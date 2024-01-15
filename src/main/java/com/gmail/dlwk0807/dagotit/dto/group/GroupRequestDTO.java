@@ -16,13 +16,12 @@ public class GroupRequestDTO {
     private String category;
     private String name;
     private String memberId;
-    private String groupImg;
-    private String groupImgName;
     private String description;
     @NotBlank(message = "시작일시는 필수입니다.")
     private String strStartDateTime;
     @NotBlank(message = "종료일시는 필수입니다.")
     private String strEndDateTime;
+    private String groupImage;
 
     public Group toGroup() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
@@ -33,11 +32,11 @@ public class GroupRequestDTO {
                 .category(category)
                 .name(name)
                 .memberId(memberId)
+                .groupImage("https://storage.googleapis.com/dagachi-image-bucket/default/group_default.png")
                 .description(description)
                 .status(GroupStatus.WAITING)
                 .startDateTime(startDateTime)
                 .endDateTime(endDateTime)
-                .groupImgName(groupImgName)
                 .build();
     }
 

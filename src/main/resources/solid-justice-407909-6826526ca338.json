@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "solid-justice-407909",
+  "private_key_id": "6826526ca3385a6cd6455579db423a51ab65ba11",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDdNz1wfVU+QUK6\nXyfGVFAYF7+9BcYA50ST+NY5hhhuj0NiOKzf2bM6jECYn8JmC2kJODDIOZfG/Zzi\n4zPmxerY6iSJWstJ/WQ6IqrY6ZWu6tGOe48McaB1bfUUJpSatQ49x9dxLeA34NOW\nR+9h0Dmf+KDm+fI2eSUJQfHNFmN9XN9/xzQle7xXf1EwMt2VOt7kX+DTwJwonzIe\nvCtjgFAdxja2tDt5iMuGBsbCli5NYjCYYVuhqBu1cgCuDPsWOqz/UtGAP4RD23Gp\ntHeFdd44G2CXcJHY1ZG6KpDYgZvmXN5+pLIYBvfQmT6DYYpIZOUFgLzvhVYygfiW\nGrucFh+HAgMBAAECggEAECNQgx1Rk6oVIR2B/FD4StmorjR2nmhAs37KugWTULV4\n1/iEfAwYrCPBLqExAFrCvd5wiJrS/LxRrqeeiK5VlJ94LOEHxY0Lu8X9qrdXqRwO\nT5Op+uFrMEXmRCMQYjzlHhKvH92V5t2q8eKrjvouygHMUy1WwyyRTByYdDq25VU3\nXtzU9cIoiZOF36sIlWFjXXxXmN4kkkhcv7bitUKyl9X5Evew/P5t28l+a/gLGg6o\n7+BVT3NHtkHeSn3Ufjw+fnk2+gtBSH8mhL0lB2qU8RhCbmymcnjz4OCHD+XWqYyM\nMT5Rp487Hju+XkYWxY9cpmr04LjYIi+LSbUDaEYfiQKBgQD7VmrmW1RO93Pyr5Uh\njXl52IQkSrBcbOme+M3P83FSozCQdtM10O87rXX8ijjLLtomsH0sa6gw91WF+AuZ\n4b9+8TWKn4hIAOVd0fLNTfcl23PiU1DTFHJf5PFB/S/lxtfWDnLc1JyxpGFm4ONP\nji4yvFJ6VMiMp4+Wy5eme9s65QKBgQDhUcbC6kZcTvXR4dv+guk++305f7T7+cWV\nSS72thL12MtAyM6NJR+zY3F0anVRcaV9KPzpj2OApADtfiazm5HlyLw6jGxO2uZH\n5Q3D43MinPONix7lNMHzdjZ5MDGbmPL5q8Nf5gnNgqXKyG6lMbg2EpXoc46jk9pC\n4cnBlHLN+wKBgFigwpV0gyhNbh+X9ticEMf8p6w8gjA1X7RlO/4mdEGVthxbKmOB\nx7qdkkt5WkmbveWCusEdPXP247uYGk8rIeHboOu/EcmCN198F0h6Q7qfxh97DbdB\nMIvMKZ8BbxBxq86Zzbs9ZfvmYUpr5vw4wOW3LsZge0/ODn44UMOuTUJZAoGAaSHR\n/xJ24A1Lr7GWB4wnruaDSHfpB4VEhuKN0jmkYSfVtpW7oqoGv5oPzwT5VpYTZHHi\niEwKXnSnpiitgDJ/gdsG0L7Crox+1F7w7EzNZQIctheKw+G4+ZNX2XX+P56/CHX3\nhGB+hHCIUTTyQ4wOatSDM+HvVS3gskJN9FACvU8CgYEAxlVznuhJX9rj0L0KkE4Y\nMLkLyIIqcOqNOoL6cpgr9EOwEHUjFubAGyYiF/H/wOCik8ffEjnul2ZsMQm4v2+o\nsjXx8CDy9HdbQLE4arSbHI5JMpLf2S3FBPrSJ1iTfwOpchsyfsJB7h4qU6P2IKxV\ng0HsMLSzBUSllOxsKL7TQxA=\n-----END PRIVATE KEY-----\n",
+  "client_email": "dagachi-storage-access@solid-justice-407909.iam.gserviceaccount.com",
+  "client_id": "101558355018568445591",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/dagachi-storage-access%40solid-justice-407909.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

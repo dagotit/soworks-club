@@ -13,8 +13,7 @@ public class GroupResponseDTO {
     private String memberId;
     private String description;
     private String status;
-    private String groupImg;
-    private String groupImgName;
+    private String groupImage;
     private String strStartDateTime;
     private String strEndDateTime;
 
@@ -28,11 +27,11 @@ public class GroupResponseDTO {
                 .status(String.valueOf(group.getStatus()))
                 .strStartDateTime(group.getStartDateTime().toString())
                 .strEndDateTime(group.getEndDateTime().toString())
-                .groupImgName(group.getGroupImgName())
+                .groupImage(group.getGroupImage())
                 .build();
     }
 
-    public void updateGroupImg(String groupImg) {
-        this.groupImg = groupImg;
+    public void updateGroupImg(String groupImage) {
+        this.groupImage = groupImage;
     }
 }
