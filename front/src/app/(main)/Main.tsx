@@ -38,10 +38,10 @@ const Main = () => {
    * 하루가 지났을 때 출석체크 하는 api 를 실행하기 위한 메서드
    * */
   useEffect(() => {
-    if (!!accessToken && !isAttend) {
+    if (!isAttend) {
       handleAttendanceApi();
     }
-  }, [accessToken, isAttend]);
+  }, [isAttend]);
 
   const testBtn = async () => {
     router.push('/calendar');

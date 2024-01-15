@@ -3,8 +3,8 @@
 import { Calendar, DateLocalizer, luxonLocalizer } from 'react-big-calendar';
 import { DateTime } from 'luxon';
 import styles from './CalendarMain.module.css';
-import { Fragment, useEffect, useState } from 'react';
-import { useGetMonthCalendar } from '@/hooks/useCalendar';
+import { Fragment, useCallback, useEffect, useState } from 'react';
+import { FilterQueryParamType, useGetMonthCalendar } from '@/hooks/useCalendar';
 import { ListType, useCalendarStore } from '@/store/useCalendar';
 import useDidMountEffect from '@/utils/useDidMountEffect';
 import Toolbar from '@/components/calendar/Toolbar';
@@ -14,6 +14,7 @@ import React from 'react';
 import Header from '@/components/Header';
 import { useTokenStore } from '@/store/useLogin';
 import ClubListFilter from '@/components/popups/ClubListFilter';
+import HeaderCellContent from '@/components/calendar/HeaderCellContent';
 
 const CalendarMain = () => {
   DateTime.local().setLocale('ko-KR');
@@ -24,13 +25,23 @@ const CalendarMain = () => {
   const calendarStore = useCalendarStore();
   const [isFilterPopup, setIsFilterPopup] = useState(false);
   const [myEvents, setMyEvents] = useState<ListType[] | []>([]);
+  const [listFilterQuery, setListFilterQuery] = useState<
+    {} | FilterQueryParamType
+  >({});
 
   useEffect(() => {
+    setMonth(2);
+    test();
+  }, []);
+
+  /* TODO: 토큰을 어떻게 하느냐에 따라서 달라짐... */
+
+  /*  useEffect(() => {
     if (!!accessToken) {
       setMonth(2);
       test();
     }
-  }, [accessToken]);
+  }, [accessToken]);*/
 
   const test = () => {
     calendarStore.add([
@@ -38,9 +49,9 @@ const CalendarMain = () => {
         id: 0,
         title: '등록된 이벤트',
         allDay: true,
-        start: new Date('2023-12-13'),
-        end: new Date('2023-12-13'),
-        colorEvento: 'green',
+        start: new Date('2024-01-10'),
+        end: new Date('2024-01-10'),
+        colorEvento: 'red',
         color: 'white',
       },
       {
@@ -71,10 +82,23 @@ const CalendarMain = () => {
    * @function
    * 필터 설정하는 팝업 open / close
    */
-  function handleFilterPopupState(e: boolean) {
+  const handleFilterPopupState = useCallback((e: boolean) => {
     setIsFilterPopup(e);
+  }, []);
+
+  /**
+   * @function
+   * 리스트 필터 팝업 적용하기 버튼 클릭 후
+   */
+  function handleSetFilterApplyData(filterData: FilterQueryParamType) {
+    setListFilterQuery(filterData);
+    setIsFilterPopup(false);
   }
 
+  /**
+   * @function
+   * 캘린더에 이벤트가 있고, 그 이벤트에 다른 색으로 표시하고 싶을때..
+   */
   function handlerPropsGetter(myEvents: any) {
     const backgroundColor = myEvents.colorEvento
       ? myEvents.colorEvento
@@ -88,19 +112,19 @@ const CalendarMain = () => {
   return (
     <Fragment>
       <main>
-        <Header />
-        {isLoading && <div className={styles.loadingText}>로딩중</div>}
+        {/*<Header />*/}
         {calendarStore.calendarList.length === 0 && (
           <div className={styles.loadingText}>로딩중</div>
         )}
-        {!isLoading && calendarStore.calendarList.length !== 0 && (
-          <div>
+        {calendarStore.calendarList.length !== 0 && (
+          <div className={styles.calendarWrap}>
             <Calendar
               className={styles.calendar}
               localizer={localize}
               components={{
                 toolbar: Toolbar,
                 month: {
+                  header: HeaderCellContent,
                   dateHeader: CustomDateHeader,
                 },
               }}
@@ -116,11 +140,18 @@ const CalendarMain = () => {
             />
           </div>
         )}
-        {!isLoading && calendarStore.calendarList.length !== 0 && (
-          <List popupState={handleFilterPopupState} />
-        )}
+        <List
+          listFilterQueryData={listFilterQuery}
+          popupState={handleFilterPopupState}
+        />
       </main>
-      {isFilterPopup && <ClubListFilter popupState={handleFilterPopupState} />}
+      {isFilterPopup && (
+        <ClubListFilter
+          listFilterQueryData={listFilterQuery}
+          popupState={handleFilterPopupState}
+          popupApplyData={handleSetFilterApplyData}
+        />
+      )}
     </Fragment>
   );
 };
