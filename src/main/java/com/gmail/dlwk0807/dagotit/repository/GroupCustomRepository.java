@@ -7,5 +7,5 @@ import java.util.List;
 
 @Repository
 public interface GroupCustomRepository {
-    List<Group> findAllByMonth(int month);
+    List<Group> findAllByMonth(int month, int year);
 }

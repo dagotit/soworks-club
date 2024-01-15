@@ -54,11 +54,11 @@ public class GroupController {
     }
 
     @GetMapping("/list")
-    public ApiMessageVO listGroup(@RequestParam int month) {
+    public ApiMessageVO listGroup(@RequestParam int month, @RequestParam int year) {
 
         return ApiMessageVO.builder()
                 .respMsg(OK_RESP_MSG)
-                .respBody(groupService.listGroup(month))
+                .respBody(groupService.listGroup(month, year))
                 .respCode(OK_RESP_CODE)
                 .build();
     }

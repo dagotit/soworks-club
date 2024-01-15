@@ -118,8 +118,8 @@ public class GroupService {
 
 
 
-    public List<Group> listGroup(int month) {
-        return groupCustomRepositoryImpl.findAllByMonth(month);
+    public List<Group> listGroup(int month, int year) {
+        return groupCustomRepositoryImpl.findAllByMonth(month, year);
     }
 
 }
