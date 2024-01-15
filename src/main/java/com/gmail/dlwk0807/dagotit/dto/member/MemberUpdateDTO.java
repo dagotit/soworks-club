@@ -1,9 +1,9 @@
 package com.gmail.dlwk0807.dagotit.dto.member;
 
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Getter
+@Data
 @NoArgsConstructor
 public class MemberUpdateDTO {
 
@@ -15,7 +15,7 @@ public class MemberUpdateDTO {
     private String nickname;
     private String birth;
     private String status;
-    private String picture;
+    private String profileImage;
     private String companyName;
     private String companyDate;
     private String authority;

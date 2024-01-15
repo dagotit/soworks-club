@@ -1,5 +1,6 @@
 package com.gmail.dlwk0807.dagotit.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.EntityListeners;
@@ -19,16 +20,21 @@ import java.time.LocalDateTime;
 @Data
 public class BaseEntity {
     @CreatedBy
+    @JsonIgnore
     private String sysRegDbId;
     @CreatedDate
     @Column(updatable = false, nullable = false)
     @Convert(converter = Jsr310JpaConverters.LocalDateTimeConverter.class)
+    @JsonIgnore
     private LocalDateTime createdAt;
     @LastModifiedBy
+    @JsonIgnore
     private String sysUpdDbId;
     @LastModifiedDate
     @Column(nullable = false)
     @Convert(converter = Jsr310JpaConverters.LocalDateTimeConverter.class)
+    @JsonIgnore
     private LocalDateTime updatedAt;
+    @JsonIgnore
     private String sysUpdReason;
 }

@@ -22,7 +22,7 @@ public class GroupController {
 
     @PostMapping("/save")
     public ApiMessageVO saveGroup(@RequestPart(value = "group") GroupRequestDTO groupRequestDto,
-                                  @RequestPart(value = "file") MultipartFile file,
+                                  @RequestPart(value = "file", required = false) MultipartFile file,
                                   @AuthenticationPrincipal User user) throws Exception {
         return ApiMessageVO.builder()
                 .respMsg(OK_RESP_MSG)

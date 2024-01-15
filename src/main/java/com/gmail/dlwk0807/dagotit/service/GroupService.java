@@ -57,9 +57,13 @@ public class GroupService {
         if (groupList.size() > 0) {
             throw new DuplicationGroup();
         }
+
         //모임 이미지 저장
-        String imageName = groupImageService.uploadGroupImage(requestDto, file);
-        group.updateImageName(imageName);
+        if (file != null && !file.isEmpty()) {
+            String imageName = groupImageService.uploadGroupImage(requestDto, file);
+            group.updateImageName(imageName);
+        }
+
         groupRepository.save(group);
 
         Member member = memberRepository.findById(Long.parseLong(memberId)).orElseThrow();

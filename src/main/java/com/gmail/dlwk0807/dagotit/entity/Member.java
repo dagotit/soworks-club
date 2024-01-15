@@ -1,5 +1,6 @@
 package com.gmail.dlwk0807.dagotit.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.gmail.dlwk0807.dagotit.dto.member.MemberUpdateDTO;
 import io.micrometer.common.util.StringUtils;
@@ -22,6 +23,7 @@ public class Member extends BaseEntity {
     private Long id;
 
     private String email;
+    @JsonIgnore
     private String password;
     private String address;
     private String addressDtl;
@@ -37,10 +39,11 @@ public class Member extends BaseEntity {
     private String profileImage;
 
     @Enumerated(EnumType.STRING)
+    @JsonIgnore
     private Authority authority;
 
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
-    @JsonIgnoreProperties({"member"})
+    @JsonIgnore
     private List<Attendance> attendanceList = new ArrayList<>();
 
     @Builder
@@ -101,6 +104,10 @@ public class Member extends BaseEntity {
 
     public void addAttendance(Attendance attendance) {
         attendanceList.add(attendance);
+    }
+
+    public void updateProfileImage(String profileImage) {
+        this.profileImage = profileImage;
     }
 
 }
