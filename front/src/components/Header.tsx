@@ -19,7 +19,7 @@ const Header = (props: any) => {
   const { open, allClose } = useDialogStore();
 
   useEffect(() => {
-    if (!accessToken) {
+    /*if (!accessToken) {
       getAccessToken.mutate(null, {
         onError: (err) => {
           console.log('err:::', err);
@@ -28,7 +28,7 @@ const Header = (props: any) => {
           });
         },
       });
-    }
+    }*/
     return () => {
       allClose();
     };

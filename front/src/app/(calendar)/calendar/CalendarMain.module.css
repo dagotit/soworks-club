@@ -1,3 +1,7 @@
+.calendarWrap {
+    padding: 19px;
+}
+
 .calendar  {
     background-color: transparent;
 }
@@ -8,14 +12,16 @@
 }
 .rbcToolbar {
     display: flex;
-    justify-content: center;
+    justify-content: start;
     margin: 10px 0px 10px 0px;
 }
 .calendar .rbcToolbar .rbcToolbarLabel {
-    font-size: 25px;
+    font-size: 16px;
     color: #fff;
     font-weight: bolder;
+    padding: 0;
 }
 .loadingText {
     color: #f0f0f0;
+    height: 500px;
 }
