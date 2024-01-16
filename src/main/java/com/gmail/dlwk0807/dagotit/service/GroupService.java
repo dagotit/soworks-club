@@ -86,7 +86,7 @@ public class GroupService {
 
     }
 
-    public Group updateGroup(GroupRequestDTO requestDto, User user) {
+    public Group updateGroup(GroupRequestDTO requestDto, MultipartFile groupImageFile, List<MultipartFile> groupFiles, User user) {
         if (!authUtil.isAdmin()) {
             String currentMemberId = user.getUsername();
             if (!currentMemberId.equals(requestDto.getMemberId())) {
@@ -94,12 +94,9 @@ public class GroupService {
             }
         }
 
-        LocalDateTime startDateTime = parseToFormatDate(requestDto.getStrStartDateTime());
-        LocalDateTime endDateTime = parseToFormatDate(requestDto.getStrEndDateTime());
-        List<Group> groupList = groupRepository.findByMemberIdAndStartDateTimeBetween(requestDto.getMemberId(), startDateTime, endDateTime);
-        if (groupList.size() > 0) {
-            throw new DuplicationGroup();
-        }
+        //그룹이미지 기존이랑 같으면 사진파일 업로드 pass
+
+        //그룹첨부파일
 
         Group group = groupRepository.findById(requestDto.getId()).orElseThrow();
         group.update(requestDto);

@@ -6,8 +6,10 @@ import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -15,6 +17,8 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
+@Slf4j
 public class GroupImageCloudServiceImpl implements GroupImageService{
 
     private final Storage storage;
@@ -33,7 +37,7 @@ public class GroupImageCloudServiceImpl implements GroupImageService{
         BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType(file.getContentType()).build();
         try {
             Blob from = storage.createFrom(blobInfo, file.getInputStream());
-            System.out.println("from = " + from);
+            log.info("Blob from : {}", from);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
