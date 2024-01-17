@@ -10,6 +10,8 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 import static com.gmail.dlwk0807.dagotit.global.CommonConstant.OK_RESP_CODE;
 import static com.gmail.dlwk0807.dagotit.global.CommonConstant.OK_RESP_MSG;
 
@@ -21,9 +23,9 @@ public class GroupController {
     private final GroupService groupService;
 
     @PostMapping("/save")
-    public ApiMessageVO saveGroup(@RequestPart(value = "group") GroupRequestDTO groupRequestDto,
-                                  @RequestPart(value = "file") MultipartFile file,
-                                  @AuthenticationPrincipal User user) throws Exception {
+    public ApiMessageVO createGroup(@RequestPart(value = "group") GroupRequestDTO groupRequestDto,
+                                    @RequestPart(value = "file", required = false) MultipartFile file,
+                                    @AuthenticationPrincipal User user) throws Exception {
         return ApiMessageVO.builder()
                 .respMsg(OK_RESP_MSG)
                 .respBody(groupService.saveGroup(groupRequestDto, file, user))
@@ -32,11 +34,14 @@ public class GroupController {
     }
 
     @PostMapping("/update")
-    public ApiMessageVO updateGroup(@Valid @RequestBody GroupRequestDTO groupRequestDto, @AuthenticationPrincipal User user) {
+    public ApiMessageVO updateGroup(@RequestPart(value = "group") GroupRequestDTO groupRequestDto,
+                                    @RequestPart(value = "groupImage", required = false) MultipartFile groupImageFile,
+                                    @RequestPart(value = "groupFiles", required = false) List<MultipartFile> groupFiles,
+                                    @AuthenticationPrincipal User user) {
 
         return ApiMessageVO.builder()
                 .respMsg(OK_RESP_MSG)
-                .respBody(groupService.updateGroup(groupRequestDto, user))
+                .respBody(groupService.updateGroup(groupRequestDto, groupImageFile, groupFiles, user))
                 .respCode(OK_RESP_CODE)
                 .build();
     }
@@ -54,11 +59,11 @@ public class GroupController {
     }
 
     @GetMapping("/list")
-    public ApiMessageVO listGroup(@RequestParam int month) {
+    public ApiMessageVO listGroup(@RequestParam int month, @RequestParam int year) {
 
         return ApiMessageVO.builder()
                 .respMsg(OK_RESP_MSG)
-                .respBody(groupService.listGroup(month))
+                .respBody(groupService.listGroup(month, year))
                 .respCode(OK_RESP_CODE)
                 .build();
     }

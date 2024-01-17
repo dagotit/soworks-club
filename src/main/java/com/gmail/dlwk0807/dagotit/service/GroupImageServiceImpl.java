@@ -9,10 +9,10 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-@Service
+//@Service
 @RequiredArgsConstructor
 @Slf4j
-@Profile("prod")
+@Deprecated
 public class GroupImageServiceImpl implements GroupImageService{
 
 

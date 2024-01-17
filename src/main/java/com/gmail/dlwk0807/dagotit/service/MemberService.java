@@ -1,6 +1,8 @@
 package com.gmail.dlwk0807.dagotit.service;
 
 import com.gmail.dlwk0807.dagotit.core.exception.AuthenticationNotMatchException;
+import com.gmail.dlwk0807.dagotit.dto.group.GroupRequestDTO;
+import com.gmail.dlwk0807.dagotit.dto.image.ProfileImageUploadDTO;
 import com.gmail.dlwk0807.dagotit.dto.member.MemberDeleteDTO;
 import com.gmail.dlwk0807.dagotit.dto.member.MemberResponseDTO;
 import com.gmail.dlwk0807.dagotit.dto.member.MemberUpdateDTO;
@@ -8,10 +10,19 @@ import com.gmail.dlwk0807.dagotit.dto.member.RequestPasswordDTO;
 import com.gmail.dlwk0807.dagotit.entity.Member;
 import com.gmail.dlwk0807.dagotit.repository.MemberRepository;
 import com.gmail.dlwk0807.dagotit.util.AuthUtil;
+import com.google.cloud.storage.Blob;
+import com.google.cloud.storage.BlobId;
+import com.google.cloud.storage.BlobInfo;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +31,8 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthUtil authUtil;
+    private final ProfileImageCloudService profileImageCloudService;
+
 
     public MemberResponseDTO findMemberInfoById(Long memberId) {
         return memberRepository.findById(memberId)
@@ -66,6 +79,28 @@ public class MemberService {
         }
         Member member = memberRepository.findByEmail(memberDeleteDto.getEmail()).orElseThrow();
         memberRepository.delete(member);
+    }
+
+    public String profileUpload(MultipartFile file, String memberId, User user) {
+
+        String imageName = null;
+
+        if (!authUtil.isAdmin()) {
+            String currentMemberId = user.getUsername();
+            if (!currentMemberId.equals(memberId)) {
+                throw new AuthenticationNotMatchException();
+            }
+        }
+
+        Member member = memberRepository.findById(Long.parseLong(memberId)).orElseThrow(() -> new UsernameNotFoundException("회원이 존재하지 않습니다."));
+
+        //모임 이미지 저장
+        if (!file.isEmpty()) {
+            imageName = profileImageCloudService.uploadProfileImage(file);
+            member.updateProfileImage(imageName);
+        }
+
+        return imageName;
     }
 
 }

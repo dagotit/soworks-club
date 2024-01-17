@@ -8,7 +8,6 @@ import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailAuthenticationException;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -25,7 +24,7 @@ public class CommonExceptionHandler {
     private ConfigurableEnvironment env;
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<?> unknowError(Exception e) {
+    public ResponseEntity<?> unknownError(Exception e) {
         String respBody = "";
 //        if (getProfile()) {
             respBody = e.getMessage();
@@ -38,7 +37,7 @@ public class CommonExceptionHandler {
     }
 
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<?> unknowError(RuntimeException e) {
+    public ResponseEntity<?> unknownError(RuntimeException e) {
         String respBody = "";
 //        if (getProfile()) {
             respBody = e.getMessage();
@@ -114,8 +113,8 @@ public class CommonExceptionHandler {
                 .respMsg("외부 리소스 조회 오류 입니다.[자세한 내용은 서버에 문의 주세요]").build(), HttpStatus.GATEWAY_TIMEOUT);
     }
 
-    @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<?> badCredentialsException(BadCredentialsException e) {
+    @ExceptionHandler(BadCredentialsCustomException.class)
+    public ResponseEntity<?> badCredentialsCustomException(BadCredentialsCustomException e) {
         String respBody = "";
 //        if (getProfile()) {
             respBody = e.getMessage();
@@ -205,7 +204,7 @@ public class CommonExceptionHandler {
     }
 
     @ExceptionHandler(AuthenticationNotMatchException.class)
-    public ResponseEntity<?> authenticatoinNotMatchException(AuthenticationNotMatchException e) {
+    public ResponseEntity<?> authenticationNotMatchException(AuthenticationNotMatchException e) {
         String respBody = "";
         respBody = e.getMessage();
         log.error(this.getClass().getName(), e);
@@ -258,6 +257,18 @@ public class CommonExceptionHandler {
                 .respBody(respBody)
                 .respMsg("오류가 발생했습니다.").build(), HttpStatus.OK);
     }
+
+    @ExceptionHandler(AccessDeniedCustomException.class)
+    public ResponseEntity<?> accessDeniedCustomException(AccessDeniedCustomException e) {
+        String respBody = "";
+        respBody = e.getMessage();
+        log.error(this.getClass().getName(), e);
+        return new ResponseEntity<ApiMessageVO>(ApiMessageVO.builder()
+                .respCode("BIZ_019")
+                .respBody(respBody)
+                .respMsg("접근권한이 없습니다.").build(), HttpStatus.OK);
+    }
+
 
 
     private boolean getProfile() {

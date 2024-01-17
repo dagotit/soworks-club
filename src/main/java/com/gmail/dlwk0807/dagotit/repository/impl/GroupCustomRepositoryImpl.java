@@ -22,9 +22,10 @@ public class GroupCustomRepositoryImpl implements GroupCustomRepository {
     private final JPAQueryFactory query;
 
     @Override
-    public List<Group> findAllByMonth(int month) {
+    public List<Group> findAllByMonth(int month, int year) {
         return query.selectFrom(group)
-                .where(group.startDateTime.month().eq(month))
+                .where(group.startDateTime.month().eq(month)
+                        .and(group.startDateTime.year().eq(year)))
                 .fetch();
     }
 }
