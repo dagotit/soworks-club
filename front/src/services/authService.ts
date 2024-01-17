@@ -1,5 +1,5 @@
 import http from './httpService';
-import axios from 'axios';
+import axios, {AxiosResponse} from 'axios';
 
 interface LoginReqType {
   email: string;
@@ -33,6 +33,11 @@ interface SignUpType {
   companyDate: string;
   addressDtl: string;
 }
+
+interface  CreateGroupType {
+  data: FormData;
+}
+
 /**
  * @function
  * 로고 이미지 가져오기
@@ -167,6 +172,21 @@ export const apiSignup = async (data: SignUpType): Promise<any> => {
   } catch (e) {
     if (axios.isAxiosError(e) && e.response) {
       console.log('회원가입 실패:::', e.response);
+      throw e.response.data;
+    }
+  }
+};
+
+export const apiCreateGroup = async (data: FormData): Promise<any> => {
+  try {
+    return await http.post('/api/v1/groups/save', data, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+  } catch (e) {
+    if (axios.isAxiosError(e) && e.response) {
+      console.log('모임생성 실패:::', e.response);
       throw e.response.data;
     }
   }

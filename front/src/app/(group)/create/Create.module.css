@@ -33,6 +33,7 @@
   font-weight: 600;
   font-size: 14px;
   margin-bottom: 5px;
+  font-family: 'Inter', sans-serif;
 }
 .cWrap .cWrapContBox .cWrapCont .cCont {
   width: 100%;
@@ -60,14 +61,24 @@
 /* 날짜 설정 */
 .cWrap .cWrapContBox .cWrapCont.cWrapDesc .cCont{
   display: flex;
-  flex-flow: row nowrap;
-  justify-content: space-between;
-  align-items: center;
+  flex-flow: column nowrap;
   font-size: 12px;
   font-weight: 500;
 }
+.cWrap .cWrapContBox .cWrapCont.cWrapDesc .cCont .dateCont {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  margin-top: 10px;
+}
+.cWrap .cWrapContBox .cWrapCont.cWrapDesc .cCont .dateCont > div {
+  width: 40px;
+  margin-right: 15px;
+  font-size: 16px;
+  font-weight: 600;
+}
 .cWrap .cWrapContBox .cWrapCont.cWrapDesc .cCont input {
-  width: 45%;
+  width: calc(100% - 55px);
   border: 2px solid #222;
   padding: 10px;
   border-radius: 8px;
@@ -108,10 +119,63 @@
   background-color: #ddd;
   margin-right: 20px;
   border-radius: 5px;
+  overflow: hidden;
+  object-position: 50% 50%;
 }
 .cWrap .cWrapContBox .cWrapCont.cWrapImg .cCont .cContMainImgBox img {
   width: 100%;
+
 }
 .cWrap .cWrapContBox .cWrapCont.cWrapImg .cCont .cContMainImgCont {
   width: calc(100% - 130px);
+}
+.cWrap .cWrapContBox .cWrapCont.cWrapImg .cCont .cContMainImgCont .fileBox {
+  display: flex;
+  flex-flow: row nowrap;
+  height: 40px;
+}
+.cWrap .cWrapContBox .cWrapCont.cWrapImg .cCont .cContMainImgCont .fileBox input.fileBoxTit {
+  width: 60%;
+  border: 1px solid #ddd;
+  background-color: #ddd;
+}
+.cWrap .cWrapContBox .cWrapCont.cWrapImg .cCont .cContMainImgCont .fileBox label {
+  display: inline-block;
+  padding: 10px 8px;
+  color: #fff;
+  vertical-align: middle;
+  background-color: #999;
+  cursor: pointer;
+  margin-left: 10px;
+  height: 40px;
+  word-break: keep-all;
+}
+.cWrap .cWrapContBox .cWrapCont.cWrapImg .cCont .cContMainImgCont .fileBox input[type="file"] {
+  position: absolute;
+  width: 0;
+  height: 0;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+}
+.cWrap .cWrapContBox .cWrapCont.cWrapImg .cCont .cContMainImgCont .warMsg {
+  font-size: 12px;
+  font-family: 'Inter', sans-serif;
+  color: #f62f2f;
+}
+
+.cWrap .cWrapContPostBtn {
+  padding: 0 20px 50px;
+  margin: 30px 0 0;
+}
+.cWrap .cWrapContPostBtn .cBtn {
+  width: 100%;
+  height: 50px;
+  align-items: center;
+  background-color: #999;
+  color: #fff;
+  word-break: keep-all;
+  font-size: 20px;
+  border: none;
+  font-weight: 700;
 }

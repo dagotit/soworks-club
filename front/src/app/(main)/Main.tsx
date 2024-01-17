@@ -46,6 +46,9 @@ const Main = () => {
   const testBtn = async () => {
     router.push('/calendar');
   };
+  const testBtn2 = async () => {
+    router.push('/create');
+  };
 
   /**
    * @function
@@ -72,6 +75,7 @@ const Main = () => {
         {/*  refetch*/}
         {/*</button>*/}
         <button onClick={testBtn}>캘린더 화면으로 이동</button>
+        <button onClick={testBtn2}>모임생성 화면으로 이동</button>
       </main>
     </Fragment>
   );
