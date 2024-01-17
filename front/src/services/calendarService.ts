@@ -3,12 +3,14 @@ import axios from 'axios';
 import { isEmptyObj } from '@/utils/common';
 import { FilterQueryParamType } from '@/hooks/useCalendar';
 
-export const apiGetMonthCalendar = async (month: number | null) => {
-  if (!month) {
-    return Promise;
-  }
+export const apiGetMonthCalendar = async (query: {
+  month: number;
+  year: number;
+}) => {
   try {
-    return await http.get(`/api/v1/group-attend/list?groupId=${month}`);
+    return await http.get(
+      `/api/v1/groups/list?month=${query.month}&year=${query.year}`,
+    );
   } catch (e) {
     if (axios.isAxiosError(e) && e.response) {
       throw e.response.data;

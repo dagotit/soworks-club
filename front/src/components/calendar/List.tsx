@@ -31,9 +31,27 @@ const List = memo((props: clubListProps) => {
 
   useEffect(() => {
     updateList([
-      { id: 0, title: '모임1', date: '2022-12-23', status: '참여:1명' },
-      { id: 1, title: '모임2', date: '2022-12-23', status: '참여:2명' },
-      { id: 2, title: '모임3', date: '2022-12-23', status: '참여:3명' },
+      {
+        id: 0,
+        title: '모임1',
+        date: '2022-12-23',
+        status: '참여:1명',
+        images: 'https://dummyimage.com/200x200',
+      },
+      {
+        id: 1,
+        title: '모임2',
+        date: '2022-12-23',
+        status: '참여:2명',
+        images: 'https://dummyimage.com/200x200',
+      },
+      {
+        id: 2,
+        title: '모임3',
+        date: '2022-12-23',
+        status: '참여:3명',
+        images: 'https://dummyimage.com/200x200',
+      },
     ]);
   }, []);
 
@@ -79,6 +97,7 @@ const List = memo((props: clubListProps) => {
               title={value.title}
               date={value.date}
               status={value.status}
+              images={value.images}
             />
           ))}
         </ul>
