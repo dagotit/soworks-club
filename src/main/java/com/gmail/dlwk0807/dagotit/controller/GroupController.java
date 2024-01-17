@@ -1,6 +1,8 @@
 package com.gmail.dlwk0807.dagotit.controller;
 
+import com.gmail.dlwk0807.dagotit.dto.group.GroupAttachFileRequestDTO;
 import com.gmail.dlwk0807.dagotit.dto.group.GroupRequestDTO;
+import com.gmail.dlwk0807.dagotit.dto.group.GroupResponseDTO;
 import com.gmail.dlwk0807.dagotit.service.GroupService;
 import com.gmail.dlwk0807.dagotit.vo.ApiMessageVO;
 import jakarta.validation.Valid;
@@ -22,26 +24,47 @@ public class GroupController {
 
     private final GroupService groupService;
 
+    @GetMapping("/info")
+    public ApiMessageVO info(@RequestParam Long groupId) {
+
+        return ApiMessageVO.builder()
+                .respMsg(OK_RESP_MSG)
+                .respBody(groupService.info(groupId))
+                .respCode(OK_RESP_CODE)
+                .build();
+    }
+
     @PostMapping("/save")
     public ApiMessageVO createGroup(@RequestPart(value = "group") GroupRequestDTO groupRequestDto,
-                                    @RequestPart(value = "file", required = false) MultipartFile file,
+                                    @RequestPart(value = "file", required = false) MultipartFile groupImageFile,
                                     @AuthenticationPrincipal User user) throws Exception {
         return ApiMessageVO.builder()
                 .respMsg(OK_RESP_MSG)
-                .respBody(groupService.saveGroup(groupRequestDto, file, user))
+                .respBody(groupService.saveGroup(groupRequestDto, groupImageFile, user))
                 .respCode(OK_RESP_CODE)
                 .build();
     }
 
     @PostMapping("/update")
     public ApiMessageVO updateGroup(@RequestPart(value = "group") GroupRequestDTO groupRequestDto,
-                                    @RequestPart(value = "groupImage", required = false) MultipartFile groupImageFile,
+                                    @RequestPart(value = "file", required = false) MultipartFile groupImageFile,
+                                    @AuthenticationPrincipal User user) {
+
+        return ApiMessageVO.builder()
+                .respMsg(OK_RESP_MSG)
+                .respBody(groupService.updateGroup(groupRequestDto, groupImageFile, user))
+                .respCode(OK_RESP_CODE)
+                .build();
+    }
+
+    @PostMapping("/update-attach-file")
+    public ApiMessageVO updateAttachFile(@RequestPart(value = "group") GroupAttachFileRequestDTO groupAttachFileRequestDTO,
                                     @RequestPart(value = "groupFiles", required = false) List<MultipartFile> groupFiles,
                                     @AuthenticationPrincipal User user) {
 
         return ApiMessageVO.builder()
                 .respMsg(OK_RESP_MSG)
-                .respBody(groupService.updateGroup(groupRequestDto, groupImageFile, groupFiles, user))
+                .respBody(groupService.updateGroupAttachFile(groupAttachFileRequestDTO, groupFiles, user))
                 .respCode(OK_RESP_CODE)
                 .build();
     }
@@ -58,12 +81,22 @@ public class GroupController {
                 .build();
     }
 
-    @GetMapping("/list")
+    @GetMapping("/group-list")
     public ApiMessageVO listGroup(@RequestParam int month, @RequestParam int year) {
 
         return ApiMessageVO.builder()
                 .respMsg(OK_RESP_MSG)
                 .respBody(groupService.listGroup(month, year))
+                .respCode(OK_RESP_CODE)
+                .build();
+    }
+
+    @GetMapping("/join-group")
+    public ApiMessageVO joinGroup(@RequestParam Long groupId, @AuthenticationPrincipal User user) {
+
+        return ApiMessageVO.builder()
+                .respMsg(OK_RESP_MSG)
+                .respBody(groupService.joinGroup(groupId, user))
                 .respCode(OK_RESP_CODE)
                 .build();
     }

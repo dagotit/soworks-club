@@ -12,16 +12,17 @@ import java.time.format.DateTimeFormatter;
 @Getter
 @NoArgsConstructor
 public class GroupRequestDTO {
-    private Long Id;
+    private Long id;
     private String category;
     private String name;
-    private String memberId;
+    private Long memberId;
     private String description;
     @NotBlank(message = "시작일시는 필수입니다.")
     private String strStartDateTime;
     @NotBlank(message = "종료일시는 필수입니다.")
     private String strEndDateTime;
     private String groupImage;
+    private Long groupMaxNum;
 
     public Group toGroup() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
@@ -37,10 +38,11 @@ public class GroupRequestDTO {
                 .status(GroupStatus.WAITING)
                 .startDateTime(startDateTime)
                 .endDateTime(endDateTime)
+                .groupMaxNum(groupMaxNum)
                 .build();
     }
 
-    public void setCurrentMemberId(String memberId) {
+    public void setCurrentMemberId(Long memberId) {
         this.memberId = memberId;
     }
 }

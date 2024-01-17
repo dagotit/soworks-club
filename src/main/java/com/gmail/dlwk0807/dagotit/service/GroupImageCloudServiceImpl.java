@@ -30,7 +30,7 @@ public class GroupImageCloudServiceImpl implements GroupImageService{
     private String bucketPath;
 
     @Override
-    public String uploadGroupImage(GroupRequestDTO requestDto, MultipartFile file) {
+    public String uploadGroupImage(MultipartFile file) {
 
         String fileName = bucketPath + UUID.randomUUID() + file.getOriginalFilename();
         BlobId blobId = BlobId.of(bucketName, fileName);
@@ -46,12 +46,35 @@ public class GroupImageCloudServiceImpl implements GroupImageService{
     }
 
     @Override
-    public String uploadGroupImage(GroupRequestDTO requestDto) {
+    public String findImage(Long groupId) throws Exception {
         return null;
     }
 
-    @Override
-    public String findImage(Long groupId) throws Exception {
-        return null;
+    public String deleteGroupImage(String objectName) {
+        //objectName = "https://storage.googleapis.com/dagachi-image-bucket/local/profileImages/fd439c25-ff55-42b6-aa30-542e5efd051fnoname3.png"
+        String prefix = bucketName + "/";
+        int start = objectName.indexOf(prefix);
+        int prefixLength = prefix.length();
+
+        //objectName = "local/profileImages/fd439c25-ff55-42b6-aa30-542e5efd051fnoname3.png"
+        String filename = objectName.substring(start + prefixLength);
+        if (filename.startsWith("default/")) {
+            return "default 이미지 삭제 제외";
+        }
+
+        if (start != -1) {
+            Blob blob = storage.get(bucketName, filename);
+            if (blob == null) {
+                System.out.println("The object " + filename + " wasn't found in " + bucketName);
+                return null;
+            }
+
+            Storage.BlobSourceOption precondition = Storage.BlobSourceOption.generationMatch(blob.getGeneration());
+
+            storage.delete(bucketName, filename, precondition);
+        }
+
+
+        return "Object " + filename + " was deleted from " + bucketName;
     }
 }

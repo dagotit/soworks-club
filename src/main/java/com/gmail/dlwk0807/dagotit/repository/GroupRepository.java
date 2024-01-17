@@ -10,6 +10,6 @@ import java.util.List;
 @Repository
 public interface GroupRepository extends JpaRepository<Group, Long> {
 
-    List<Group> findByMemberIdAndStartDateTimeBetween(String memberId, LocalDateTime strStartDateTime, LocalDateTime strEndDateTime);
+    List<Group> findByMemberIdAndStartDateTimeBetween(Long memberId, LocalDateTime strStartDateTime, LocalDateTime strEndDateTime);
 
 }

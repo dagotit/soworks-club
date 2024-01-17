@@ -37,9 +37,11 @@ public class QGroup extends EntityPathBase<Group> {
 
     public final StringPath groupImage = createString("groupImage");
 
+    public final NumberPath<Long> groupMaxNum = createNumber("groupMaxNum", Long.class);
+
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final StringPath memberId = createString("memberId");
+    public final NumberPath<Long> memberId = createNumber("memberId", Long.class);
 
     public final StringPath name = createString("name");
 

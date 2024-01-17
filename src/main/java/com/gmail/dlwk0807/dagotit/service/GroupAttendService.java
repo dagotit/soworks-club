@@ -38,14 +38,14 @@ public class GroupAttendService {
 
     public GroupResponseDTO applyGroupAttend(GroupAttendRequestDTO groupAttendRequestDto, User user) throws Exception {
         if (!authUtil.isAdmin()) {
-            String currentMemberId = user.getUsername();
+            Long currentMemberId = Long.valueOf(user.getUsername());
             if (!currentMemberId.equals(groupAttendRequestDto.getMemberId())) {
                 throw new AuthenticationNotMatchException();
             }
         }
 
-        long groupId = Long.parseLong(groupAttendRequestDto.getGroupId());
-        long memberId = Long.parseLong(groupAttendRequestDto.getMemberId());
+        long groupId = groupAttendRequestDto.getGroupId();
+        long memberId = groupAttendRequestDto.getMemberId();
         //중복체크
         if (groupAttendRepository.existsByGroupIdAndMemberId(groupId, memberId)) {
             throw new DuplicationGroupAttend("이미 모임신청을 하셨습니다.");
@@ -72,14 +72,14 @@ public class GroupAttendService {
 
     public String cancelGroupAttend(GroupAttendRequestDTO groupAttendRequestDto, User user) {
         if (!authUtil.isAdmin()) {
-            String currentMemberId = user.getUsername();
+            Long currentMemberId = Long.valueOf(user.getUsername());
             if (!currentMemberId.equals(groupAttendRequestDto.getMemberId())) {
                 throw new AuthenticationNotMatchException();
             }
         }
 
-        long groupId = Long.parseLong(groupAttendRequestDto.getGroupId());
-        long memberId = Long.parseLong(groupAttendRequestDto.getMemberId());
+        long groupId = groupAttendRequestDto.getGroupId();
+        long memberId = groupAttendRequestDto.getMemberId();
         //참석체크
         if (!groupAttendRepository.existsByGroupIdAndMemberId(groupId, memberId)) {
             throw new CustomRespBodyException("참여하지 않은 모임입니다.");

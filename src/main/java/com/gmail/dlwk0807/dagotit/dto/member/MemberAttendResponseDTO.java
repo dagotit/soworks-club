@@ -12,7 +12,7 @@ public class MemberAttendResponseDTO {
     private String email;
     private String name;
     private String nickname;
-    private Long id;
+    private Long memberId;
 
     public static MemberAttendResponseDTO of(Member member) {
         return new MemberAttendResponseDTO(member.getEmail(), member.getName(), member.getNickname(), member.getId());

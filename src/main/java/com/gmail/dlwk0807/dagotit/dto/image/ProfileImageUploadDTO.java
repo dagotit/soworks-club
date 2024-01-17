@@ -5,5 +5,5 @@ import lombok.Data;
 @Data
 public class ProfileImageUploadDTO {
 
-    private String memberId;
+    private Long memberId;
 }

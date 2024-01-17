@@ -81,18 +81,18 @@ public class MemberService {
         memberRepository.delete(member);
     }
 
-    public String profileUpload(MultipartFile file, String memberId, User user) {
+    public String profileUpload(MultipartFile file, Long memberId, User user) {
 
         String imageName = null;
 
         if (!authUtil.isAdmin()) {
-            String currentMemberId = user.getUsername();
+            Long currentMemberId = Long.valueOf(user.getUsername());
             if (!currentMemberId.equals(memberId)) {
                 throw new AuthenticationNotMatchException();
             }
         }
 
-        Member member = memberRepository.findById(Long.parseLong(memberId)).orElseThrow(() -> new UsernameNotFoundException("회원이 존재하지 않습니다."));
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new UsernameNotFoundException("회원이 존재하지 않습니다."));
 
         //모임 이미지 저장
         if (!file.isEmpty()) {

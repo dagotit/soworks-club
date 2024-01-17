@@ -22,7 +22,7 @@ public class GroupImageServiceImpl implements GroupImageService{
     private String uploadFolder;
 
     @Override
-    public String uploadGroupImage(GroupRequestDTO requestDto, MultipartFile file) {
+    public String uploadGroupImage(MultipartFile file) {
         return null;
     }
 
@@ -61,6 +61,11 @@ public class GroupImageServiceImpl implements GroupImageService{
 //        } else {
 //            return getImage(uploadFolder + groupImgName);
 //        }
+        return null;
+    }
+
+    @Override
+    public String deleteGroupImage(String objectName) {
         return null;
     }
 }
