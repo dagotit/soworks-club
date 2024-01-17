@@ -7,6 +7,7 @@ import {
   apiSignup,
   apiUpdatePassword,
   getLogoImg,
+  apiCreateGroup,
 } from '@/services/authService';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
@@ -72,5 +73,12 @@ export const usePostSignup = () => {
   return useMutation({
     mutationKey: ['post-signup'],
     mutationFn: apiSignup,
+  });
+};
+
+export const usePostCreateGroup = () => {
+  return useMutation({
+    mutationKey: ['post-createGroup'],
+    mutationFn: apiCreateGroup,
   });
 };

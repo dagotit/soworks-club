@@ -17,8 +17,6 @@ const Join = () => {
   const creditsEmail = usePostCreditsEmail(); // 인증번호 보내기
   const emailCodeVerify = useGetEmailCodeVerfiy(); // 인증번호 가져오기
   const [code, setCode] = useState('');
-  // const [phoneNumber, setPhoneNumber] = useState('');
-  // const [telecom, setTelecom] = useState('');
   const [roadAddress, setRoadAddress] = useState('');
   const [zipCode, setZipCode] = useState('');
   const [detailAddress, setDetailAddress] = useState('');
@@ -43,10 +41,7 @@ const Join = () => {
   const [corporateRegiNumber, setCorporateRegiNumber] = useState('');
   const [isValid, setIsValid] = useState(false);
   const [isConfirmRegiNumBlurred, setIsConfirmRegiNumBlurred] = useState(false);
-  // const [snNum, setSnNum] = useState('');
 
-  // 주민번호 자동 input focus
-  // const snNumInput = useRef(null);
 
   /**
    * @function
@@ -57,17 +52,10 @@ const Join = () => {
       allClose();
     };
   }, []);
-  // useEffect(() => {
-  //   setAddress(roadAddress + ', ' + detailAddress);
-  // }, [roadAddress, detailAddress]);
   /**
    * @function
    * @DESC 연락처 영역
    */
-  // const handleSubmit = (e): void => {
-  //   e.preventDefault();
-  //   console.log({phoneNumber, telecom});
-  // }
 
   // 이메일 유효성 검사
   function isValidEmail(email: string): boolean {
@@ -250,23 +238,12 @@ const Join = () => {
     setCorporateRegiNumber(value);
   };
 
-  // 주민번호 포커스 이동
-  // const handleSnFeildChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   const value = event.target.value;
-  //   if (value.length === 6) {
-  //     snNumInput.current?.focus();
-  //   }
-  // };
   // 회원가입 버튼 클릭
   const handleSignUpClick = (): void => {
     if (onerName.trim() === '') {
       open('alert', '회원가입', '대표자분의 성함을 입력해주세요.');
       return;
     }
-    // if (phoneNumber.trim() === '') {
-    //   open('alert', '회원가입', '연락처를 입력해주세요.');
-    //   return;
-    // }
     if (companyName.trim() === '') {
       open('alert', '회원가입', '회사명을 입력해주세요.');
       return;
@@ -312,10 +289,11 @@ const Join = () => {
       return;
     }
 
-    let address = roadAddress + ', ' + detailAddress;
+    let address = roadAddress;
+    let addressDtl = detailAddress;
     // 가입 완료 후 로그인 페이지로 이동
     postSignup.mutate(
-      { email, password, address, corporateRegiNumber, onerName, companyName, companyDate },
+      { email, password, address, addressDtl, corporateRegiNumber, onerName, companyName, companyDate },
       {
         onSuccess: handlerSignupSuccess,
         onError: (error: any) => {
@@ -349,39 +327,6 @@ const Join = () => {
           </div>
         </div>
         {/* //이름 영역 */}
-        {/* 주민번호 영역 개인정보 이슈로 인한 막기 */}
-        {/* <div className={styles.sn_field}>
-         <div className={styles.tag_name}>주민번호</div>
-         <div className={styles.tag_input}> */}
-            {/* 주민번호 앞자리 */}
-            {/* <input type="number"
-                  onChange={handleSnFeildChange}/>
-            <div className={styles.dash} /> */}
-            {/* 주민번호 뒷자리 */}
-            {/*<input type="password" ref={snNumInput} />
-          </div>
-        </div> */}
-        {/* //주민번호 영역 */}
-        {/* 연락처 영역 */}
-        {/* <form className={styles.phone_field}>
-          <label className={styles.tag_name}>연락처</label>
-          <div className={styles.tag_box}>
-            <select value={telecom} onChange={(e) => setTelecom(e.target.value)}>
-            <option value="Skt">SKT</option>
-            <option value="Kt">KT</option>
-            <option value="Lgu+">LG U+</option>
-            <option value="Altteul">알뜰폰</option>
-          </select>
-            <input
-              type="tel"
-              value={phoneNumber}
-              className={styles.tag_input}
-              onChange={(e) => setPhoneNumber(e.target.value)}
-              placeholder="' - ' 기호는 생략해주세요."
-            />
-          </div>
-        </form> */}
-        {/* //연락처 영역 */}
         {/* 회사명 영역 */}
         <div className={styles.company_name_field}>
           <div className={styles.tag_name}>회사명</div>

@@ -32,7 +32,7 @@ app.interceptors.response.use(
   async (err) => {
     if (!isEmptyObj(err.response.data)) {
       const data = err.response.data;
-      if (data.respCode !== 'BIZ_007') {
+      if (data.respCode === 'BIZ_007') {
         const originalConfig = err.config;
         if (err.response.status === 401 && !originalConfig._retry) {
           originalConfig._retry = true;
