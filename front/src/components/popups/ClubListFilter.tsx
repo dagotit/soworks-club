@@ -2,8 +2,9 @@
 
 import { isEmptyObj } from '@/utils/common';
 import styles from './ClubListFilter.module.css';
-import { memo, useEffect, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import { FilterQueryParamType } from '@/hooks/useCalendar';
+import { DateTime } from 'luxon';
 
 interface clubFilterProps {
   popupState: any;
@@ -12,9 +13,17 @@ interface clubFilterProps {
 }
 
 const ClubListFilter = memo((props: clubFilterProps) => {
-  const [allCheckBox, setAllCheckBox] = useState(false);
+  const DEFAULTENDDAY = `${DateTime.now().year}-${
+    String(DateTime.now().month).length === 1
+      ? '0' + DateTime.now().month
+      : DateTime.now().month
+  }-${new Date(DateTime.now().year, DateTime.now().month, 0).getDate()}`; // 모임리스트 조회 종료일
+  const DEFAULTSTARTDAY = DateTime.now().toISODate(); // 모임리스트 조회 시작일
+  const [allCheckBox, setAllCheckBox] = useState(true);
   const [attendClubCheckBox, setAttendClubCheckBox] = useState(false);
   const [createClubCheckBox, setCreateClubCheckBox] = useState(false);
+  const [startDay, setStartDay] = useState(DEFAULTSTARTDAY);
+  const [endDay, setEndDay] = useState(DEFAULTENDDAY);
 
   /**
    * @function
@@ -22,7 +31,7 @@ const ClubListFilter = memo((props: clubFilterProps) => {
    */
   useEffect(() => {
     if (!isEmptyObj(props.listFilterQueryData)) {
-      const { isAll, isAttendClub, isCreateClub } = {
+      const { isAll, isAttendClub, isCreateClub, startDate, endDate } = {
         ...props.listFilterQueryData,
       };
       if (isAll !== undefined) {
@@ -34,8 +43,55 @@ const ClubListFilter = memo((props: clubFilterProps) => {
       if (isCreateClub !== undefined) {
         setCreateClubCheckBox(isCreateClub);
       }
+      if (startDate !== undefined) {
+        setStartDay(startDate);
+      }
+      if (endDate !== undefined) {
+        setEndDay(endDate);
+      }
     }
   }, []);
+  /**
+   * @function
+   * 시작날짜 onchange
+   */
+  function onChangeStartDate(e: React.ChangeEvent<HTMLInputElement>) {
+    setStartDay(e.currentTarget.value);
+    handleDetailChecked();
+  }
+  /**
+   * @function
+   * 시작날짜 onchange
+   */
+  function onChangeEndDate(e: React.ChangeEvent<HTMLInputElement>) {
+    setEndDay(e.currentTarget.value);
+    handleDetailChecked();
+  }
+  /**
+   * @function
+   * 전체 보기와 상세필터를 구분
+   */
+  function handleAllChecked() {
+    if (!allCheckBox) {
+      setStartDay(DEFAULTSTARTDAY);
+      setEndDay(DEFAULTENDDAY);
+      setAttendClubCheckBox(false);
+      setCreateClubCheckBox(false);
+    }
+  }
+  /**
+   * @function
+   * 필터 있을 경우 > 전체조회 false
+   * */
+  function handleDetailChecked() {
+    if (startDay !== DEFAULTENDDAY || endDay !== DEFAULTENDDAY) {
+      setAllCheckBox(false);
+    }
+
+    if (!attendClubCheckBox || !createClubCheckBox) {
+      setAllCheckBox(false);
+    }
+  }
   /**
    * @function
    * 팝업 닫기 버튼
@@ -53,8 +109,8 @@ const ClubListFilter = memo((props: clubFilterProps) => {
     if (!isEmptyObj(props)) {
       props.popupApplyData({
         isAll: allCheckBox,
-        startDate: '',
-        endDate: '',
+        startDate: startDay,
+        endDate: endDay,
         isAttendClub: attendClubCheckBox,
         isCreateClub: createClubCheckBox,
       });
@@ -77,7 +133,10 @@ const ClubListFilter = memo((props: clubFilterProps) => {
                 id="fe_club_filter1"
                 className={styles.switch}
                 checked={allCheckBox}
-                onChange={(e) => setAllCheckBox(e.currentTarget.checked)}
+                onChange={(e) => {
+                  setAllCheckBox(e.currentTarget.checked);
+                  handleAllChecked();
+                }}
               />
               <label htmlFor="fe_club_filter1" className={styles.switch_label}>
                 <span className={styles.onf_btn}></span>
@@ -88,7 +147,12 @@ const ClubListFilter = memo((props: clubFilterProps) => {
           <label>
             <span>날짜로 보기</span>
             <div className={styles.filterDateWrap}>
-              <input type="date" /> ~ <input type="date" />
+              <input
+                type="date"
+                value={startDay}
+                onChange={onChangeStartDate}
+              />
+              ~ <input type="date" value={endDay} onChange={onChangeEndDate} />
             </div>
           </label>
 
@@ -100,7 +164,10 @@ const ClubListFilter = memo((props: clubFilterProps) => {
                 id="fe_club_filter2"
                 className={styles.switch}
                 checked={attendClubCheckBox}
-                onChange={(e) => setAttendClubCheckBox(e.currentTarget.checked)}
+                onChange={(e) => {
+                  setAttendClubCheckBox(e.currentTarget.checked);
+                  handleDetailChecked();
+                }}
               />
               <label htmlFor="fe_club_filter2" className={styles.switch_label}>
                 <span className={styles.onf_btn}></span>
@@ -116,7 +183,10 @@ const ClubListFilter = memo((props: clubFilterProps) => {
                 id="fe_club_filter3"
                 className={styles.switch}
                 checked={createClubCheckBox}
-                onChange={(e) => setCreateClubCheckBox(e.currentTarget.checked)}
+                onChange={(e) => {
+                  setCreateClubCheckBox(e.currentTarget.checked);
+                  handleDetailChecked();
+                }}
               />
               <label htmlFor="fe_club_filter3" className={styles.switch_label}>
                 <span className={styles.onf_btn}></span>

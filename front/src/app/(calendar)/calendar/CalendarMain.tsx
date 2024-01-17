@@ -20,8 +20,9 @@ const CalendarMain = () => {
   DateTime.local().setLocale('ko-KR');
   const { accessToken } = useTokenStore();
   const localize: DateLocalizer = luxonLocalizer(DateTime);
-  const [month, setMonth] = useState<number | null>(null);
-  const { isLoading } = useGetMonthCalendar(month);
+  const [month, setMonth] = useState<number>(DateTime.now().month);
+  const [year, setYear] = useState<number>(DateTime.now().year);
+  const apiCalendarData = useGetMonthCalendar({ month, year });
   const calendarStore = useCalendarStore();
   const [isFilterPopup, setIsFilterPopup] = useState(false);
   const [myEvents, setMyEvents] = useState<ListType[] | []>([]);
@@ -29,19 +30,28 @@ const CalendarMain = () => {
     {} | FilterQueryParamType
   >({});
 
-  useEffect(() => {
-    setMonth(2);
+  useDidMountEffect(() => {
+    // setMonth(2);
     test();
-  }, []);
+    console.log('apiCalendarData.data:', apiCalendarData.data);
+    const data: any = {
+      ...apiCalendarData.data,
+    };
+    const calendarList = data.respBody.map((item: any) => {
+      return {
+        id: item.id,
+        title: '등록된 이벤트',
+        allDay: false,
+        start: new Date(item.startDateTime),
+        end: new Date(item.endDateTime),
+        attendanceDate: new Date('2024-01-13'),
+        colorEvento: 'green',
+        color: 'white',
+      };
+    });
 
-  /* TODO: 토큰을 어떻게 하느냐에 따라서 달라짐... */
-
-  /*  useEffect(() => {
-    if (!!accessToken) {
-      setMonth(2);
-      test();
-    }
-  }, [accessToken]);*/
+    console.log('calendarList:', calendarList);
+  }, [apiCalendarData.data]);
 
   const test = () => {
     calendarStore.add([
@@ -112,7 +122,7 @@ const CalendarMain = () => {
   return (
     <Fragment>
       <main>
-        {/*<Header />*/}
+        <Header />
         {calendarStore.calendarList.length === 0 && (
           <div className={styles.loadingText}>로딩중</div>
         )}

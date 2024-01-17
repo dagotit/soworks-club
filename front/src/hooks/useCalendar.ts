@@ -12,10 +12,10 @@ export interface FilterQueryParamType {
   isAttendClub: boolean;
   isCreateClub: boolean;
 }
-export const useGetMonthCalendar = (month: number | null) => {
+export const useGetMonthCalendar = (query: { month: number; year: number }) => {
   return useQuery({
-    queryKey: ['get-month-calendar', month],
-    queryFn: () => apiGetMonthCalendar(month),
+    queryKey: ['get-month-calendar', query.month, query.year],
+    queryFn: () => apiGetMonthCalendar(query),
     retry: 0,
     // staleTime: Infinity,
   });

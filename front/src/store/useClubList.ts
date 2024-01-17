@@ -5,6 +5,7 @@ export interface ClubListItemType {
   title: string;
   date: string;
   status: string;
+  images: string;
 }
 
 interface ClubListState {

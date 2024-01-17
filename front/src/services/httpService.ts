@@ -46,7 +46,11 @@ app.interceptors.response.use(
               await setAccessToken(resp);
               return app(originalConfig);
             }
-          } catch (error) {
+          } catch (error: any) {
+            if (error.response.data.respCode === 'BIZ_002') {
+              // 로그아웃된 사용자 입니다.
+              location.href = '/login';
+            }
             return Promise.reject(error);
           }
         }
