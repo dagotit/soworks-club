@@ -4,6 +4,7 @@ import {
   apiGetMonthCalendar,
 } from '@/services/calendarService';
 import { useMutation, useQuery } from '@tanstack/react-query';
+import { isEmptyObj } from '@/utils/common';
 
 export interface FilterQueryParamType {
   isAll: boolean;
@@ -28,7 +29,7 @@ export const useGetAttendance = () => {
   });
 };
 
-export const useGetClubList = (query: FilterQueryParamType | {}) => {
+export const useGetClubList = (query: FilterQueryParamType) => {
   return useQuery({
     queryKey: ['get-club-list', query],
     queryFn: () => apiGetClubList(query),
