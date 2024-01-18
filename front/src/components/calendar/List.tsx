@@ -11,6 +11,7 @@ import { isEmptyObj } from '@/utils/common';
 import { ClubListItemType, useClubListStore } from '@/store/useClubList';
 import Link from 'next/link';
 import useDidMountEffect from '@/utils/useDidMountEffect';
+import { DateTime } from 'luxon';
 
 interface clubListProps {
   popupState: any;
@@ -18,41 +19,53 @@ interface clubListProps {
 }
 
 const List = memo((props: clubListProps) => {
+  const DEFAULTENDDAY = `${DateTime.now().year}-${
+    String(DateTime.now().month).length === 1
+      ? '0' + DateTime.now().month
+      : DateTime.now().month
+  }-${new Date(DateTime.now().year, DateTime.now().month, 0).getDate()}`; // 모임리스트 조회 종료일
+  const DEFAULTSTARTDAY = DateTime.now().toISODate(); // 모임리스트 조회 시작일
   const router = useRouter();
   const { clubList, updateList } = useClubListStore();
+  const [queryData, setQueryData] = useState<any>({
+    isAll: true,
+    startDate: DEFAULTSTARTDAY,
+    endDate: DEFAULTENDDAY,
+    isAttendClub: false,
+    isCreateClub: false,
+  });
   // const [list, setList] = useState<[] | ClubListItemType[]>([]);
-  const { isLoading, isFetching, data } = useGetClubList(
-    props.listFilterQueryData,
-  );
+  const apiGetClubList = useGetClubList(queryData);
 
+  /**
+   * @function
+   * api 쿼리 파라미터 - 필터 데이터 셋팅을 위해 ( 여러번 호출 방지 )
+   */
   useEffect(() => {
-    console.log('data:', isLoading);
-  }, [data]);
+    if (isEmptyObj(props.listFilterQueryData)) {
+      setQueryData({
+        isAll: true,
+        startDate: DEFAULTSTARTDAY,
+        endDate: DEFAULTENDDAY,
+        isAttendClub: false,
+        isCreateClub: false,
+      });
+      return;
+    }
+    setQueryData(props.listFilterQueryData);
+  }, [props.listFilterQueryData]);
 
-  useEffect(() => {
-    updateList([
-      {
+  useDidMountEffect(() => {
+    /*
+    * {
         id: 0,
         title: '모임1',
         date: '2022-12-23',
         status: '참여:1명',
         images: 'https://dummyimage.com/200x200',
       },
-      {
-        id: 1,
-        title: '모임2',
-        date: '2022-12-23',
-        status: '참여:2명',
-        images: 'https://dummyimage.com/200x200',
-      },
-      {
-        id: 2,
-        title: '모임3',
-        date: '2022-12-23',
-        status: '참여:3명',
-        images: 'https://dummyimage.com/200x200',
-      },
-    ]);
+    * */
+    updateList([]);
   }, []);
 
   /**

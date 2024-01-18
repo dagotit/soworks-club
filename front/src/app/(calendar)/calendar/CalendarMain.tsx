@@ -15,6 +15,7 @@ import Header from '@/components/Header';
 import { useTokenStore } from '@/store/useLogin';
 import ClubListFilter from '@/components/popups/ClubListFilter';
 import HeaderCellContent from '@/components/calendar/HeaderCellContent';
+import { isEmptyObj } from '@/utils/common';
 
 const CalendarMain = () => {
   DateTime.local().setLocale('ko-KR');
@@ -31,12 +32,13 @@ const CalendarMain = () => {
   >({});
 
   useDidMountEffect(() => {
-    // setMonth(2);
     test();
-    console.log('apiCalendarData.data:', apiCalendarData.data);
     const data: any = {
       ...apiCalendarData.data,
     };
+    if (isEmptyObj(data)) {
+      return;
+    }
     const calendarList = data.respBody.map((item: any) => {
       return {
         id: item.id,
@@ -86,6 +88,7 @@ const CalendarMain = () => {
 
   function handlerViewChange(val: any) {
     // 월 단위로 고정
+    console.log(val);
   }
 
   /**
@@ -100,10 +103,13 @@ const CalendarMain = () => {
    * @function
    * 리스트 필터 팝업 적용하기 버튼 클릭 후
    */
-  function handleSetFilterApplyData(filterData: FilterQueryParamType) {
-    setListFilterQuery(filterData);
-    setIsFilterPopup(false);
-  }
+  const handleSetFilterApplyData = useCallback(
+    (filterData: FilterQueryParamType) => {
+      setListFilterQuery(filterData);
+      setIsFilterPopup(false);
+    },
+    [],
+  );
 
   /**
    * @function
@@ -117,6 +123,19 @@ const CalendarMain = () => {
     return {
       style: { backgroundColor, color },
     };
+  }
+
+  /**
+   * @function
+   * 다른 월 클릭 시 이벤트
+   */
+  function handlerMonth(e: any) {
+    const clickDay = DateTime.fromJSDate(e).toFormat('yyyy-MM-dd');
+    const month = DateTime.fromJSDate(e).toFormat('M');
+    const year = DateTime.fromJSDate(e).toFormat('yyyy');
+    // TODO 임시 주석
+    // setMonth(Number(month));
+    // setYear(Number(year));
   }
 
   return (
@@ -145,6 +164,7 @@ const CalendarMain = () => {
               view={'month'}
               views={['month']}
               eventPropGetter={handlerPropsGetter}
+              onNavigate={handlerMonth}
               onView={handlerViewChange}
               style={{ height: 500 }}
             />

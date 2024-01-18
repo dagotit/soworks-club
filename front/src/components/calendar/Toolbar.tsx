@@ -6,12 +6,15 @@ const Toolbar = (props: any) => {
   const week = ['일', '월', '화', '수', '목', '금', '토'];
   const [month, setMonth] = useState(DateTime.now().month);
 
+  /**
+   * @function
+   * 월 이동 버튼
+   */
   const navigate = (action: string) => {
     props.onNavigate(action);
   };
 
   const onViews = (action: any) => {
-    console.log('onViews action::', action);
     props.onView(action);
   };
 
