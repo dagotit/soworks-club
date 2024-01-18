@@ -1,9 +1,9 @@
 package com.gmail.dlwk0807.dagotit.dto.image;
 
+import com.gmail.dlwk0807.dagotit.core.aspect.AOPMemberIdDTO;
 import lombok.Data;
 
 @Data
-public class ProfileImageUploadDTO {
+public class ProfileImageUploadDTO extends AOPMemberIdDTO {
 
-    private Long memberId;
 }

@@ -62,6 +62,7 @@ public class MemberController {
                 .build();
     }
 
+
     @PostMapping(value = "/profile-upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApiMessageVO upload(@RequestPart(value = "file") MultipartFile file,
                                @RequestPart(value = "member") ProfileImageUploadDTO profileImageUploadDTO, @AuthenticationPrincipal User user) {

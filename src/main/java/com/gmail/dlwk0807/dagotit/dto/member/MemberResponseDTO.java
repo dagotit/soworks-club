@@ -14,7 +14,7 @@ public class MemberResponseDTO {
     private String email;
     private String name;
     private String nickname;
-    private Long id;
+    private Long memberId;
     private String profileImage;
 
     public static MemberResponseDTO of(Member member) {

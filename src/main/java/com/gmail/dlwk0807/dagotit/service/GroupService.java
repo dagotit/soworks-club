@@ -43,18 +43,9 @@ public class GroupService {
     private final GroupCustomRepositoryImpl groupCustomRepositoryImpl;
     private final GroupImageService groupImageService;
 
-    public GroupResponseDTO saveGroup(GroupRequestDTO requestDto, MultipartFile groupImageFile, User user) throws Exception {
+    public GroupResponseDTO saveGroup(GroupRequestDTO requestDto, MultipartFile groupImageFile) throws Exception {
 
-        if (!authUtil.isAdmin()) {
-            Long currentMemberId = Long.valueOf(user.getUsername());
-            if (!currentMemberId.equals(requestDto.getMemberId())) {
-                throw new AuthenticationNotMatchException();
-            }
-        }
-
-        Long memberId = Long.valueOf(user.getUsername());
-        requestDto.setCurrentMemberId(memberId);
-
+        Long memberId = requestDto.getMemberId();
         Group group = requestDto.toGroup();
 
         LocalDateTime startDateTime = parseToFormatDate(requestDto.getStrStartDateTime());
@@ -92,13 +83,8 @@ public class GroupService {
 
     }
 
-    public Group updateGroup(GroupRequestDTO requestDto, MultipartFile groupImageFile, User user) {
-        if (!authUtil.isAdmin()) {
-            Long currentMemberId = Long.valueOf(user.getUsername());
-            if (!currentMemberId.equals(requestDto.getMemberId())) {
-                throw new AuthenticationNotMatchException();
-            }
-        }
+    public Group updateGroup(GroupRequestDTO requestDto, MultipartFile groupImageFile) {
+
         Group group = groupRepository.findById(requestDto.getId()).orElseThrow();
 
         //모임 이미지 저장, 기존이미지 삭제
@@ -108,18 +94,12 @@ public class GroupService {
             log.info("기존 이미지 삭제 결과 : {}", deleteResult);
             group.updateImageName(imageName);
         }
-
         group.update(requestDto);
+
         return group;
     }
 
-    public void deleteGroup(GroupRequestDTO requestDto, User user) {
-        if (!authUtil.isAdmin()) {
-            Long currentMemberId = Long.valueOf(user.getUsername());
-            if (!currentMemberId.equals(requestDto.getMemberId())) {
-                throw new AuthenticationNotMatchException();
-            }
-        }
+    public void deleteGroup(GroupRequestDTO requestDto) {
         Group group = groupRepository.findById(requestDto.getId()).orElseThrow();
 
         String deleteResult = groupImageService.deleteGroupImage(group.getGroupImage());

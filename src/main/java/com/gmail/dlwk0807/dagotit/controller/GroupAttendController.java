@@ -20,11 +20,11 @@ public class GroupAttendController {
     private final GroupAttendService groupAttendService;
 
     @PostMapping("/apply")
-    public ApiMessageVO applyGroupAttend(@Valid @RequestBody GroupAttendRequestDTO groupAttendRequestDto, @AuthenticationPrincipal User user) throws Exception {
+    public ApiMessageVO applyGroupAttend(@Valid @RequestBody GroupAttendRequestDTO groupAttendRequestDto) throws Exception {
 
         return ApiMessageVO.builder()
                 .respMsg(OK_RESP_MSG)
-                .respBody(groupAttendService.applyGroupAttend(groupAttendRequestDto, user))
+                .respBody(groupAttendService.applyGroupAttend(groupAttendRequestDto))
                 .respCode(OK_RESP_CODE)
                 .build();
     }
@@ -40,11 +40,11 @@ public class GroupAttendController {
     }
 
     @PostMapping("/cancel")
-    public ApiMessageVO cancelGroupAttend(@Valid @RequestBody GroupAttendRequestDTO groupAttendRequestDto, @AuthenticationPrincipal User user) {
+    public ApiMessageVO cancelGroupAttend(@Valid @RequestBody GroupAttendRequestDTO groupAttendRequestDto) {
 
         return ApiMessageVO.builder()
                 .respMsg(OK_RESP_MSG)
-                .respBody(groupAttendService.cancelGroupAttend(groupAttendRequestDto, user))
+                .respBody(groupAttendService.cancelGroupAttend(groupAttendRequestDto))
                 .respCode(OK_RESP_CODE)
                 .build();
     }

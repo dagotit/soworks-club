@@ -20,11 +20,11 @@ public class JwtAccessDeniedHandler implements AccessDeniedHandler {
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
         // response에 데이터 넣기
         ApiMessageVO apiMessageVO = ApiMessageVO.builder()
-                .respCode("BIZ_001")
+                .respCode("BIZ_014")
                 .respBody("")
-                .respMsg("잘못된 접근입니다.").build();
+                .respMsg("변경 권한이 존재하지 않습니다.").build();
 
-        response.setContentType("application/json");
+        response.setContentType("application/json;charset=UTF-8");
         response.getWriter().write(new ObjectMapper().writeValueAsString(apiMessageVO));
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
 

@@ -9,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
+import static com.gmail.dlwk0807.dagotit.util.SecurityUtil.getCurrentMemberAuthority;
 import static com.gmail.dlwk0807.dagotit.util.SecurityUtil.getCurrentMemberId;
 
 @Slf4j
@@ -29,7 +30,7 @@ public class AuthUtil {
     }
 
     public boolean isAdmin() {
-        Member member = getCurrentMember();
-        return Authority.ROLE_ADMIN.equals(member.getAuthority());
+        String currentAuthority = getCurrentMemberAuthority();
+        return Authority.ROLE_ADMIN.equals(Authority.valueOf(currentAuthority));
     }
 }

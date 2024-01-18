@@ -4,9 +4,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class SecurityUtil {
@@ -23,5 +25,17 @@ public class SecurityUtil {
         }
 
         return Long.parseLong(authentication.getName());
+    }
+
+    public static String getCurrentMemberAuthority() {
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || authentication.getName() == null) {
+            throw  new RuntimeException("Security Context 에 인증 정보가 없습니다.");
+        }
+
+        return authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(","));
     }
 }

@@ -97,9 +97,6 @@ public class Member extends BaseEntity {
         if (StringUtils.isNotBlank(memberUpdateDto.getStatus())) {
             this.status = memberUpdateDto.getStatus();
         }
-        if (StringUtils.isNotBlank(memberUpdateDto.getAuthority())) {
-            this.authority = Authority.valueOf(memberUpdateDto.getAuthority());
-        }
     }
 
     public void addAttendance(Attendance attendance) {
@@ -108,6 +105,10 @@ public class Member extends BaseEntity {
 
     public void updateProfileImage(String profileImage) {
         this.profileImage = profileImage;
+    }
+
+    public void updateAuthority(String authority) {
+        this.authority = Authority.valueOf(authority);
     }
 
 }

@@ -4,6 +4,7 @@ import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
 @Data
+@Deprecated
 public class UploadReqDto {
 
     private String bucketName;

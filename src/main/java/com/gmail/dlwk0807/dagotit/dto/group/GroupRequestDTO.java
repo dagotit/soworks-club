@@ -1,5 +1,6 @@
 package com.gmail.dlwk0807.dagotit.dto.group;
 
+import com.gmail.dlwk0807.dagotit.core.aspect.AOPMemberIdDTO;
 import com.gmail.dlwk0807.dagotit.entity.Group;
 import com.gmail.dlwk0807.dagotit.entity.GroupStatus;
 import jakarta.validation.constraints.NotBlank;
@@ -11,11 +12,10 @@ import java.time.format.DateTimeFormatter;
 
 @Getter
 @NoArgsConstructor
-public class GroupRequestDTO {
+public class GroupRequestDTO extends AOPMemberIdDTO {
     private Long id;
     private String category;
     private String name;
-    private Long memberId;
     private String description;
     @NotBlank(message = "시작일시는 필수입니다.")
     private String strStartDateTime;
@@ -32,7 +32,7 @@ public class GroupRequestDTO {
         return Group.builder()
                 .category(category)
                 .name(name)
-                .memberId(memberId)
+                .memberId(getMemberId())
                 .groupImage("https://storage.googleapis.com/dagachi-image-bucket/default/group_default.png")
                 .description(description)
                 .status(GroupStatus.WAITING)
@@ -43,6 +43,6 @@ public class GroupRequestDTO {
     }
 
     public void setCurrentMemberId(Long memberId) {
-        this.memberId = memberId;
+        setMemberId(memberId);
     }
 }

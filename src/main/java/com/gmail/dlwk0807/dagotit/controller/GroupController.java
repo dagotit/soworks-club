@@ -36,23 +36,21 @@ public class GroupController {
 
     @PostMapping("/save")
     public ApiMessageVO createGroup(@RequestPart(value = "group") GroupRequestDTO groupRequestDto,
-                                    @RequestPart(value = "file", required = false) MultipartFile groupImageFile,
-                                    @AuthenticationPrincipal User user) throws Exception {
+                                    @RequestPart(value = "file", required = false) MultipartFile groupImageFile) throws Exception {
         return ApiMessageVO.builder()
                 .respMsg(OK_RESP_MSG)
-                .respBody(groupService.saveGroup(groupRequestDto, groupImageFile, user))
+                .respBody(groupService.saveGroup(groupRequestDto, groupImageFile))
                 .respCode(OK_RESP_CODE)
                 .build();
     }
 
     @PostMapping("/update")
     public ApiMessageVO updateGroup(@RequestPart(value = "group") GroupRequestDTO groupRequestDto,
-                                    @RequestPart(value = "file", required = false) MultipartFile groupImageFile,
-                                    @AuthenticationPrincipal User user) {
+                                    @RequestPart(value = "file", required = false) MultipartFile groupImageFile) {
 
         return ApiMessageVO.builder()
                 .respMsg(OK_RESP_MSG)
-                .respBody(groupService.updateGroup(groupRequestDto, groupImageFile, user))
+                .respBody(groupService.updateGroup(groupRequestDto, groupImageFile))
                 .respCode(OK_RESP_CODE)
                 .build();
     }
@@ -70,9 +68,9 @@ public class GroupController {
     }
 
     @PostMapping("/delete")
-    public ApiMessageVO deleteGroup(@Valid @RequestBody GroupRequestDTO groupRequestDto, @AuthenticationPrincipal User user) {
+    public ApiMessageVO deleteGroup(@Valid @RequestBody GroupRequestDTO groupRequestDto) {
 
-        groupService.deleteGroup(groupRequestDto, user);
+        groupService.deleteGroup(groupRequestDto);
 
         return ApiMessageVO.builder()
                 .respMsg(OK_RESP_MSG)
