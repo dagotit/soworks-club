@@ -1,21 +1,24 @@
 package com.gmail.dlwk0807.dagotit.repository.impl;
 
+import com.gmail.dlwk0807.dagotit.dto.group.GroupListRequestDTO;
 import com.gmail.dlwk0807.dagotit.entity.Group;
 import com.gmail.dlwk0807.dagotit.entity.GroupStatus;
-import com.gmail.dlwk0807.dagotit.entity.Member;
-import com.gmail.dlwk0807.dagotit.entity.QGroup;
+import com.gmail.dlwk0807.dagotit.entity.QGroupAttend;
 import com.gmail.dlwk0807.dagotit.repository.GroupCustomRepository;
-import com.gmail.dlwk0807.dagotit.repository.MemberCustomRepository;
+import com.gmail.dlwk0807.dagotit.util.AuthUtil;
+import com.querydsl.core.types.SubQueryExpression;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.gmail.dlwk0807.dagotit.entity.QGroup.group;
 import static com.gmail.dlwk0807.dagotit.entity.QGroupAttend.groupAttend;
-import static com.gmail.dlwk0807.dagotit.entity.QMember.member;
 
 @Repository
 @RequiredArgsConstructor
@@ -24,9 +27,21 @@ public class GroupCustomRepositoryImpl implements GroupCustomRepository {
     private final JPAQueryFactory query;
 
     @Override
-    public List<Group> findAllByMonth(int month, int year) {
+    public List<Group> findAllByMonthAndYear(int month, int year) {
         return query.selectFrom(group)
                 .where(monthEq(month), yearEq(year))
+                .fetch();
+    }
+
+    @Override
+    public List<Group> findAllByFilter(GroupListRequestDTO dto) {
+
+        return query.selectFrom(group)
+                .where(statusNotDone(dto.getStatusNotDone())
+                        , dateBetween(dto.getStYear(), dto.getStMonth(), dto.getEndYear(), dto.getEndMonth())
+                        , makeOnly(dto.getMakeOnly(), dto.getMemberId())
+                        , joinOnly(dto.getJoinOnly(), dto.getMemberId())
+                )
                 .fetch();
     }
 
@@ -35,16 +50,29 @@ public class GroupCustomRepositoryImpl implements GroupCustomRepository {
     }
 
     private BooleanExpression monthEq(Integer month) {
-        return month != null? group.startDateTime.month().eq(month) : null;
+        return month != null ? group.startDateTime.month().eq(month) : null;
     }
 
-    private BooleanExpression statusNe(String status) {
-        return status != null? group.status.ne(GroupStatus.valueOf(status)) : null;
+    private BooleanExpression statusNotDone(String status) {
+        return status != null ? group.status.ne(GroupStatus.DONE) : null;
     }
 
-//    private BooleanExpression groupIn(Long groupId) {
-//        return groupId != null? group.startDateTime.month().eq(groupId) : null;
-//    }
+    private BooleanExpression dateBetween(Integer stYear, Integer stMonth, Integer endYear, Integer endMonth) {
+        LocalDateTime stDate = LocalDateTime.of(stYear, stMonth, 1, 0, 0);
+        LocalDateTime endDate = LocalDateTime.of(endYear, endMonth, LocalDate.MAX.getDayOfMonth(), 23, 59);
+        return stYear != null ? group.startDateTime.between(stDate, endDate) : null;
+    }
+
+    private BooleanExpression makeOnly(String makeOnly, Long memberId) {
+        return makeOnly != null ? group.memberId.eq(memberId) : null;
+    }
+
+    private BooleanExpression joinOnly(String joinOnly, Long memberId) {
+        return joinOnly != null ?
+                group.id.in(JPAExpressions.select(groupAttend.group.id)
+                        .from(groupAttend)
+                        .where(groupAttend.member.id.eq(memberId))) : null;
+    }
 
     /**
      * 전체보기 -> parameter : month 만

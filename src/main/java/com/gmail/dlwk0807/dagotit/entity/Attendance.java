@@ -22,12 +22,10 @@ public class Attendance extends BaseEntity {
     @JoinColumn(name="MEMBER_ID")
     private Member member;
     private LocalDate attendDate;
-    private boolean attendance;
 
     @Builder
-    public Attendance(Member member, LocalDate attendDate, boolean attendance) {
+    public Attendance(Member member, LocalDate attendDate) {
         this.member = member;
         this.attendDate = attendDate;
-        this.attendance = attendance;
     }
 }

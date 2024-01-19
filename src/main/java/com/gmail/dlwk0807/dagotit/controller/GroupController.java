@@ -1,8 +1,6 @@
 package com.gmail.dlwk0807.dagotit.controller;
 
-import com.gmail.dlwk0807.dagotit.dto.group.GroupAttachFileRequestDTO;
-import com.gmail.dlwk0807.dagotit.dto.group.GroupRequestDTO;
-import com.gmail.dlwk0807.dagotit.dto.group.GroupResponseDTO;
+import com.gmail.dlwk0807.dagotit.dto.group.*;
 import com.gmail.dlwk0807.dagotit.service.GroupService;
 import com.gmail.dlwk0807.dagotit.vo.ApiMessageVO;
 import jakarta.validation.Valid;
@@ -67,6 +65,16 @@ public class GroupController {
                 .build();
     }
 
+    @GetMapping("/update-status")
+    public ApiMessageVO updateGroupStatus(GroupStatusRequestDTO groupStatusRequestDTO) {
+
+        return ApiMessageVO.builder()
+                .respMsg(OK_RESP_MSG)
+                .respBody(groupService.updateGroupStatus(groupStatusRequestDTO))
+                .respCode(OK_RESP_CODE)
+                .build();
+    }
+
     @PostMapping("/delete")
     public ApiMessageVO deleteGroup(@Valid @RequestBody GroupRequestDTO groupRequestDto) {
 
@@ -80,11 +88,11 @@ public class GroupController {
     }
 
     @GetMapping("/group-list")
-    public ApiMessageVO listGroup(@RequestParam int month, @RequestParam int year) {
+    public ApiMessageVO listGroup(GroupListRequestDTO groupListRequestDTO) {
 
         return ApiMessageVO.builder()
                 .respMsg(OK_RESP_MSG)
-                .respBody(groupService.listGroup(month, year))
+                .respBody(groupService.listGroup(groupListRequestDTO))
                 .respCode(OK_RESP_CODE)
                 .build();
     }

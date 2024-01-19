@@ -3,11 +3,10 @@ package com.gmail.dlwk0807.dagotit.service;
 import com.gmail.dlwk0807.dagotit.core.exception.AuthenticationNotMatchException;
 import com.gmail.dlwk0807.dagotit.core.exception.CustomRespBodyException;
 import com.gmail.dlwk0807.dagotit.core.exception.DuplicationGroup;
-import com.gmail.dlwk0807.dagotit.dto.group.GroupAttachFileRequestDTO;
-import com.gmail.dlwk0807.dagotit.dto.group.GroupRequestDTO;
-import com.gmail.dlwk0807.dagotit.dto.group.GroupResponseDTO;
+import com.gmail.dlwk0807.dagotit.dto.group.*;
 import com.gmail.dlwk0807.dagotit.entity.Group;
 import com.gmail.dlwk0807.dagotit.entity.GroupAttend;
+import com.gmail.dlwk0807.dagotit.entity.GroupStatus;
 import com.gmail.dlwk0807.dagotit.entity.Member;
 import com.gmail.dlwk0807.dagotit.repository.GroupAttendRepository;
 import com.gmail.dlwk0807.dagotit.repository.GroupRepository;
@@ -16,7 +15,6 @@ import com.gmail.dlwk0807.dagotit.repository.impl.GroupCustomRepositoryImpl;
 import com.gmail.dlwk0807.dagotit.util.AuthUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,10 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
-
-import static com.gmail.dlwk0807.dagotit.util.FileUtil.*;
 
 @Service
 @RequiredArgsConstructor
@@ -83,7 +78,7 @@ public class GroupService {
 
     }
 
-    public Group updateGroup(GroupRequestDTO requestDto, MultipartFile groupImageFile) {
+    public GroupResponseDTO updateGroup(GroupRequestDTO requestDto, MultipartFile groupImageFile) {
 
         Group group = groupRepository.findById(requestDto.getId()).orElseThrow();
 
@@ -96,7 +91,19 @@ public class GroupService {
         }
         group.update(requestDto);
 
-        return group;
+        GroupResponseDTO groupResponseDTO = GroupResponseDTO.of(group);
+
+        return groupResponseDTO;
+    }
+
+    public GroupResponseDTO updateGroupStatus(GroupStatusRequestDTO groupStatusRequestDTO) {
+
+        Group group = groupRepository.findById(groupStatusRequestDTO.getGroupId()).orElseThrow();
+        group.updateStatus(GroupStatus.valueOf(groupStatusRequestDTO.getStatus()));
+
+        GroupResponseDTO groupResponseDTO = GroupResponseDTO.of(group);
+
+        return groupResponseDTO;
     }
 
     public void deleteGroup(GroupRequestDTO requestDto) {
@@ -110,10 +117,8 @@ public class GroupService {
         groupRepository.deleteById(requestDto.getId());
     }
 
-
-
-    public List<GroupResponseDTO> listGroup(int month, int year) {
-        return groupCustomRepositoryImpl.findAllByMonth(month, year).stream()
+    public List<GroupResponseDTO> listGroup(GroupListRequestDTO groupListRequestDTO) {
+        return groupCustomRepositoryImpl.findAllByFilter(groupListRequestDTO).stream()
                 .map(o -> GroupResponseDTO.of(o)).collect(Collectors.toList());
     }
 

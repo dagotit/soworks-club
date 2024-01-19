@@ -20,11 +20,9 @@ public class QAttendance extends EntityPathBase<Attendance> {
 
     private static final PathInits INITS = PathInits.DIRECT2;
 
-    public static final QAttendance attendance1 = new QAttendance("attendance1");
+    public static final QAttendance attendance = new QAttendance("attendance");
 
     public final QBaseEntity _super = new QBaseEntity(this);
-
-    public final BooleanPath attendance = createBoolean("attendance");
 
     public final DatePath<java.time.LocalDate> attendDate = createDate("attendDate", java.time.LocalDate.class);
 

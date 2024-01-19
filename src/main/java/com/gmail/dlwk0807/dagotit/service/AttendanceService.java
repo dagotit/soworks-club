@@ -26,7 +26,6 @@ public class AttendanceService {
         Member member = authUtil.getCurrentMember();
         Attendance attendance = Attendance.builder()
                 .attendDate(now)
-                .attendance(true)
                 .member(member)
                 .build();
 
