@@ -29,6 +29,7 @@ jobs:
       - name: Push Docker image
         run: docker push churihyung/dagachi:latest
 
+
       - name: SSH into GCP instance
         uses: appleboy/ssh-action@master
         with:
