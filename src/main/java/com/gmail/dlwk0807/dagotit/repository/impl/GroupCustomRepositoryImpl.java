@@ -15,6 +15,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 
 import static com.gmail.dlwk0807.dagotit.entity.QGroup.group;
@@ -59,7 +60,8 @@ public class GroupCustomRepositoryImpl implements GroupCustomRepository {
 
     private BooleanExpression dateBetween(Integer stYear, Integer stMonth, Integer endYear, Integer endMonth) {
         LocalDateTime stDate = LocalDateTime.of(stYear, stMonth, 1, 0, 0);
-        LocalDateTime endDate = LocalDateTime.of(endYear, endMonth, LocalDate.MAX.getDayOfMonth(), 23, 59);
+        LocalDate tmpEndDate = LocalDate.of(endYear, endMonth, 1);
+        LocalDateTime endDate = LocalDateTime.of(endYear, endMonth, tmpEndDate.with(TemporalAdjusters.lastDayOfMonth()).getDayOfMonth(), 23, 59);
         return stYear != null ? group.startDateTime.between(stDate, endDate) : null;
     }
 
