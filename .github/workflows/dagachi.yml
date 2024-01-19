@@ -29,7 +29,6 @@ jobs:
       - name: Push Docker image
         run: docker push churihyung/dagachi:latest
 
-
       - name: SSH into GCP instance
         uses: appleboy/ssh-action@master
         with:
@@ -38,5 +37,5 @@ jobs:
           key: ${{ secrets.GCP_KEY }}
           script: |
             docker-compose down
-            docker rmi $(docker images | grep 'churihyung/dagachi:latest')
+            docker rmi churihyung/dagachi:latest 
             docker-compose up -d
