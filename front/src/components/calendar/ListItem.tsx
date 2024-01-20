@@ -20,7 +20,7 @@ const ListItem = memo((props: clubListItemProps) => {
    */
   function onClickGotoDetailPage(id: number) {
     // TODO: 이건 ... 만들어서 연결
-    router.push(`/detail/${id}`);
+    router.push(`/group/detail/${id}`);
   }
   return (
     <li
