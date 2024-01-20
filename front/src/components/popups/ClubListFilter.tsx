@@ -24,6 +24,7 @@ const ClubListFilter = memo((props: clubFilterProps) => {
   const [createClubCheckBox, setCreateClubCheckBox] = useState(false);
   const [startDay, setStartDay] = useState(DEFAULTSTARTDAY);
   const [endDay, setEndDay] = useState(DEFAULTENDDAY);
+  const [statusClubCheckBox, setStatusClubCheckBox] = useState(true);
 
   /**
    * @function
@@ -31,7 +32,14 @@ const ClubListFilter = memo((props: clubFilterProps) => {
    */
   useEffect(() => {
     if (!isEmptyObj(props.listFilterQueryData)) {
-      const { isAll, isAttendClub, isCreateClub, startDate, endDate } = {
+      const {
+        isAll,
+        isAttendClub,
+        isCreateClub,
+        startDate,
+        endDate,
+        statusClub,
+      } = {
         ...props.listFilterQueryData,
       };
       if (isAll !== undefined) {
@@ -48,6 +56,9 @@ const ClubListFilter = memo((props: clubFilterProps) => {
       }
       if (endDate !== undefined) {
         setEndDay(endDate);
+      }
+      if (statusClub !== undefined) {
+        setStatusClubCheckBox(statusClub);
       }
     }
   }, []);
@@ -77,6 +88,7 @@ const ClubListFilter = memo((props: clubFilterProps) => {
       setEndDay(DEFAULTENDDAY);
       setAttendClubCheckBox(false);
       setCreateClubCheckBox(false);
+      // setStatusClubCheckBox(true);
     }
   }
   /**
@@ -113,6 +125,7 @@ const ClubListFilter = memo((props: clubFilterProps) => {
         endDate: endDay,
         isAttendClub: attendClubCheckBox,
         isCreateClub: createClubCheckBox,
+        statusClub: statusClubCheckBox,
       });
     }
   }
@@ -144,6 +157,24 @@ const ClubListFilter = memo((props: clubFilterProps) => {
             </div>
           </div>
 
+          <div className={styles.filterInputWrap}>
+            <span>진행중인 모임</span>
+            <div>
+              <input
+                type="checkbox"
+                id="fe_club_filter2"
+                className={styles.switch}
+                checked={statusClubCheckBox}
+                onChange={(e) => {
+                  setStatusClubCheckBox(e.currentTarget.checked);
+                }}
+              />
+              <label htmlFor="fe_club_filter2" className={styles.switch_label}>
+                <span className={styles.onf_btn}></span>
+              </label>
+            </div>
+          </div>
+
           <label>
             <span>날짜로 보기</span>
             <div className={styles.filterDateWrap}>
@@ -161,7 +192,7 @@ const ClubListFilter = memo((props: clubFilterProps) => {
             <div>
               <input
                 type="checkbox"
-                id="fe_club_filter2"
+                id="fe_club_filter3"
                 className={styles.switch}
                 checked={attendClubCheckBox}
                 onChange={(e) => {
@@ -169,7 +200,7 @@ const ClubListFilter = memo((props: clubFilterProps) => {
                   handleDetailChecked();
                 }}
               />
-              <label htmlFor="fe_club_filter2" className={styles.switch_label}>
+              <label htmlFor="fe_club_filter3" className={styles.switch_label}>
                 <span className={styles.onf_btn}></span>
               </label>
             </div>
@@ -180,7 +211,7 @@ const ClubListFilter = memo((props: clubFilterProps) => {
             <div>
               <input
                 type="checkbox"
-                id="fe_club_filter3"
+                id="fe_club_filter4"
                 className={styles.switch}
                 checked={createClubCheckBox}
                 onChange={(e) => {
@@ -188,7 +219,7 @@ const ClubListFilter = memo((props: clubFilterProps) => {
                   handleDetailChecked();
                 }}
               />
-              <label htmlFor="fe_club_filter3" className={styles.switch_label}>
+              <label htmlFor="fe_club_filter4" className={styles.switch_label}>
                 <span className={styles.onf_btn}></span>
               </label>
             </div>

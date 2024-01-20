@@ -14,7 +14,7 @@ export const apiGetMonthCalendar = async (query: {
 }) => {
   try {
     return await http.get(
-      `/api/v1/groups/group-list?month=${query.month}&year=${query.year}`,
+      `/api/v1/calendar/list?month=${query.month}&year=${query.year}`,
     );
   } catch (e) {
     if (axios.isAxiosError(e) && e.response) {
@@ -42,12 +42,19 @@ export const apiGetAttendance = async (data: null) => {
  * 모임리스트 ( 필터 )
  */
 export const apiGetClubList = async (query: FilterQueryParamType) => {
-  const year = DateTime.fromFormat(query.startDate, 'yyyy-MM-dd').year;
-  const month = DateTime.fromFormat(query.startDate, 'yyyy-MM-dd').month;
+  console.log('query:', query);
+  const stYear = DateTime.fromFormat(query.startDate, 'yyyy-MM-dd').year;
+  const stMonth = DateTime.fromFormat(query.startDate, 'yyyy-MM-dd').month;
+  const endYear = DateTime.fromFormat(query.endDate, 'yyyy-MM-dd').year;
+  const endMonth = DateTime.fromFormat(query.endDate, 'yyyy-MM-dd').month;
+  const joinOnly = query.isAttendClub ? 'Y' : 'N';
+  const makeOnly = query.isCreateClub ? 'Y' : 'N';
+  const statusNotDone = query.statusClub ? 'Y' : 'N';
 
+  // TODO: 멤버 id는 회원가입할 때.. 담으면.. 새로고침하면ㅇ ㅓ떻게 확인하지?
   try {
     return await http.get(
-      `/api/v1/groups/group-list?month=${month}&year=${year}`,
+      `/api/v1/groups/group-list?stYear=${stYear}&stMonth=${stMonth}&endYear=${endYear}&endMonth=${endMonth}&memberId=1&joinOnly=${joinOnly}&makeOnly=${makeOnly}&statusNotDone=${statusNotDone}`,
     );
   } catch (e) {
     if (axios.isAxiosError(e) && e.response) {

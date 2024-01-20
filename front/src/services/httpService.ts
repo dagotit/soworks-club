@@ -12,6 +12,8 @@ const app = axios.create({
   timeout: 30000,
 });
 
+let count = 0;
+
 app.interceptors.request.use(
   (res) => {
     const accessToken = useTokenStore.getState().accessToken;
@@ -38,6 +40,15 @@ app.interceptors.response.use(
           originalConfig._retry = true;
           // 토큰 다시 가져오기 TODO: 오류가 많이 생길 것 같아서 이건 ... 회의 필요
           try {
+            if (count !== 0) {
+              setTimeout(() => {
+                app(originalConfig);
+              }, 500);
+              return Promise;
+            }
+            if (count === 0) {
+              count = 1;
+            }
             const resp = await axios.get(`/auth/reissue`, {
               withCredentials: true,
             });
@@ -50,6 +61,7 @@ app.interceptors.response.use(
               return app(originalConfig);
             }
           } catch (error: any) {
+            // BIZ_002 런타임 오류?
             if (
               error.response.data.respCode === 'BIZ_002' ||
               error.response.data.respCode === 'BIZ_018'

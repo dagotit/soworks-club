@@ -32,11 +32,14 @@ const CalendarMain = () => {
   >({});
 
   useDidMountEffect(() => {
-    test();
     const data: any = {
       ...apiCalendarData.data,
     };
     if (isEmptyObj(data)) {
+      return;
+    }
+    // TODO 데이터가 없어서 어떻게 오는지 확인 불가능
+    if (data.respBody.length === 0) {
       return;
     }
     const calendarList = data.respBody.map((item: any) => {
@@ -55,7 +58,7 @@ const CalendarMain = () => {
     console.log('calendarList:', calendarList);
   }, [apiCalendarData.data]);
 
-  const test = () => {
+  /* const test = () => {
     calendarStore.add([
       {
         id: 0,
@@ -77,7 +80,7 @@ const CalendarMain = () => {
         color: 'white',
       },
     ]);
-  };
+  };*/
   /**
    * @function
    * 등록된 이벤트 클릭했을 때
@@ -134,18 +137,18 @@ const CalendarMain = () => {
     const month = DateTime.fromJSDate(e).toFormat('M');
     const year = DateTime.fromJSDate(e).toFormat('yyyy');
     // TODO 임시 주석
-    // setMonth(Number(month));
-    // setYear(Number(year));
+    setMonth(Number(month));
+    setYear(Number(year));
   }
 
   return (
     <Fragment>
       <main>
         <Header />
-        {calendarStore.calendarList.length === 0 && (
+        {apiCalendarData.isLoading && (
           <div className={styles.loadingText}>로딩중</div>
         )}
-        {calendarStore.calendarList.length !== 0 && (
+        {!apiCalendarData.isLoading && (
           <div className={styles.calendarWrap}>
             <Calendar
               className={styles.calendar}

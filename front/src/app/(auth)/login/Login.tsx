@@ -129,6 +129,7 @@ const Login = () => {
           if (error.respCode !== '') {
             open('alert', '로그인', error.respMsg);
           }
+          console.log('error.', error);
         },
         onSettled: () => {
           // 요청이 성공하든, 에러가 발생되든 실행하고 싶은 경우

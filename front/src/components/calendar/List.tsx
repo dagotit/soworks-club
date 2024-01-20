@@ -33,6 +33,7 @@ const List = memo((props: clubListProps) => {
     endDate: DEFAULTENDDAY,
     isAttendClub: false,
     isCreateClub: false,
+    statusClub: true,
   });
   // const [list, setList] = useState<[] | ClubListItemType[]>([]);
   const apiGetClubList = useGetClubList(queryData);
@@ -49,6 +50,7 @@ const List = memo((props: clubListProps) => {
         endDate: DEFAULTENDDAY,
         isAttendClub: false,
         isCreateClub: false,
+        statusClub: true,
       });
       return;
     }
@@ -65,8 +67,16 @@ const List = memo((props: clubListProps) => {
         images: 'https://dummyimage.com/200x200',
       },
     * */
-    updateList([]);
-  }, []);
+    updateList([
+      {
+        id: 1,
+        title: '모임1',
+        date: '2022-12-23',
+        status: '참여:1명',
+        images: 'https://dummyimage.com/200x200',
+      },
+    ]);
+  }, [apiGetClubList.data]);
 
   /**
    * @function
@@ -106,7 +116,7 @@ const List = memo((props: clubListProps) => {
           {clubList.map((value, index) => (
             <ListItem
               key={index}
-              id={index}
+              id={value.id}
               title={value.title}
               date={value.date}
               status={value.status}
