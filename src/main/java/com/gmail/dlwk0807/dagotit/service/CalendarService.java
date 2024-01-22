@@ -44,6 +44,10 @@ public class CalendarService {
                     count.getAndIncrement();
                 }
             });
+            if (allAttendances.isEmpty()) {
+                calendars.add(CalendarResponseDTO.of(count.get(), g, null));
+                count.getAndIncrement();
+            }
         });
 
         return calendars;
