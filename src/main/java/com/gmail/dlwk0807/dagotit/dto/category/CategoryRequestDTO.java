@@ -14,8 +14,6 @@ public class CategoryRequestDTO {
     public static Category of(CategoryRequestDTO requestDTO) {
         return Category.builder()
                 .name(requestDTO.getName())
-                .depth(requestDTO.getDepth())
-                .upCategory(new Category())
                 .build();
     }
 }

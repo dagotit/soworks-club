@@ -13,14 +13,15 @@ public class CategoryResponseDTO {
     private Long id;
     private String name;
     private Long depth;
-    private List<CategoryResponseDTO> children;
+    private Long upCategoryId;
 
     public static CategoryResponseDTO of(Category category) {
         return new CategoryResponseDTO(
                 category.getId(),
                 category.getName(),
                 category.getDepth(),
-                category.getChildren().stream().map(CategoryResponseDTO::of).collect(Collectors.toList())
+                category.getUpCategory().getId()
         );
     }
+
 }

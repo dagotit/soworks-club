@@ -7,7 +7,6 @@ import com.gmail.dlwk0807.dagotit.entity.Category;
 import com.gmail.dlwk0807.dagotit.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,18 +18,9 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
 
     public List<CategoryResponseDTO> list(Long upCategoryId) {
-        List<Category> allByUpCategoryId = categoryRepository.findAllByUpCategoryIsNull(upCategoryId);
+        List<Category> allByUpCategoryId = categoryRepository.findAll();
         return allByUpCategoryId.stream().map(CategoryResponseDTO::of).collect(Collectors.toList());
     }
-
-//    public String save(@RequestBody List<CategoryRequestDTO> list) {
-//        list.forEach(o -> {
-//            categoryRepository.save(o::of);
-//        });
-//
-//
-//        return "ok";
-//    }
 
     public List<Category> save(List<CategoryRequestDTO> categoryRequestDTOs) {
         List<Category> savedCategories = new ArrayList<>();
