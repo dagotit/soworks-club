@@ -36,7 +36,7 @@ jobs:
           username: ${{ secrets.GCP_USERNAME }}
           key: ${{ secrets.GCP_KEY }}
           script: |
-            docker-compose down
+            docker compose down
             docker wait dagachi002-app-1
             docker rmi churihyung/dagachi:latest 
-            docker-compose up -d
+            docker compose up -d
