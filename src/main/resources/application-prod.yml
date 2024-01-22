@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:mysql://solid-justice-407909:us-central1/my-db?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    url: jdbc:mysql://35.239.13.225:3306/dagachi?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: ${SPRING_DATASOURCE_USERNAME}
     password: ${MYSQL_PASSWORD}
