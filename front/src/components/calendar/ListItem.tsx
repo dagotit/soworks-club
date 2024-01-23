@@ -19,7 +19,6 @@ const ListItem = memo((props: clubListItemProps) => {
    * 모임 상세 페이지로 이동
    */
   function onClickGotoDetailPage(id: number) {
-    // TODO: 이건 ... 만들어서 연결
     router.push(`/group/detail/${id}`);
   }
   return (

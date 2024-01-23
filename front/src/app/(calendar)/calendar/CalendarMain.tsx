@@ -4,7 +4,10 @@ import { Calendar, DateLocalizer, luxonLocalizer } from 'react-big-calendar';
 import { DateTime } from 'luxon';
 import styles from './CalendarMain.module.css';
 import { Fragment, useCallback, useEffect, useState } from 'react';
-import { FilterQueryParamType, useGetMonthCalendar } from '@/hooks/useCalendar';
+import {
+  FilterQueryParamType,
+  useGetCalendarQuerys,
+} from '@/hooks/useCalendar';
 import { ListType, useCalendarStore } from '@/store/useCalendar';
 import useDidMountEffect from '@/utils/useDidMountEffect';
 import Toolbar from '@/components/calendar/Toolbar';
@@ -12,81 +15,140 @@ import CustomDateHeader from '@/components/calendar/CustomDateHeader';
 import List from '@/components/calendar/List';
 import React from 'react';
 import Header from '@/components/Header';
-import { useTokenStore } from '@/store/useLogin';
 import ClubListFilter from '@/components/popups/ClubListFilter';
 import HeaderCellContent from '@/components/calendar/HeaderCellContent';
-import { isEmptyObj } from '@/utils/common';
+import { useRouter } from 'next/navigation';
+import { useClubListStore } from '@/store/useClubList';
 
 const CalendarMain = () => {
-  DateTime.local().setLocale('ko-KR');
-  const { accessToken } = useTokenStore();
-  const localize: DateLocalizer = luxonLocalizer(DateTime);
-  const [month, setMonth] = useState<number>(DateTime.now().month);
-  const [year, setYear] = useState<number>(DateTime.now().year);
-  const apiCalendarData = useGetMonthCalendar({ month, year });
-  const calendarStore = useCalendarStore();
-  const [isFilterPopup, setIsFilterPopup] = useState(false);
+  const router = useRouter(); // 라우터
+  DateTime.local().setLocale('ko-KR'); // 캘린더 한국시간 기준으로 설정
+  const localize: DateLocalizer = luxonLocalizer(DateTime); // 달력 데이터 setting
+  const DEFAULTSTARTDAY = DateTime.now().toISODate(); // 모임리스트 조회 시작일
+  const DEFAULTENDDAY = `${DateTime.now().year}-${
+    String(DateTime.now().month).length === 1
+      ? '0' + DateTime.now().month
+      : DateTime.now().month
+  }-${new Date(DateTime.now().year, DateTime.now().month, 0).getDate()}`; // 모임리스트 조회 종료일
+  const [year, setYear] = useState<number>(DateTime.now().year); // 캘린더 조회 년도
+  const [month, setMonth] = useState<number>(DateTime.now().month); // 캘린더 조회 월
+  const calendarStore = useCalendarStore(); // 캘린더 데이터 담기
+  const clubListStore = useClubListStore(); //  모임 리스트 데이터 스토어에 담기
+  const [isFilterPopup, setIsFilterPopup] = useState(false); // 필터 팝업 open & close 여부
+  // 필터 옵션
+  const [listFilterQuery, setListFilterQuery] = useState<FilterQueryParamType>({
+    isAll: true,
+    startDate: DEFAULTSTARTDAY,
+    endDate: DEFAULTENDDAY,
+    isAttendClub: false,
+    isCreateClub: false,
+    statusClub: true,
+  });
+
+  // api
+  const apiCalendarQuerys = useGetCalendarQuerys(
+    {
+      month,
+      year,
+    },
+    listFilterQuery,
+  );
+
+  // 사용 x
   const [myEvents, setMyEvents] = useState<ListType[] | []>([]);
-  const [listFilterQuery, setListFilterQuery] = useState<
-    {} | FilterQueryParamType
-  >({});
 
-  useDidMountEffect(() => {
-    const data: any = {
-      ...apiCalendarData.data,
-    };
-    if (isEmptyObj(data)) {
-      return;
+  /**
+   * @function
+   * 캘린더 api 데이터 스토어에 setting
+   * 모임 리스트 api 데이터 스토어에 setting
+   */
+  useEffect(() => {
+    if (apiCalendarQuerys[0].isSuccess) {
+      // 캘린더 api 데이터 스토어에 set
+      /**
+       *  "id": "1",
+       *  "groupId": "1",
+       *  "title": "댄스동아리",
+       *  "allDay": null,
+       *  "start": "2024-01-04",
+       *  "end": "2024-01-04",
+       *  "attendanceDate": null,
+       *  "colorEvento": "",
+       *  "color": ""
+       */
+      let calendarList = [];
+      // @ts-ignore
+      if (apiCalendarQuerys[0].data.respBody.length === 0) {
+        calendarStore.remove();
+        return;
+      }
+      // @ts-ignore
+      calendarList = apiCalendarQuerys[0].data.respBody.map((item: any) => {
+        const itemData: ListType = {
+          id: item.id,
+          title: item.title,
+          allDay: false,
+          start: new Date(item.start),
+          end: new Date(item.end),
+          colorEvento: 'green',
+          color: 'white',
+        };
+        if (item.attendanceDate) {
+          itemData.attendanceDate = new Date(item.attendanceDate);
+        }
+        return itemData;
+      });
+      if (calendarList?.length !== 0) {
+        calendarStore.add(calendarList);
+      }
     }
-    // TODO 데이터가 없어서 어떻게 오는지 확인 불가능
-    if (data.respBody.length === 0) {
-      return;
+
+    if (apiCalendarQuerys[1].isSuccess) {
+      // 모임 리스트 api 데이터 스토어에 setting
+      /**
+       * id: 1,
+       * category: '취미',
+       * name: '댄스동아리',
+       * memberId: 1,
+       * description: '방송댄스배우기',
+       * status: 'WAITING',
+       * groupImage:'https://storage.googleapis.com/dagachi-image-bucket/default/group_default.png',
+       * strStartDate: '20240104',
+       * strStartTime: '1900',
+       * strEndDate: '20240104',
+       * strEndTime: '2200',
+       * groupMaxNum: null,
+       * numberPersons: 1,
+       * */
+      let groupList = [];
+      // @ts-ignore
+      if (apiCalendarQuerys[1].data.respBody.length === 0) {
+        clubListStore.updateList([]);
+        return;
+      }
+      // @ts-ignore
+      // strEndDate, strStartTime
+      groupList = apiCalendarQuerys[1].data.respBody.map((item: any) => {
+        return {
+          id: item.id,
+          title: item.title,
+          date: DateTime.fromFormat(item.strEndDate, 'yyyyMMdd').toFormat(
+            'yyyy-MM-dd',
+          ),
+          status: `참여: ${item.numberPersons}명`,
+          images: item.groupImage,
+        };
+      });
+      clubListStore.updateList(groupList);
     }
-    const calendarList = data.respBody.map((item: any) => {
-      return {
-        id: item.id,
-        title: '등록된 이벤트',
-        allDay: false,
-        start: new Date(item.startDateTime),
-        end: new Date(item.endDateTime),
-        attendanceDate: new Date('2024-01-13'),
-        colorEvento: 'green',
-        color: 'white',
-      };
-    });
+  }, [apiCalendarQuerys[0].isSuccess, apiCalendarQuerys[1].isSuccess]);
 
-    console.log('calendarList:', calendarList);
-  }, [apiCalendarData.data]);
-
-  /* const test = () => {
-    calendarStore.add([
-      {
-        id: 0,
-        title: '등록된 이벤트',
-        allDay: true,
-        start: new Date('2024-01-10'),
-        end: new Date('2024-01-10'),
-        colorEvento: 'red',
-        color: 'white',
-      },
-      {
-        id: 1,
-        title: '등록된 이벤트',
-        allDay: false,
-        start: new Date('2024-01-13'),
-        end: new Date('2024-01-13'),
-        attendanceDate: new Date('2024-01-13'),
-        colorEvento: 'green',
-        color: 'white',
-      },
-    ]);
-  };*/
   /**
    * @function
    * 등록된 이벤트 클릭했을 때
    */
   function onClickScheduler(item: ListType) {
-    console.log('click', item);
+    router.push(`/group/detail/${item.id}`);
   }
 
   function handlerViewChange(val: any) {
@@ -117,6 +179,7 @@ const CalendarMain = () => {
   /**
    * @function
    * 캘린더에 이벤트가 있고, 그 이벤트에 다른 색으로 표시하고 싶을때..
+   * 사용 x, 삭제 x
    */
   function handlerPropsGetter(myEvents: any) {
     const backgroundColor = myEvents.colorEvento
@@ -136,48 +199,53 @@ const CalendarMain = () => {
     const clickDay = DateTime.fromJSDate(e).toFormat('yyyy-MM-dd');
     const month = DateTime.fromJSDate(e).toFormat('M');
     const year = DateTime.fromJSDate(e).toFormat('yyyy');
-    // TODO 임시 주석
     setMonth(Number(month));
     setYear(Number(year));
+
+    // 캘린더 내용 바뀌면 리스트의 날짜도 변경되어야함..?
+    setListFilterQuery({
+      ...listFilterQuery,
+      startDate: clickDay,
+      endDate: clickDay,
+    });
   }
 
   return (
     <Fragment>
       <main>
         <Header />
-        {apiCalendarData.isLoading && (
+
+        {apiCalendarQuerys[0].isLoading && (
           <div className={styles.loadingText}>로딩중</div>
         )}
-        {!apiCalendarData.isLoading && (
-          <div className={styles.calendarWrap}>
-            <Calendar
-              className={styles.calendar}
-              localizer={localize}
-              components={{
-                toolbar: Toolbar,
-                month: {
-                  header: HeaderCellContent,
-                  dateHeader: CustomDateHeader,
-                },
-              }}
-              events={calendarStore.calendarList || []}
-              startAccessor="start"
-              endAccessor="end"
-              onSelectEvent={onClickScheduler}
-              view={'month'}
-              views={['month']}
-              eventPropGetter={handlerPropsGetter}
-              onNavigate={handlerMonth}
-              onView={handlerViewChange}
-              style={{ height: 500 }}
-            />
-          </div>
-        )}
-        <List
-          listFilterQueryData={listFilterQuery}
-          popupState={handleFilterPopupState}
-        />
+
+        <div className={styles.calendarWrap}>
+          <Calendar
+            className={styles.calendar}
+            localizer={localize}
+            components={{
+              toolbar: Toolbar,
+              month: {
+                header: HeaderCellContent,
+                dateHeader: CustomDateHeader,
+              },
+            }}
+            events={calendarStore.calendarList || []}
+            startAccessor="start"
+            endAccessor="end"
+            onSelectEvent={onClickScheduler}
+            view={'month'}
+            views={['month']}
+            eventPropGetter={handlerPropsGetter}
+            onNavigate={handlerMonth}
+            onView={handlerViewChange}
+            style={{ height: 500 }}
+          />
+        </div>
+
+        <List popupState={handleFilterPopupState} />
       </main>
+
       {isFilterPopup && (
         <ClubListFilter
           listFilterQueryData={listFilterQuery}

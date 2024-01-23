@@ -1,6 +1,5 @@
 import http from '@/services/httpService';
 import axios from 'axios';
-import { isEmptyObj } from '@/utils/common';
 import { FilterQueryParamType } from '@/hooks/useCalendar';
 import { DateTime } from 'luxon';
 
@@ -12,6 +11,7 @@ export const apiGetMonthCalendar = async (query: {
   month: number;
   year: number;
 }) => {
+  console.log('달력:', query);
   try {
     return await http.get(
       `/api/v1/calendar/list?month=${query.month}&year=${query.year}`,
@@ -42,7 +42,7 @@ export const apiGetAttendance = async (data: null) => {
  * 모임리스트 ( 필터 )
  */
 export const apiGetClubList = async (query: FilterQueryParamType) => {
-  console.log('query:', query);
+  console.log('리스트:', query);
   const stYear = DateTime.fromFormat(query.startDate, 'yyyy-MM-dd').year;
   const stMonth = DateTime.fromFormat(query.startDate, 'yyyy-MM-dd').month;
   const endYear = DateTime.fromFormat(query.endDate, 'yyyy-MM-dd').year;
