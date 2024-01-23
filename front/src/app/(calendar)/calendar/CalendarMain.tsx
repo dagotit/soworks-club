@@ -19,7 +19,6 @@ import ClubListFilter from '@/components/popups/ClubListFilter';
 import HeaderCellContent from '@/components/calendar/HeaderCellContent';
 import { useRouter } from 'next/navigation';
 import { useClubListStore } from '@/store/useClubList';
-import { it } from 'node:test';
 
 const CalendarMain = () => {
   const router = useRouter(); // 라우터
