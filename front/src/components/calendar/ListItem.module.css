@@ -12,24 +12,39 @@
     color: #f0f0f0;
     font-size: 14px;
     justify-content: space-between;
+    margin: 10px 0;
 }
 .itembox {
-    color: #f0f0f0;
-    position: relative;
-    overflow: hidden;
+    color: #fff;
     margin-bottom: 10px;
+    height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.49);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.itembox.disabled {
+    background-color: #606060;
+    opacity: .7;
+    /*color: #fff;*/
 }
 .create {
     display: block;
     height: 10px;
 }
 
-.itemBgImg {
+/*.itemBgImg {
     position: absolute;
     top:0;
     left: 0;
     width: 100%;
-    /*height: 100%;*/
+    height: 100%;
     object-fit: cover;
-}
+    z-index: -1;
+    opacity: .49;
+}*/
 

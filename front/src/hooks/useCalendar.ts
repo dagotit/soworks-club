@@ -34,6 +34,7 @@ export const useGetCalendarQuerys = (
   calendarQuery: { month: number; year: number },
   clubListQuery: FilterQueryParamType,
 ) => {
+  console.log();
   return useQueries({
     queries: [
       {
@@ -43,7 +44,7 @@ export const useGetCalendarQuerys = (
         // retry: false,
       },
       {
-        queryKey: ['get-club-list', clubListQuery],
+        queryKey: ['get-club-list', clubListQuery, calendarQuery],
         queryFn: () => apiGetClubList(clubListQuery),
         staleTime: 0,
         // retry: false,
