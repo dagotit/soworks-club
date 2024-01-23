@@ -29,26 +29,38 @@ public class CalendarService {
         List<CalendarResponseDTO> calendars = new ArrayList<>();
         AtomicInteger count = new AtomicInteger(1);
 
-        allGroups.forEach(g -> {
-            LocalDate groupDate = g.getStartDateTime().toLocalDate();
-            allAttendances.forEach(a -> {
-                LocalDate attendDate = a.getAttendDate();
-                if (groupDate.isBefore(attendDate)) {
+        if (!allGroups.isEmpty()) {
+            allGroups.forEach(g -> {
+                LocalDate groupDate = g.getStartDateTime().toLocalDate();
+                allAttendances.forEach(a -> {
+                    LocalDate attendDate = a.getAttendDate();
+                    if (groupDate.isBefore(attendDate)) {
+                        calendars.add(CalendarResponseDTO.of(count.get(), g, null));
+                        count.getAndIncrement();
+                    } else if (groupDate.isEqual(attendDate)) {
+                        calendars.add(CalendarResponseDTO.of(count.get(), g, attendDate));
+                        count.getAndIncrement();
+                    } else {
+                        calendars.add(CalendarResponseDTO.of(count.get(), null, attendDate));
+                        count.getAndIncrement();
+                    }
+                });
+                if (allAttendances.isEmpty()) {
                     calendars.add(CalendarResponseDTO.of(count.get(), g, null));
-                    count.getAndIncrement();
-                } else if (groupDate.isEqual(attendDate)) {
-                    calendars.add(CalendarResponseDTO.of(count.get(), g, attendDate));
-                    count.getAndIncrement();
-                } else {
-                    calendars.add(CalendarResponseDTO.of(count.get(), null, attendDate));
                     count.getAndIncrement();
                 }
             });
-            if (allAttendances.isEmpty()) {
-                calendars.add(CalendarResponseDTO.of(count.get(), g, null));
+        }
+        else {
+            allAttendances.forEach(a -> {
+                LocalDate attendDate = a.getAttendDate();
+                calendars.add(CalendarResponseDTO.of(count.get(), null, attendDate));
                 count.getAndIncrement();
-            }
-        });
+            });
+        }
+
+
+
 
         return calendars;
     }
