@@ -37,3 +37,7 @@ spring:
 # file path
 file.profileImagePath: local/profileImages/
 file.groupImagePath: local/groupImages/
+
+logging:
+  level:
+    root: debug

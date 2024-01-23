@@ -13,9 +13,17 @@ spring:
   profiles:
     default: local
 
-logging:
-  level:
-    root: info
+springdoc:
+  packages-to-scan: com.gmail.dlwk0807.dagachi.controller
+  default-consumes-media-type: application/json;charset=UTF-8
+  default-produces-media-type: application/json;charset=UTF-8
+  swagger-ui:
+    path: /
+    disable-swagger-default-url: true
+    display-request-duration: true
+    operations-sorter: alpha
+  show-login-endpoint: true
+
 #  config: classpath:bk_logback-spring.xml
 
 # HS512 알고리즘을 사용할 것이기 때문에 512bit, 즉 64byte 이상의 secret key를 사용해야 한다.
