@@ -19,6 +19,7 @@ import ClubListFilter from '@/components/popups/ClubListFilter';
 import HeaderCellContent from '@/components/calendar/HeaderCellContent';
 import { useRouter } from 'next/navigation';
 import { useClubListStore } from '@/store/useClubList';
+import { it } from 'node:test';
 
 const CalendarMain = () => {
   const router = useRouter(); // 라우터
@@ -63,7 +64,7 @@ const CalendarMain = () => {
    * 모임 리스트 api 데이터 스토어에 setting
    */
   useEffect(() => {
-    if (apiCalendarQuerys[0].isSuccess) {
+    if (!!apiCalendarQuerys[0].data) {
       // 캘린더 api 데이터 스토어에 set
       /**
        *  "id": "1",
@@ -80,68 +81,72 @@ const CalendarMain = () => {
       // @ts-ignore
       if (apiCalendarQuerys[0].data.respBody.length === 0) {
         calendarStore.remove();
-        return;
       }
       // @ts-ignore
-      calendarList = apiCalendarQuerys[0].data.respBody.map((item: any) => {
-        const itemData: ListType = {
-          id: item.id,
-          title: item.title,
-          allDay: false,
-          start: new Date(item.start),
-          end: new Date(item.end),
-          colorEvento: 'green',
-          color: 'white',
-        };
-        if (item.attendanceDate) {
-          itemData.attendanceDate = new Date(item.attendanceDate);
-        }
-        return itemData;
-      });
-      if (calendarList?.length !== 0) {
+      if (apiCalendarQuerys[0].data.respBody.length > 0) {
+        // @ts-ignore
+        calendarList = apiCalendarQuerys[0].data.respBody.map((item: any) => {
+          const itemData: ListType = {
+            id: item.id,
+            title: item.title,
+            allDay: false,
+            start: new Date(item.start),
+            end: new Date(item.end),
+            colorEvento: 'green',
+            color: 'white',
+          };
+          if (item.attendanceDate) {
+            itemData.attendanceDate = new Date(item.attendanceDate);
+          }
+          return itemData;
+        });
         calendarStore.add(calendarList);
       }
     }
 
-    if (apiCalendarQuerys[1].isSuccess) {
+    if (!!apiCalendarQuerys[1].data) {
       // 모임 리스트 api 데이터 스토어에 setting
       /**
-       * id: 1,
-       * category: '취미',
-       * name: '댄스동아리',
-       * memberId: 1,
-       * description: '방송댄스배우기',
-       * status: 'WAITING',
-       * groupImage:'https://storage.googleapis.com/dagachi-image-bucket/default/group_default.png',
-       * strStartDate: '20240104',
-       * strStartTime: '1900',
-       * strEndDate: '20240104',
-       * strEndTime: '2200',
-       * groupMaxNum: null,
-       * numberPersons: 1,
+       * api 데이터
+       *   "groupId": 1,
+       *   "category": "취미",
+       *   "name": "댄스동아리",
+       *   "memberId": 1,
+       *   "description": "방송댄스배우기",
+       *   "status": "WAITING",
+       *   "groupImage": "https://storage.googleapis.com/dagachi-image-bucket/default/group_default.png",
+       *   "strStartDate": "20240127",
+       *   "strStartTime": "1900",
+       *   "strEndDate": "20240127",
+       *   "strEndTime": "2200",
+       *   "groupMaxNum": null,
+       *   "numberPersons": 1
        * */
       let groupList = [];
       // @ts-ignore
       if (apiCalendarQuerys[1].data.respBody.length === 0) {
-        clubListStore.updateList([]);
-        return;
+        clubListStore.remove();
       }
       // @ts-ignore
-      // strEndDate, strStartTime
-      groupList = apiCalendarQuerys[1].data.respBody.map((item: any) => {
-        return {
-          id: item.id,
-          title: item.title,
-          date: DateTime.fromFormat(item.strEndDate, 'yyyyMMdd').toFormat(
-            'yyyy-MM-dd',
-          ),
-          status: `참여: ${item.numberPersons}명`,
-          images: item.groupImage,
-        };
-      });
-      clubListStore.updateList(groupList);
+      if (apiCalendarQuerys[1].data.respBody.length > 0) {
+        // @ts-ignore
+        groupList = apiCalendarQuerys[1].data.respBody.map((item: any) => {
+          return {
+            id: item.groupId,
+            title: item.name,
+            date: DateTime.fromFormat(item.strStartDate, 'yyyyMMdd').toFormat(
+              'yyyy-MM-dd',
+            ),
+            status: item.status,
+            personNumber: `참여: ${item.numberPersons}명`,
+            images: item.groupImage,
+            time: DateTime.fromFormat(item.strStartTime, 'HHmm').toFormat('t'),
+          };
+        });
+        clubListStore.updateList(groupList);
+      }
     }
-  }, [apiCalendarQuerys[0].isSuccess, apiCalendarQuerys[1].isSuccess]);
+  }, [apiCalendarQuerys[0].data, apiCalendarQuerys[1].data]);
 
   /**
    * @function

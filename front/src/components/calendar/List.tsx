@@ -12,7 +12,7 @@ interface clubListProps {
 
 const List = memo((props: clubListProps) => {
   const router = useRouter();
-  const { clubList, updateList } = useClubListStore();
+  const { clubList } = useClubListStore();
 
   /**
    * @function
@@ -44,7 +44,9 @@ const List = memo((props: clubListProps) => {
             href={{
               pathname: '/create',
             }}
-          ></Link>
+          >
+            모임 만들기
+          </Link>
         </div>
       )}
       {clubList.length !== 0 && (
@@ -56,7 +58,9 @@ const List = memo((props: clubListProps) => {
               title={value.title}
               date={value.date}
               status={value.status}
+              personNumber={value.personNumber}
               images={value.images}
+              time={value.time}
             />
           ))}
         </ul>

@@ -31,8 +31,8 @@ const Toolbar = (props: any) => {
               week[date.getDay()]
             }요일`}
         </span>
-        <button onClick={navigate.bind(null, 'PREV')}>↑</button>
-        <button onClick={navigate.bind(null, 'NEXT')}>↓</button>
+        <button onClick={navigate.bind(null, 'PREV')}>&#10094;</button>
+        <button onClick={navigate.bind(null, 'NEXT')}>&#10095;</button>
       </span>
 
       <button onClick={navigate.bind(null, 'TODAY')}>{month}월</button>
