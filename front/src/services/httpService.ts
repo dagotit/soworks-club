@@ -36,19 +36,15 @@ app.interceptors.response.use(
       const data = err.response.data;
       if (data.respCode === 'BIZ_007') {
         const originalConfig = err.config;
-        if (err.response.status === 401 && !originalConfig._retry) {
+        if (
+          err.response.status === 401 &&
+          !originalConfig._retry &&
+          count === 0
+        ) {
+          // count === 0 여러면 reissue 호출하는걸 방지 useQueries 사용하면 해당 현상이 발생할 일이 없음. 아마도?
           originalConfig._retry = true;
-          // 토큰 다시 가져오기 TODO: 오류가 많이 생길 것 같아서 이건 ... 회의 필요
           try {
-            if (count !== 0) {
-              setTimeout(() => {
-                app(originalConfig);
-              }, 500);
-              return Promise;
-            }
-            if (count === 0) {
-              count = 1;
-            }
+            count = 1;
             const resp = await axios.get(`/auth/reissue`, {
               withCredentials: true,
             });

@@ -1,5 +1,5 @@
 import http from './httpService';
-import axios, {AxiosResponse} from 'axios';
+import axios from 'axios';
 
 interface LoginReqType {
   email: string;
@@ -21,8 +21,6 @@ interface CreditsEmailType {
   name: string;
 }
 
-interface passwordChangeType {}
-
 interface SignUpType {
   email: string;
   password: string;
@@ -34,26 +32,10 @@ interface SignUpType {
   addressDtl: string;
 }
 
-interface  CreateGroupType {
+interface CreateGroupType {
   data: FormData;
 }
 
-/**
- * @function
- * 로고 이미지 가져오기
- */
-export async function getLogoImg(): Promise<any> {
-  try {
-    const response = await axios.get('/cat?json=true', {
-      withCredentials: true,
-    });
-    return `https://cataas.com/${response.data}`;
-  } catch (e) {
-    if (axios.isAxiosError(e) && e.response) {
-      throw e.response.data;
-    }
-  }
-}
 /**
  * @function
  * 로그아웃
