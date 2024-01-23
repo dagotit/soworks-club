@@ -6,11 +6,14 @@ export interface ClubListItemType {
   date: string;
   status: string;
   images: string;
+  personNumber: number;
+  time: string;
 }
 
 interface ClubListState {
   clubList: ClubListItemType[];
   updateList: (list: ClubListItemType[]) => void;
+  remove: () => void;
 }
 
 const useClubListStore = create<ClubListState>((set, get) => ({
@@ -19,6 +22,9 @@ const useClubListStore = create<ClubListState>((set, get) => ({
     set(() => ({
       clubList: [...list],
     }));
+  },
+  remove: () => {
+    set(() => ({ clubList: [] }));
   },
 }));
 
