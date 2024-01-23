@@ -18,6 +18,8 @@ To learn more about Next.js, take a look at the following resources:
 
  [the Next.js GitHub repository](https://github.com/vercel/next.js/) - Next.js 깃허브
 
+- [https://github.com/ssi02014/react-query-tutorial]() - 리엑트 쿼리 사용 방법인데.. 읽어보면 좋을 듯
+
 ## env 순서
 
 ```bash

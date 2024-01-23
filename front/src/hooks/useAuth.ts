@@ -6,7 +6,6 @@ import {
   apiPostCreditsEmail,
   apiSignup,
   apiUpdatePassword,
-  getLogoImg,
   apiCreateGroup,
 } from '@/services/authService';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -57,15 +56,6 @@ export const useGetLogout = () => {
   return useMutation({
     mutationKey: ['get-logout'],
     mutationFn: apiLogout,
-  });
-};
-
-export const useGetLogoImg = () => {
-  useQuery({
-    queryKey: ['get-logo'],
-    queryFn: getLogoImg,
-    retry: false,
-    staleTime: Infinity,
   });
 };
 

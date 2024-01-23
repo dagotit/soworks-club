@@ -3,8 +3,7 @@ import {
   apiGetClubList,
   apiGetMonthCalendar,
 } from '@/services/calendarService';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { isEmptyObj } from '@/utils/common';
+import { useMutation, useQueries } from '@tanstack/react-query';
 
 export interface FilterQueryParamType {
   isAll: boolean;
@@ -14,15 +13,11 @@ export interface FilterQueryParamType {
   isCreateClub: boolean;
   statusClub: boolean;
 }
-export const useGetMonthCalendar = (query: { month: number; year: number }) => {
-  return useQuery({
-    queryKey: ['get-month-calendar', query],
-    queryFn: () => apiGetMonthCalendar(query),
-    retry: 0,
-    // staleTime: Infinity,
-  });
-};
 
+/**
+ * @function
+ * 출석 api
+ */
 export const useGetAttendance = () => {
   return useMutation({
     mutationKey: ['get-attendance'],
@@ -30,10 +25,29 @@ export const useGetAttendance = () => {
   });
 };
 
-export const useGetClubList = (query: FilterQueryParamType) => {
-  return useQuery({
-    queryKey: ['get-club-list', query],
-    queryFn: () => apiGetClubList(query),
-    retry: 0,
+/**
+ * @function
+ * 1. 캘린더 api
+ * 2. 모임 리스트 api
+ */
+export const useGetCalendarQuerys = (
+  calendarQuery: { month: number; year: number },
+  clubListQuery: FilterQueryParamType,
+) => {
+  return useQueries({
+    queries: [
+      {
+        queryKey: ['get-month-calendar', calendarQuery],
+        queryFn: () => apiGetMonthCalendar(calendarQuery),
+        staleTime: 0,
+        // retry: false,
+      },
+      {
+        queryKey: ['get-club-list', clubListQuery],
+        queryFn: () => apiGetClubList(clubListQuery),
+        staleTime: 0,
+        // retry: false,
+      },
+    ],
   });
 };
