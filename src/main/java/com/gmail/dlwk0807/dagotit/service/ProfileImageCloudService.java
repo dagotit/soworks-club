@@ -1,8 +1,5 @@
 package com.gmail.dlwk0807.dagotit.service;
 
-import com.gmail.dlwk0807.dagotit.dto.group.GroupRequestDTO;
-import com.gmail.dlwk0807.dagotit.dto.image.ProfileImageUploadDTO;
-import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;

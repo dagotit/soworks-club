@@ -25,6 +25,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.gmail.dlwk0807.dagotit.util.SecurityUtil.getCurrentMemberId;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -38,14 +40,14 @@ public class GroupService {
     private final GroupCustomRepositoryImpl groupCustomRepositoryImpl;
     private final GroupImageService groupImageService;
 
-    public GroupResponseDTO saveGroup(GroupRequestDTO requestDto, MultipartFile groupImageFile) throws Exception {
+    public GroupResponseDTO saveGroup(GroupSaveRequestDTO requestDto, MultipartFile groupImageFile) throws Exception {
 
-        Long memberId = requestDto.getMemberId();
-        Group group = requestDto.toGroup();
+        Member member = authUtil.getCurrentMember();
+        Group group = requestDto.toGroup(member);
 
         LocalDateTime startDateTime = parseToFormatDate(requestDto.getStrStartDateTime());
         LocalDateTime endDateTime = parseToFormatDate(requestDto.getStrEndDateTime());
-        List<Group> groupList = groupRepository.findByMemberIdAndStartDateTimeBetween(memberId, startDateTime, endDateTime);
+        List<Group> groupList = groupRepository.findByMemberIdAndStartDateTimeBetween(member.getId(), startDateTime, endDateTime);
         if (groupList.size() > 0) {
             throw new DuplicationGroup();
         }
@@ -58,7 +60,6 @@ public class GroupService {
 
         groupRepository.save(group);
 
-        Member member = memberRepository.findById(memberId).orElseThrow();
         //모임 만들때 모임장 참여인원에 저장
         GroupAttend groupAttend = GroupAttend.builder()
                 .attendYn("Y")
@@ -78,9 +79,9 @@ public class GroupService {
 
     }
 
-    public GroupResponseDTO updateGroup(GroupRequestDTO requestDto, MultipartFile groupImageFile) {
+    public GroupResponseDTO updateGroup(GroupUpdateRequestDTO requestDto, MultipartFile groupImageFile) {
 
-        Group group = groupRepository.findById(requestDto.getId()).orElseThrow();
+        Group group = groupRepository.findById(requestDto.getGroupId()).orElseThrow();
 
         //모임 이미지 저장, 기존이미지 삭제
         if (groupImageFile != null && !groupImageFile.isEmpty()) {
@@ -106,31 +107,27 @@ public class GroupService {
         return groupResponseDTO;
     }
 
-    public void deleteGroup(GroupRequestDTO requestDto) {
-        Group group = groupRepository.findById(requestDto.getId()).orElseThrow();
+    public void deleteGroup(GroupDeleteRequestDTO requestDto) {
+        Group group = groupRepository.findById(requestDto.getGroupId()).orElseThrow();
 
         String deleteResult = groupImageService.deleteGroupImage(group.getGroupImage());
         log.info("기존 이미지 삭제 결과 : {}", deleteResult);
 
         //delete group 첨부파일 작업필요
 
-        groupRepository.deleteById(requestDto.getId());
+        groupRepository.deleteById(requestDto.getGroupId());
     }
 
     public List<GroupResponseDTO> listGroup(GroupListRequestDTO groupListRequestDTO) {
-        return groupCustomRepositoryImpl.findAllByFilter(groupListRequestDTO).stream()
+        return groupCustomRepositoryImpl.findAllByFilter(groupListRequestDTO, getCurrentMemberId()).stream()
                 .map(o -> GroupResponseDTO.of(o)).collect(Collectors.toList());
     }
 
-    public String updateGroupAttachFile(GroupAttachFileRequestDTO requestDto, List<MultipartFile> groupFiles, User user) {
+    public String updateGroupAttachFile(GroupAttachFileRequestDTO requestDto, List<MultipartFile> groupFiles) {
 
-        Group group = groupRepository.findById(Long.valueOf(requestDto.getGroupId())).orElseThrow();
+        Group group = groupRepository.findById(requestDto.getGroupId()).orElseThrow();
 
         if (!authUtil.isAdmin()) {
-            Long currentMemberId = Long.valueOf(user.getUsername());
-            if (!currentMemberId.equals(requestDto.getMemberId())) {
-                throw new AuthenticationNotMatchException();
-            }
             //모임장 체크
             if (!group.getMemberId().equals(requestDto.getMemberId())) {
                 throw new AuthenticationNotMatchException();

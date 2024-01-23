@@ -1,5 +1,6 @@
 package com.gmail.dlwk0807.dagotit.util;
 
+import com.gmail.dlwk0807.dagotit.core.exception.CustomRespBodyException;
 import com.gmail.dlwk0807.dagotit.entity.Authority;
 import com.gmail.dlwk0807.dagotit.entity.Member;
 import com.gmail.dlwk0807.dagotit.repository.MemberRepository;
@@ -21,7 +22,7 @@ public class AuthUtil {
 
     public Member getCurrentMember() {
         Long id = getCurrentMemberId();
-        Member member = memberRepository.findById(id).orElseThrow();
+        Member member = memberRepository.findById(id).orElseThrow(() -> new CustomRespBodyException("회원이 존재하지 않습니다."));
         return member;
     }
 

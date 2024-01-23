@@ -1,7 +1,6 @@
 package com.gmail.dlwk0807.dagotit.core.aspect;
 
 import com.gmail.dlwk0807.dagotit.core.exception.AuthenticationNotMatchException;
-import com.gmail.dlwk0807.dagotit.dto.group.GroupRequestDTO;
 import com.gmail.dlwk0807.dagotit.util.AuthUtil;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;

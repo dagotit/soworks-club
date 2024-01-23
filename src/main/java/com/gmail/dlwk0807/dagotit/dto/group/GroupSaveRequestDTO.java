@@ -1,8 +1,8 @@
 package com.gmail.dlwk0807.dagotit.dto.group;
 
-import com.gmail.dlwk0807.dagotit.core.aspect.AOPMemberIdDTO;
 import com.gmail.dlwk0807.dagotit.entity.Group;
 import com.gmail.dlwk0807.dagotit.entity.GroupStatus;
+import com.gmail.dlwk0807.dagotit.entity.Member;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,8 +12,7 @@ import java.time.format.DateTimeFormatter;
 
 @Getter
 @NoArgsConstructor
-public class GroupRequestDTO extends AOPMemberIdDTO {
-    private Long id;
+public class GroupSaveRequestDTO {
     private String category;
     private String name;
     private String description;
@@ -24,7 +23,7 @@ public class GroupRequestDTO extends AOPMemberIdDTO {
     private String groupImage;
     private Long groupMaxNum;
 
-    public Group toGroup() {
+    public Group toGroup(Member member) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
         LocalDateTime startDateTime = LocalDateTime.parse(strStartDateTime, formatter);
         LocalDateTime endDateTime = LocalDateTime.parse(strEndDateTime, formatter);
@@ -32,7 +31,7 @@ public class GroupRequestDTO extends AOPMemberIdDTO {
         return Group.builder()
                 .category(category)
                 .name(name)
-                .memberId(getMemberId())
+                .memberId(member.getId())
                 .groupImage("https://storage.googleapis.com/dagachi-image-bucket/default/group_default.png")
                 .description(description)
                 .status(GroupStatus.WAITING)
@@ -42,7 +41,4 @@ public class GroupRequestDTO extends AOPMemberIdDTO {
                 .build();
     }
 
-    public void setCurrentMemberId(Long memberId) {
-        setMemberId(memberId);
-    }
 }

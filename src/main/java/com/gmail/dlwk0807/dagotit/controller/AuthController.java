@@ -1,6 +1,6 @@
 package com.gmail.dlwk0807.dagotit.controller;
 
-import com.gmail.dlwk0807.dagotit.dto.member.MemberRequestDTO;
+import com.gmail.dlwk0807.dagotit.dto.member.MemberAuthRequestDTO;
 import com.gmail.dlwk0807.dagotit.dto.token.TokenDTO;
 import com.gmail.dlwk0807.dagotit.service.AuthService;
 import com.gmail.dlwk0807.dagotit.vo.ApiMessageVO;
@@ -22,18 +22,18 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/signup")
-    public ApiMessageVO signup(@RequestBody MemberRequestDTO memberRequestDto) {
+    public ApiMessageVO signup(@RequestBody MemberAuthRequestDTO memberAuthRequestDto) {
         return ApiMessageVO.builder()
                 .respMsg(OK_RESP_MSG)
-                .respBody(authService.signup(memberRequestDto))
+                .respBody(authService.signup(memberAuthRequestDto))
                 .respCode(OK_RESP_CODE)
                 .build();
     }
 
     @PostMapping("/login")
-    public ApiMessageVO login(@RequestBody MemberRequestDTO memberRequestDto, HttpServletResponse response) {
+    public ApiMessageVO login(@RequestBody MemberAuthRequestDTO memberAuthRequestDto, HttpServletResponse response) {
 
-        TokenDTO token = authService.login(memberRequestDto);
+        TokenDTO token = authService.login(memberAuthRequestDto);
         setHeaderCookie(response, token, 7 * 24 * 60 * 60);
 
         return ApiMessageVO.builder()

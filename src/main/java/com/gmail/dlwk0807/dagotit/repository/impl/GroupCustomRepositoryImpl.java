@@ -35,13 +35,13 @@ public class GroupCustomRepositoryImpl implements GroupCustomRepository {
     }
 
     @Override
-    public List<Group> findAllByFilter(GroupListRequestDTO dto) {
+    public List<Group> findAllByFilter(GroupListRequestDTO dto, Long memberId) {
 
         return query.selectFrom(group)
                 .where(statusNotDone(dto.getStatusNotDone())
                         , dateBetween(dto.getStYear(), dto.getStMonth(), dto.getEndYear(), dto.getEndMonth())
-                        , makeOnly(dto.getMakeOnly(), dto.getMemberId())
-                        , joinOnly(dto.getJoinOnly(), dto.getMemberId())
+                        , makeOnly(dto.getMakeOnly(), memberId)
+                        , joinOnly(dto.getJoinOnly(), memberId)
                 )
                 .fetch();
     }

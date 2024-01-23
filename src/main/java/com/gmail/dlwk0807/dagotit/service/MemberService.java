@@ -1,6 +1,5 @@
 package com.gmail.dlwk0807.dagotit.service;
 
-import com.gmail.dlwk0807.dagotit.core.exception.AuthenticationNotMatchException;
 import com.gmail.dlwk0807.dagotit.core.exception.CustomRespBodyException;
 import com.gmail.dlwk0807.dagotit.dto.member.MemberDeleteDTO;
 import com.gmail.dlwk0807.dagotit.dto.member.MemberResponseDTO;
@@ -11,11 +10,12 @@ import com.gmail.dlwk0807.dagotit.repository.MemberRepository;
 import com.gmail.dlwk0807.dagotit.util.AuthUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import static com.gmail.dlwk0807.dagotit.util.SecurityUtil.getCurrentMemberId;
 
 @Service
 @RequiredArgsConstructor
@@ -41,33 +41,31 @@ public class MemberService {
 
     public void updatePassword(RequestPasswordDTO requestPasswordDto) {
 
-        Member member = memberRepository.findById(requestPasswordDto.getMemberId()).orElseThrow(() -> new CustomRespBodyException("회원이 존재하지 않습니다."));
+        Member member = authUtil.getCurrentMember();
         member.setPassword(passwordEncoder.encode(requestPasswordDto.getUpdatePassword()));
-
     }
 
 
     public MemberResponseDTO memberUpdate(MemberUpdateDTO memberUpdateDto) {
 
-        Member member = memberRepository.findById(memberUpdateDto.getMemberId()).orElseThrow(() -> new CustomRespBodyException("회원이 존재하지 않습니다."));
+        Member member = authUtil.getCurrentMember();
         member.update(memberUpdateDto);
-        MemberResponseDTO memberResponseDTO = MemberResponseDTO.of(member);
-        return memberResponseDTO;
+        return MemberResponseDTO.of(member);
     }
 
     public String memberDelete(MemberDeleteDTO memberDeleteDto) {
 
-        Member member = memberRepository.findByEmail(memberDeleteDto.getEmail()).orElseThrow(() -> new CustomRespBodyException("회원이 존재하지 않습니다."));
+        Member member = memberRepository.findById(memberDeleteDto.getMemberId()).orElseThrow(() -> new CustomRespBodyException("회원이 존재하지 않습니다."));
         memberRepository.delete(member);
 
         return "ok";
     }
 
-    public String profileUpload(MultipartFile file, Long memberId, User user) {
+    public String profileUpload(MultipartFile file) {
 
         String imageName = null;
 
-        Member member = memberRepository.findById(memberId).orElseThrow(() -> new CustomRespBodyException("회원이 존재하지 않습니다."));
+        Member member = authUtil.getCurrentMember();
 
         //모임 이미지 저장
         if (!file.isEmpty()) {

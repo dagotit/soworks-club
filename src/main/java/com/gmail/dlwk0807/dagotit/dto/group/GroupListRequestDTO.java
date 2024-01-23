@@ -10,7 +10,6 @@ public class GroupListRequestDTO {
     private int endYear;
     private int stMonth;
     private int endMonth;
-    private Long memberId;
     private String joinOnly;
     private String makeOnly;
     private String statusNotDone;

@@ -33,17 +33,17 @@ public class GroupController {
     }
 
     @PostMapping("/save")
-    public ApiMessageVO createGroup(@RequestPart(value = "group") GroupRequestDTO groupRequestDto,
+    public ApiMessageVO createGroup(@RequestPart(value = "group") GroupSaveRequestDTO groupSaveRequestDto,
                                     @RequestPart(value = "file", required = false) MultipartFile groupImageFile) throws Exception {
         return ApiMessageVO.builder()
                 .respMsg(OK_RESP_MSG)
-                .respBody(groupService.saveGroup(groupRequestDto, groupImageFile))
+                .respBody(groupService.saveGroup(groupSaveRequestDto, groupImageFile))
                 .respCode(OK_RESP_CODE)
                 .build();
     }
 
     @PostMapping("/update")
-    public ApiMessageVO updateGroup(@RequestPart(value = "group") GroupRequestDTO groupRequestDto,
+    public ApiMessageVO updateGroup(@RequestPart(value = "group") GroupUpdateRequestDTO groupRequestDto,
                                     @RequestPart(value = "file", required = false) MultipartFile groupImageFile) {
 
         return ApiMessageVO.builder()
@@ -55,12 +55,11 @@ public class GroupController {
 
     @PostMapping("/update-attach-file")
     public ApiMessageVO updateAttachFile(@RequestPart(value = "group") GroupAttachFileRequestDTO groupAttachFileRequestDTO,
-                                    @RequestPart(value = "groupFiles", required = false) List<MultipartFile> groupFiles,
-                                    @AuthenticationPrincipal User user) {
+                                    @RequestPart(value = "groupFiles", required = false) List<MultipartFile> groupFiles) {
 
         return ApiMessageVO.builder()
                 .respMsg(OK_RESP_MSG)
-                .respBody(groupService.updateGroupAttachFile(groupAttachFileRequestDTO, groupFiles, user))
+                .respBody(groupService.updateGroupAttachFile(groupAttachFileRequestDTO, groupFiles))
                 .respCode(OK_RESP_CODE)
                 .build();
     }
@@ -76,7 +75,7 @@ public class GroupController {
     }
 
     @PostMapping("/delete")
-    public ApiMessageVO deleteGroup(@Valid @RequestBody GroupRequestDTO groupRequestDto) {
+    public ApiMessageVO deleteGroup(@Valid @RequestBody GroupDeleteRequestDTO groupRequestDto) {
 
         groupService.deleteGroup(groupRequestDto);
 

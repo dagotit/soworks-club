@@ -10,5 +10,5 @@ import java.util.List;
 public interface GroupCustomRepository {
     List<Group> findAllByMonthAndYear(int month, int year);
 
-    List<Group> findAllByFilter(GroupListRequestDTO groupListRequestDTO);
+    List<Group> findAllByFilter(GroupListRequestDTO groupListRequestDTO, Long memberId);
 }

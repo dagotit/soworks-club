@@ -12,6 +12,7 @@ import com.gmail.dlwk0807.dagotit.repository.GroupAttendRepository;
 import com.gmail.dlwk0807.dagotit.repository.GroupRepository;
 import com.gmail.dlwk0807.dagotit.repository.MemberRepository;
 import com.gmail.dlwk0807.dagotit.repository.impl.MemberCustomRepositoryImpl;
+import com.gmail.dlwk0807.dagotit.util.AuthUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,22 +28,21 @@ public class GroupAttendService {
 
     private final GroupAttendRepository groupAttendRepository;
     private final GroupRepository groupRepository;
-    private final MemberRepository memberRepository;
     private final MemberCustomRepositoryImpl memberCustomRepository;
     private final GroupImageService groupImageService;
+    private final AuthUtil authUtil;
 
 
     public GroupResponseDTO applyGroupAttend(GroupAttendRequestDTO groupAttendRequestDto) throws Exception {
 
         long groupId = groupAttendRequestDto.getGroupId();
-        long memberId = groupAttendRequestDto.getMemberId();
+        Member member = authUtil.getCurrentMember();
         //중복체크
-        if (groupAttendRepository.existsByGroupIdAndMemberId(groupId, memberId)) {
+        if (groupAttendRepository.existsByGroupIdAndMemberId(groupId, member.getId())) {
             throw new DuplicationGroupAttend("이미 모임신청을 하셨습니다.");
         }
 
         Group group = groupRepository.findById(groupId).orElseThrow();
-        Member member = memberRepository.findById(memberId).orElseThrow();
         GroupAttend groupAttend = GroupAttend.builder()
                 .group(group)
                 .member(member)
@@ -63,13 +63,13 @@ public class GroupAttendService {
     public String cancelGroupAttend(GroupAttendRequestDTO groupAttendRequestDto) {
 
         long groupId = groupAttendRequestDto.getGroupId();
-        long memberId = groupAttendRequestDto.getMemberId();
+        Member member = authUtil.getCurrentMember();
         //참석체크
-        if (!groupAttendRepository.existsByGroupIdAndMemberId(groupId, memberId)) {
+        if (!groupAttendRepository.existsByGroupIdAndMemberId(groupId, member.getId())) {
             throw new CustomRespBodyException("참여하지 않은 모임입니다.");
         }
 
-        GroupAttend groupAttend = groupAttendRepository.findByGroupIdAndMemberId(groupId, memberId).orElseThrow();
+        GroupAttend groupAttend = groupAttendRepository.findByGroupIdAndMemberId(groupId, member.getId()).orElseThrow();
         groupAttendRepository.delete(groupAttend);
 
         return "ok";

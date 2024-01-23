@@ -1,12 +1,11 @@
 package com.gmail.dlwk0807.dagotit.dto.group;
 
-import com.gmail.dlwk0807.dagotit.core.aspect.AOPMemberIdDTO;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Getter
+@Data
 @NoArgsConstructor
-public class GroupAttendRequestDTO extends AOPMemberIdDTO {
+public class GroupAttendRequestDTO {
     private Long groupId;
 
 }

@@ -1,9 +1,7 @@
 package com.gmail.dlwk0807.dagotit.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.gmail.dlwk0807.dagotit.dto.group.GroupRequestDTO;
-import com.gmail.dlwk0807.dagotit.dto.group.GroupResponseDTO;
+import com.gmail.dlwk0807.dagotit.dto.group.GroupUpdateRequestDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,7 +24,6 @@ public class Group extends BaseEntity {
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String category;
     private String name;
     private Long memberId;
@@ -57,7 +54,7 @@ public class Group extends BaseEntity {
         this.groupMaxNum = groupMaxNum;
     }
 
-    public void update(GroupRequestDTO requestDto) {
+    public void update(GroupUpdateRequestDTO requestDto) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
         LocalDateTime startDateTime = LocalDateTime.parse(requestDto.getStrStartDateTime(), formatter);
         LocalDateTime endDateTime = LocalDateTime.parse(requestDto.getStrEndDateTime(), formatter);

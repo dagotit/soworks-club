@@ -1,6 +1,5 @@
 package com.gmail.dlwk0807.dagotit.controller;
 
-import com.gmail.dlwk0807.dagotit.dto.image.ProfileImageUploadDTO;
 import com.gmail.dlwk0807.dagotit.dto.member.MemberUpdateDTO;
 import com.gmail.dlwk0807.dagotit.dto.member.RequestPasswordDTO;
 import com.gmail.dlwk0807.dagotit.service.MemberService;
@@ -8,8 +7,6 @@ import com.gmail.dlwk0807.dagotit.util.SecurityUtil;
 import com.gmail.dlwk0807.dagotit.vo.ApiMessageVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,15 +24,6 @@ public class MemberController {
         return ApiMessageVO.builder()
                 .respMsg(OK_RESP_MSG)
                 .respBody(memberService.findMemberInfoById(SecurityUtil.getCurrentMemberId()))
-                .respCode(OK_RESP_CODE)
-                .build();
-    }
-
-    @GetMapping("/{email}")
-    public ApiMessageVO findMemberInfoByEmail(@PathVariable String email) {
-        return ApiMessageVO.builder()
-                .respMsg(OK_RESP_MSG)
-                .respBody(memberService.findMemberInfoByEmail(email))
                 .respCode(OK_RESP_CODE)
                 .build();
     }
@@ -64,12 +52,11 @@ public class MemberController {
 
 
     @PostMapping(value = "/profile-upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ApiMessageVO upload(@RequestPart(value = "file") MultipartFile file,
-                               @RequestPart(value = "member") ProfileImageUploadDTO profileImageUploadDTO, @AuthenticationPrincipal User user) {
+    public ApiMessageVO upload(@RequestPart(value = "file") MultipartFile file) {
 
         return ApiMessageVO.builder()
                 .respMsg(OK_RESP_MSG)
-                .respBody(memberService.profileUpload(file, profileImageUploadDTO.getMemberId(), user))
+                .respBody(memberService.profileUpload(file))
                 .respCode(OK_RESP_CODE)
                 .build();
     }

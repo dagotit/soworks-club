@@ -3,7 +3,7 @@ package com.gmail.dlwk0807.dagotit.service;
 import com.gmail.dlwk0807.dagotit.core.config.jwt.TokenProvider;
 import com.gmail.dlwk0807.dagotit.core.exception.CustomRespBodyException;
 import com.gmail.dlwk0807.dagotit.core.exception.DuplicationMember;
-import com.gmail.dlwk0807.dagotit.dto.member.MemberRequestDTO;
+import com.gmail.dlwk0807.dagotit.dto.member.MemberAuthRequestDTO;
 import com.gmail.dlwk0807.dagotit.dto.member.MemberResponseDTO;
 import com.gmail.dlwk0807.dagotit.dto.token.TokenDTO;
 import com.gmail.dlwk0807.dagotit.entity.Member;
@@ -30,20 +30,20 @@ public class AuthService {
     private final RefreshTokenRepository refreshTokenRepository;
 
     @Transactional
-    public MemberResponseDTO signup(MemberRequestDTO memberRequestDto) {
-        if (memberRepository.existsByEmail(memberRequestDto.getEmail())) {
+    public MemberResponseDTO signup(MemberAuthRequestDTO memberAuthRequestDto) {
+        if (memberRepository.existsByEmail(memberAuthRequestDto.getEmail())) {
             throw new DuplicationMember("이미 가입되어 있는 유저입니다");
         }
 
-        Member member = memberRequestDto.toMember(passwordEncoder);
+        Member member = memberAuthRequestDto.toMember(passwordEncoder);
 
         return MemberResponseDTO.of(memberRepository.save(member));
     }
 
     @Transactional
-    public TokenDTO login(MemberRequestDTO memberRequestDto) {
+    public TokenDTO login(MemberAuthRequestDTO memberAuthRequestDto) {
         // 1. Login ID/PW 를 기반으로 AuthenticationToken 생성
-        UsernamePasswordAuthenticationToken authenticationToken = memberRequestDto.toAuthentication();
+        UsernamePasswordAuthenticationToken authenticationToken = memberAuthRequestDto.toAuthentication();
 
         // 2. 실제로 검증 (사용자 비밀번호 체크) 이 이루어지는 부분
         //    authenticate 메서드가 실행이 될 때 CustomUserDetailsService 에서 만들었던 loadUserByUsername 메서드가 실행됨

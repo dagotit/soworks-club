@@ -21,8 +21,4 @@ public class MemberResponseDTO {
         return new MemberResponseDTO(member.getEmail(), member.getName(), member.getNickname(), member.getId(), member.getProfileImage());
     }
 
-    public void setProfileImage(String profileImage) {
-        this.profileImage = profileImage;
-    }
-
 }

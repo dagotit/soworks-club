@@ -1,12 +1,11 @@
 package com.gmail.dlwk0807.dagotit.dto.member;
 
-import com.gmail.dlwk0807.dagotit.core.aspect.AOPMemberIdDTO;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class MemberUpdateDTO extends AOPMemberIdDTO {
+public class MemberUpdateDTO {
 
     private String email;
     private String address;

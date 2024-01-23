@@ -39,4 +39,13 @@ public class AdminController {
                 .build();
     }
 
+    @GetMapping("/{email}")
+    public ApiMessageVO findMemberInfoByEmail(@PathVariable String email) {
+        return ApiMessageVO.builder()
+                .respMsg(OK_RESP_MSG)
+                .respBody(memberService.findMemberInfoByEmail(email))
+                .respCode(OK_RESP_CODE)
+                .build();
+    }
+
 }

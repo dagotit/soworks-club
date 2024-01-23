@@ -15,6 +15,7 @@ import java.io.IOException;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/gcs")
+@Deprecated
 public class GCSController {
 
     private final GCSService gcsService;

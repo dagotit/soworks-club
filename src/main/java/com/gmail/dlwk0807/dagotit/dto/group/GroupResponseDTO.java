@@ -9,7 +9,7 @@ import java.time.format.DateTimeFormatter;
 @Getter
 @Builder
 public class GroupResponseDTO {
-    private Long id;
+    private Long groupId;
     private String category;
     private String name;
     private Long memberId;
@@ -25,7 +25,7 @@ public class GroupResponseDTO {
 
     public static GroupResponseDTO of(Group group) {
         return GroupResponseDTO.builder()
-                .id(group.getId())
+                .groupId(group.getId())
                 .category(group.getCategory())
                 .name(group.getName())
                 .memberId(group.getMemberId())
