@@ -29,7 +29,7 @@ export const apiGetMonthCalendar = async (query: {
  */
 export const apiGetAttendance = async (data: null) => {
   try {
-    return http.get('/api/v1/attendance/attend');
+    return await http.get('/api/v1/attendance/attend');
   } catch (e) {
     if (axios.isAxiosError(e) && e.response) {
       throw e.response.data;
@@ -51,10 +51,9 @@ export const apiGetClubList = async (query: FilterQueryParamType) => {
   const makeOnly = query.isCreateClub ? 'Y' : 'N';
   const statusNotDone = query.statusClub ? 'Y' : 'N';
 
-  // TODO: 멤버 id는 회원가입할 때.. 담으면.. 새로고침하면ㅇ ㅓ떻게 확인하지?
   try {
     return await http.get(
-      `/api/v1/groups/group-list?stYear=${stYear}&stMonth=${stMonth}&endYear=${endYear}&endMonth=${endMonth}&memberId=1&joinOnly=${joinOnly}&makeOnly=${makeOnly}&statusNotDone=${statusNotDone}`,
+      `/api/v1/groups/group-list?stYear=${stYear}&stMonth=${stMonth}&endYear=${endYear}&endMonth=${endMonth}&joinOnly=${joinOnly}&makeOnly=${makeOnly}&statusNotDone=${statusNotDone}`,
     );
   } catch (e) {
     if (axios.isAxiosError(e) && e.response) {

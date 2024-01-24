@@ -45,7 +45,7 @@ app.interceptors.response.use(
           originalConfig._retry = true;
           try {
             count = 1;
-            const resp = await axios.get(`/auth/reissue`, {
+            const resp = await axios.get(`/api/v1/auth/reissue`, {
               withCredentials: true,
             });
             if (resp) {
@@ -118,7 +118,7 @@ const handlerTokenExpires = async () => {
         accessToken: '',
         expires: 0,
       });
-      await app.get(`/reissue`, {
+      await app.get(`/api/v1/auth/reissue`, {
         withCredentials: true,
       });
     } catch (e) {

@@ -4,7 +4,7 @@
     height: 7vh;
     width: 100%;
     /*background-color: #303134;*/
-    /*box-shadow: 0 1px 6px 0 rgba(0,0,0,0.2);*/
+    box-shadow: 0 1px 6px 0 rgba(0,0,0,0.2);
 }
 
 .headerWrap {
@@ -18,10 +18,15 @@
     z-index: 50;
     width: 100%;
     height: 100%;
-    background-color: #303134;
+    background-color: #e6e6e6;
     box-shadow: 0 1px 6px 0 rgba(0,0,0,0.2);
 }
-
+/* 뒤로가기 */
+.backBtn {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+}
 /* 메뉴 */
 .menuTrigger{
     position: fixed;
@@ -141,9 +146,9 @@
     background-color: #d9d9d9;
     padding: 10px;
     position: fixed;
-    display: flex;
+    /*display: flex;*/
     width: 100%;
-    top: -7vw;
+    top: -100%;
 
     -moz-transition: all 300ms;
     -webkit-transition: all 300ms;
@@ -153,4 +158,8 @@
 .searchWrap.active {
     /*top: calc(7vh + 40px);*/
     top: 7vh;
+}
+
+.searchAction {
+    display: flex;
 }

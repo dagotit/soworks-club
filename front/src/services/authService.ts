@@ -42,7 +42,7 @@ interface CreateGroupType {
  */
 export const apiLogout = async (data: null): Promise<any> => {
   try {
-    return http.get('/auth/logout');
+    return await http.get('/api/v1/auth/logout');
   } catch (e) {
     if (axios.isAxiosError(e) && e.response) {
       throw e.response.data;
@@ -55,7 +55,7 @@ export const apiLogout = async (data: null): Promise<any> => {
  */
 export const apiLogin = async (data: LoginReqType): Promise<any> => {
   try {
-    return await http.post('/auth/login', data);
+    return await http.post('/api/v1/auth/login', data);
   } catch (e) {
     if (axios.isAxiosError(e) && e.response) {
       throw e.response.data;
@@ -68,7 +68,7 @@ export const apiLogin = async (data: LoginReqType): Promise<any> => {
  */
 export const apiGetAccessToken = async (data: null): Promise<any> => {
   try {
-    return await http.get('/auth/reissue');
+    return await http.get('/api/v1/auth/reissue');
   } catch (e) {
     if (axios.isAxiosError(e) && e.response) {
       throw e.response.data;

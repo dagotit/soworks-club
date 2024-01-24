@@ -1,7 +1,7 @@
 'use client';
 import styles from '@/components/css/Header.module.css';
 import { useGetAccessToken, useGetLogout } from '@/hooks/useAuth';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { useTokenStore } from '@/store/useLogin';
 import { useDialogStore } from '@/store/useDialog';
@@ -9,6 +9,7 @@ import useDidMountEffect from '@/utils/useDidMountEffect';
 import { isEmptyObj } from '@/utils/common';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useGetSearchList } from '@/hooks/useGroup';
 
 interface HeaderProps {
   propAttendanceCk?: () => void;
@@ -16,12 +17,18 @@ interface HeaderProps {
 const Header = (props: any) => {
   const getLogout = useGetLogout();
   const router = useRouter();
+  const pathname = usePathname();
   const { accessToken, setAccessToken, setTokenExpires } = useTokenStore();
   const [isNavOpen, setNavOpen] = useState(false);
   const getAccessToken = useGetAccessToken();
   const { open, allClose } = useDialogStore();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchVal, setSearchVal] = useState('');
+  const [isShowBackBtn, setIsShowBackBtn] = useState(
+    pathname.includes('/group/detail'),
+  );
+  const apiSearch = useGetSearchList();
+  const [searchList, setSearchList] = useState<any[]>([]);
 
   useEffect(() => {
     /*if (!accessToken) {
@@ -84,9 +91,28 @@ const Header = (props: any) => {
       | React.MouseEvent<HTMLButtonElement>
       | any,
   ) {
-    if (e.type === 'click' || (e.type === 'keydown' && e.key === 'Enter')) {
+    if (e.type === 'click' || (e.type === 'keypress' && e.key === 'Enter')) {
       e.currentTarget.blur(); // input 포커스 아웃
-      onClickSearchOpen();
+      apiSearch.mutate(searchVal, {
+        onSuccess: handleSearchSuccess,
+      });
+      // onClickSearchOpen();
+    }
+  }
+  /**
+   * @function
+   * api 검색 성공
+   **/
+  function handleSearchSuccess(e: any) {
+    console.log('e:', e);
+    if (e.respCode === '00') {
+      const list = e.respBody.map((item: any, index: number) => {
+        if (index < 6) {
+          return item;
+        }
+      });
+      console.log(list);
+      setSearchList(list);
     }
   }
   /**
@@ -99,9 +125,21 @@ const Header = (props: any) => {
   return (
     <header className={styles.header}>
       <div className={styles.headerWrap}>
-        <div className={styles.menuTrigger} onClick={onClickNavOpen}>
-          <Image src="/navBar.svg" alt="알림" width={18} height={12} />
-        </div>
+        {isShowBackBtn && (
+          <div
+            className={styles.backBtn}
+            onClick={() => {
+              history.back();
+            }}
+          >
+            &#10094;
+          </div>
+        )}
+        {!isShowBackBtn && (
+          <div className={styles.menuTrigger} onClick={onClickNavOpen}>
+            <Image src="/navBar.svg" alt="알림" width={18} height={12} />
+          </div>
+        )}
         <Link
           href={{
             pathname: '/news',
@@ -157,15 +195,45 @@ const Header = (props: any) => {
       <div
         className={`${styles.searchWrap} ${isSearchOpen ? styles.active : ''}`}
       >
-        <input
-          type="text"
-          value={searchVal}
-          onChange={onChangeSearch}
-          onKeyDown={handleSearch}
-        />
-        <button type="button" onClick={handleSearch}>
-          검색
-        </button>
+        <div className={styles.searchAction}>
+          <input
+            type="text"
+            value={searchVal}
+            onChange={onChangeSearch}
+            onKeyPress={handleSearch}
+          />
+          <button type="button" onClick={handleSearch}>
+            검색
+          </button>
+        </div>
+        {searchList.length !== 0 && (
+          <div>
+            <ul>
+              {searchList.map((value, index) => (
+                <li key={index}>
+                  <Link
+                    href={{
+                      pathname: `/group/detail/${value.groupId}`,
+                    }}
+                  >
+                    {value.category} | {value.name} |{' '}
+                    {/* TODO 수정 있을 수 있음 */}
+                    {value.status === 'WAITING' ? '모집중' : '모집종료?'}
+                  </Link>
+                </li>
+              ))}
+              <li>
+                <Link
+                  href={{
+                    pathname: '/calendar',
+                  }}
+                >
+                  더보기
+                </Link>
+              </li>
+            </ul>
+          </div>
+        )}
       </div>
     </header>
   );
