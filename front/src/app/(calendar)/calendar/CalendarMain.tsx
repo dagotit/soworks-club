@@ -199,7 +199,8 @@ const CalendarMain = () => {
    * @function
    * 다른 월 클릭 시 이벤트
    */
-  function handlerMonth(e: any) {
+  const handlerMonth = useCallback((e: any) => {
+    console.log('e :', e);
     const clickDay = DateTime.fromJSDate(e).toFormat('yyyy-MM-dd');
     const month = DateTime.fromJSDate(e).toFormat('M');
     const year = DateTime.fromJSDate(e).toFormat('yyyy');
@@ -212,7 +213,7 @@ const CalendarMain = () => {
       startDate: clickDay,
       endDate: clickDay,
     });
-  }
+  }, []);
 
   return (
     <Fragment>
@@ -220,7 +221,16 @@ const CalendarMain = () => {
         <Header />
 
         {apiCalendarQuerys[0].isLoading && (
-          <div className={styles.loadingText}>로딩중</div>
+          <div className={styles.loadingText}>
+            <div className={styles.loader}></div>
+
+            <div
+              className={`${styles.loaderSection} ${styles.sectionLeft}`}
+            ></div>
+            <div
+              className={`${styles.loaderSection} ${styles.sectionRight}`}
+            ></div>
+          </div>
         )}
 
         <div className={styles.calendarWrap}>

@@ -18,7 +18,7 @@ export async function withoutAuth(req: NextRequest) {
 
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/auth/reissue`,
+      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/reissue`,
       {
         method: 'GET',
         mode: 'cors',

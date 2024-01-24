@@ -175,7 +175,7 @@ const ClubListFilter = memo((props: clubFilterProps) => {
             </div>
           </div>
 
-          <label>
+          {/*<label>
             <span>날짜로 보기</span>
             <div className={styles.filterDateWrap}>
               <input
@@ -185,7 +185,7 @@ const ClubListFilter = memo((props: clubFilterProps) => {
               />
               ~ <input type="date" value={endDay} onChange={onChangeEndDate} />
             </div>
-          </label>
+          </label>*/}
 
           <div className={styles.filterInputWrap}>
             <span>내가 참여한 모임만 보기</span>
