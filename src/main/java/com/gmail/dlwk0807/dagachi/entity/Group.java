@@ -36,7 +36,7 @@ public class Group extends BaseEntity {
     private LocalDateTime endDateTime;
     private Long groupMaxNum;
 
-    @OneToMany(mappedBy = "group")
+    @OneToMany(mappedBy = "group", cascade = CascadeType.REMOVE)
     @JsonIgnore
     private List<GroupAttend> groupAttendList = new ArrayList<>();
 
