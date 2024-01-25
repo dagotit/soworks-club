@@ -1,10 +1,7 @@
 package com.gmail.dlwk0807.dagachi.service;
 
 import com.gmail.dlwk0807.dagachi.core.exception.CustomRespBodyException;
-import com.gmail.dlwk0807.dagachi.dto.member.MemberDeleteDTO;
-import com.gmail.dlwk0807.dagachi.dto.member.MemberResponseDTO;
-import com.gmail.dlwk0807.dagachi.dto.member.MemberUpdateDTO;
-import com.gmail.dlwk0807.dagachi.dto.member.RequestPasswordDTO;
+import com.gmail.dlwk0807.dagachi.dto.member.*;
 import com.gmail.dlwk0807.dagachi.entity.Member;
 import com.gmail.dlwk0807.dagachi.repository.MemberRepository;
 import com.gmail.dlwk0807.dagachi.util.AuthUtil;
@@ -75,6 +72,12 @@ public class MemberService {
         }
 
         return imageName;
+    }
+
+    public ChkAdminResponseDTO checkAdmin(Long memberId) {
+        return memberRepository.findById(memberId)
+                .map(member -> ChkAdminResponseDTO.of(member))
+                .orElseThrow(() -> new CustomRespBodyException("회원이 존재하지 않습니다."));
     }
 
 }

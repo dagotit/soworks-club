@@ -3,6 +3,10 @@ package com.gmail.dlwk0807.dagachi.controller;
 import com.gmail.dlwk0807.dagachi.dto.category.CategoryRequestDTO;
 import com.gmail.dlwk0807.dagachi.service.CategoryService;
 import com.gmail.dlwk0807.dagachi.vo.ApiMessageVO;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,6 +22,12 @@ public class CategoryController {
 
     private final CategoryService categoryService;
 
+    @Operation(summary = "카테고리 조회")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200",description = "OK, 성공"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "Error Code",description = "Error message",
+                    content = @Content(schema = @Schema(implementation = ApiMessageVO.class))),
+    })
     @GetMapping("/list")
     public ApiMessageVO list(@RequestParam(required = false) Long upCategoryId) {
         return ApiMessageVO.builder()
@@ -27,6 +37,12 @@ public class CategoryController {
                 .build();
     }
 
+    @Operation(summary = "카테고리 저장")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200",description = "OK, 성공"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "Error Code",description = "Error message",
+                    content = @Content(schema = @Schema(implementation = ApiMessageVO.class))),
+    })
     @PostMapping("/save")
     public ApiMessageVO save(@RequestBody List<CategoryRequestDTO> categoryRequestDTO) {
         return ApiMessageVO.builder()

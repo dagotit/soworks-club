@@ -107,15 +107,15 @@ public class GroupService {
         return groupResponseDTO;
     }
 
-    public void deleteGroup(GroupDeleteRequestDTO requestDto) {
-        Group group = groupRepository.findById(requestDto.getGroupId()).orElseThrow();
+    public void deleteGroup(Long groupId) {
+        Group group = groupRepository.findById(groupId).orElseThrow();
 
         String deleteResult = groupImageService.deleteGroupImage(group.getGroupImage());
         log.info("기존 이미지 삭제 결과 : {}", deleteResult);
 
         //delete group 첨부파일 작업필요
 
-        groupRepository.deleteById(requestDto.getGroupId());
+        groupRepository.deleteById(groupId);
     }
 
     public List<GroupResponseDTO> listGroup(GroupListRequestDTO groupListRequestDTO) {
@@ -145,23 +145,4 @@ public class GroupService {
         return GroupResponseDTO.of(group);
     }
 
-    public GroupResponseDTO joinGroup(Long groupId, User user) {
-        Long memberId = Long.valueOf(user.getUsername());
-        Group group = groupRepository.findById(groupId).orElseThrow();
-        Member member = memberRepository.findById(memberId).orElseThrow();
-
-        //참석체크
-        if (groupAttendRepository.existsByGroupIdAndMemberId(groupId, memberId)) {
-            throw new CustomRespBodyException("이미 참여한 모임 입니다.");
-        }
-
-        GroupAttend groupAttend = GroupAttend.builder()
-                .attendYn("Y")
-                .group(group)
-                .member(member)
-                .build();
-        groupAttendRepository.save(groupAttend);
-
-        return GroupResponseDTO.of(group);
-    }
 }

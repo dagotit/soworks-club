@@ -2,6 +2,7 @@ package com.gmail.dlwk0807.dagachi.service;
 
 import com.gmail.dlwk0807.dagachi.dto.calendar.CalendarRequestDTO;
 import com.gmail.dlwk0807.dagachi.dto.calendar.CalendarResponseDTO;
+import com.gmail.dlwk0807.dagachi.dto.group.GroupListRequestDTO;
 import com.gmail.dlwk0807.dagachi.entity.Attendance;
 import com.gmail.dlwk0807.dagachi.entity.Group;
 import com.gmail.dlwk0807.dagachi.repository.AttendanceCustomRepository;
@@ -15,6 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static com.gmail.dlwk0807.dagachi.util.SecurityUtil.getCurrentMemberId;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -22,10 +25,10 @@ public class CalendarService {
     private final GroupCustomRepository groupCustomRepository;
     private final AttendanceCustomRepository attendanceCustomRepository;
 
-    public List<CalendarResponseDTO> list(CalendarRequestDTO calendarRequestDTO) {
-
-        List<Group> allGroups = groupCustomRepository.findAllByMonthAndYear(calendarRequestDTO.getMonth(), calendarRequestDTO.getYear());
-        List<Attendance> allAttendances = attendanceCustomRepository.findAllByMonthAndYear(calendarRequestDTO.getMonth(), calendarRequestDTO.getYear());
+    public List<CalendarResponseDTO> list(CalendarRequestDTO request) {
+        GroupListRequestDTO groupListRequestDTO = new GroupListRequestDTO(request.getStYear(), request.getEndYear(), request.getStMonth(), request.getEndMonth(), request.getJoinOnly(), request.getMakeOnly(), request.getStatusNotDone());
+        List<Group> allGroups = groupCustomRepository.findAllByFilter(groupListRequestDTO, getCurrentMemberId());
+        List<Attendance> allAttendances = attendanceCustomRepository.findAllByMonthAndYear(request.getStMonth(), request.getStYear());
         List<CalendarResponseDTO> calendars = new ArrayList<>();
         AtomicInteger count = new AtomicInteger(1);
 
@@ -58,9 +61,6 @@ public class CalendarService {
                 count.getAndIncrement();
             });
         }
-
-
-
 
         return calendars;
     }

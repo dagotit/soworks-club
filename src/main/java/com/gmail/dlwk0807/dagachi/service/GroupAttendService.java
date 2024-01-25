@@ -19,6 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.gmail.dlwk0807.dagachi.util.SecurityUtil.getCurrentMemberId;
+
 
 @Service
 @RequiredArgsConstructor
@@ -28,7 +30,6 @@ public class GroupAttendService {
     private final GroupAttendRepository groupAttendRepository;
     private final GroupRepository groupRepository;
     private final MemberCustomRepositoryImpl memberCustomRepository;
-    private final GroupImageService groupImageService;
     private final AuthUtil authUtil;
 
 
@@ -48,8 +49,6 @@ public class GroupAttendService {
                 .build();
         groupAttendRepository.save(groupAttend);
 
-        GroupResponseDTO groupResponseDTO = GroupResponseDTO.of(group);
-        groupResponseDTO.updateGroupImg(groupImageService.findImage(groupId));
         return GroupResponseDTO.of(group);
     }
 
@@ -62,13 +61,13 @@ public class GroupAttendService {
     public String cancelGroupAttend(GroupAttendRequestDTO groupAttendRequestDto) {
 
         long groupId = groupAttendRequestDto.getGroupId();
-        Member member = authUtil.getCurrentMember();
+        Long currentMemberId = getCurrentMemberId();
         //참석체크
-        if (!groupAttendRepository.existsByGroupIdAndMemberId(groupId, member.getId())) {
+        if (!groupAttendRepository.existsByGroupIdAndMemberId(groupId, currentMemberId)) {
             throw new CustomRespBodyException("참여하지 않은 모임입니다.");
         }
 
-        GroupAttend groupAttend = groupAttendRepository.findByGroupIdAndMemberId(groupId, member.getId()).orElseThrow();
+        GroupAttend groupAttend = groupAttendRepository.findByGroupIdAndMemberId(groupId, currentMemberId).orElseThrow();
         groupAttendRepository.delete(groupAttend);
 
         return "ok";

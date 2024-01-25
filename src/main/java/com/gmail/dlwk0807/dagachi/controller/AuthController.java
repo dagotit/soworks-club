@@ -4,6 +4,10 @@ import com.gmail.dlwk0807.dagachi.dto.member.MemberAuthRequestDTO;
 import com.gmail.dlwk0807.dagachi.dto.token.TokenDTO;
 import com.gmail.dlwk0807.dagachi.service.AuthService;
 import com.gmail.dlwk0807.dagachi.vo.ApiMessageVO;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -23,6 +27,12 @@ import static com.gmail.dlwk0807.dagachi.global.CommonConstant.OK_RESP_MSG;
 public class AuthController {
     private final AuthService authService;
 
+    @Operation(summary = "회원가입")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200",description = "OK, 성공"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "Error Code",description = "Error message",
+                    content = @Content(schema = @Schema(implementation = ApiMessageVO.class))),
+    })
     @PostMapping("/signup")
     public ApiMessageVO signup(@RequestBody MemberAuthRequestDTO memberAuthRequestDto) {
         return ApiMessageVO.builder()
@@ -32,6 +42,12 @@ public class AuthController {
                 .build();
     }
 
+    @Operation(summary = "로그인")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200",description = "OK, 성공"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "Error Code",description = "Error message",
+                    content = @Content(schema = @Schema(implementation = ApiMessageVO.class))),
+    })
     @PostMapping("/login")
     public ApiMessageVO login(@RequestBody MemberAuthRequestDTO memberAuthRequestDto, HttpServletResponse response) {
 
@@ -45,6 +61,12 @@ public class AuthController {
                 .build();
     }
 
+    @Operation(summary = "토큰재발급")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200",description = "OK, 성공"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "Error Code",description = "Error message",
+                    content = @Content(schema = @Schema(implementation = ApiMessageVO.class))),
+    })
     @GetMapping("/reissue")
     public ApiMessageVO reissue(@CookieValue(value = "refreshToken") Cookie cookie, HttpServletResponse response) {
         String refreshToken = cookie.getValue();
@@ -70,6 +92,12 @@ public class AuthController {
         response.setHeader("Set-Cookie", cookie.toString());
     }
 
+    @Operation(summary = "로그아웃")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200",description = "OK, 성공"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "Error Code",description = "Error message",
+                    content = @Content(schema = @Schema(implementation = ApiMessageVO.class))),
+    })
     @GetMapping("/logout")
     public ApiMessageVO logout(@CookieValue(value = "refreshToken") Cookie cookie, HttpServletResponse response) {
         String refreshToken = cookie.getValue();
