@@ -115,9 +115,9 @@ public class GroupController {
                     content = @Content(schema = @Schema(implementation = ApiMessageVO.class))),
     })
     @PostMapping("/delete")
-    public ApiMessageVO deleteGroup(@RequestParam Long groupId) {
+    public ApiMessageVO deleteGroup(GroupDeleteRequestDTO groupDeleteRequestDTO) {
 
-        groupService.deleteGroup(groupId);
+        groupService.deleteGroup(groupDeleteRequestDTO);
 
         return ApiMessageVO.builder()
                 .respMsg(OK_RESP_MSG)

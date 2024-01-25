@@ -54,7 +54,7 @@ public class GroupAttendService {
 
     public List<MemberAttendResponseDTO> listGroupAttend(Long groupId) {
         List<Member> memberList = memberCustomRepository.findAllByGroupId(groupId);
-        return memberList.stream().map(v -> MemberAttendResponseDTO.of(v))
+        return memberList.stream().map(MemberAttendResponseDTO::of)
                 .collect(Collectors.toList());
     }
 

@@ -26,6 +26,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.gmail.dlwk0807.dagachi.util.SecurityUtil.getCurrentMemberId;
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
 
 @Service
 @RequiredArgsConstructor
@@ -35,7 +37,6 @@ public class GroupService {
 
     private final GroupRepository groupRepository;
     private final GroupAttendRepository groupAttendRepository;
-    private final MemberRepository memberRepository;
     private final AuthUtil authUtil;
     private final GroupCustomRepositoryImpl groupCustomRepositoryImpl;
     private final GroupImageService groupImageService;
@@ -69,6 +70,7 @@ public class GroupService {
         groupAttendRepository.save(groupAttend);
 
         GroupResponseDTO groupResponseDTO = GroupResponseDTO.of(group);
+        groupResponseDTO.updateMasterYn("Y");
 
         return groupResponseDTO;
     }
@@ -107,20 +109,25 @@ public class GroupService {
         return groupResponseDTO;
     }
 
-    public void deleteGroup(Long groupId) {
-        Group group = groupRepository.findById(groupId).orElseThrow();
+    public void deleteGroup(GroupDeleteRequestDTO groupDeleteRequestDTO) {
+        Group group = groupRepository.findById(groupDeleteRequestDTO.getGroupId()).orElseThrow();
 
         String deleteResult = groupImageService.deleteGroupImage(group.getGroupImage());
         log.info("기존 이미지 삭제 결과 : {}", deleteResult);
 
         //delete group 첨부파일 작업필요
 
-        groupRepository.deleteById(groupId);
+        groupRepository.delete(group);
     }
 
     public List<GroupResponseDTO> listGroup(GroupListRequestDTO groupListRequestDTO) {
         return groupCustomRepositoryImpl.findAllByFilter(groupListRequestDTO, getCurrentMemberId()).stream()
-                .map(o -> GroupResponseDTO.of(o)).collect(Collectors.toList());
+                .map(o -> {
+                    GroupResponseDTO of = GroupResponseDTO.of(o);
+                    of.updateMasterYn(getCurrentMemberId().equals(o.getMemberId()) ? "Y" : "N");
+                    return of;
+                })
+                .collect(Collectors.toList());
     }
 
     public String updateGroupAttachFile(GroupAttachFileRequestDTO requestDto, List<MultipartFile> groupFiles) {
@@ -142,7 +149,9 @@ public class GroupService {
 
     public GroupResponseDTO info(Long groupId) {
         Group group = groupRepository.findById(groupId).orElseThrow();
-        return GroupResponseDTO.of(group);
+        GroupResponseDTO of = GroupResponseDTO.of(group);
+        of.updateMasterYn(getCurrentMemberId().equals(group.getMemberId()) ? "Y" : "N");
+        return of;
     }
 
 }

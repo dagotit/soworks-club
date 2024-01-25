@@ -6,6 +6,8 @@ import lombok.Data;
 
 import java.time.LocalDate;
 
+import static com.gmail.dlwk0807.dagachi.util.SecurityUtil.getCurrentMemberId;
+
 @Data
 @Builder
 public class CalendarResponseDTO {
@@ -18,6 +20,7 @@ public class CalendarResponseDTO {
     private String attendanceDate; // 출석체크한날
     private String colorEvento; // 모임 배경색
     private String color; // 모임 글자색
+    private String masterYn; // 모임장 여부
 
     public static CalendarResponseDTO of(int id, Group group, LocalDate localDate) {
         if (group == null) {
@@ -38,7 +41,9 @@ public class CalendarResponseDTO {
                 .attendanceDate(localDate == null ? null : localDate.toString())
                 .colorEvento("")
                 .color("")
+                .masterYn(group.getMemberId().equals(getCurrentMemberId()) ? "Y" : "N")
                 .build();
     }
+
 
 }

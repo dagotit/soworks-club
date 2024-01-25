@@ -12,9 +12,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @NoArgsConstructor
 public class MemberAuthRequestDTO {
 
-    @Schema(description = "로그인 ID", nullable = false, example = "test@test.com")
+    @Schema(description = "로그인 ID", nullable = true, example = "test@test.com")
     private String email;
-    @Schema(description = "패스워드", nullable = false, example = "1234")
+    @Schema(description = "패스워드", nullable = true, example = "1234")
     private String password;
     @Schema(description = "주소", nullable = false, example = "테스트주소")
     private String address;
@@ -34,7 +34,7 @@ public class MemberAuthRequestDTO {
     private String birth;
     @Schema(description = "인증대기상태", nullable = false, example = "Y")
     private String status;
-    @Schema(description = "권한", nullable = false, example = "ROLE_ADMIN")
+    @Schema(description = "권한", nullable = true, example = "ROLE_ADMIN")
     private String authority;
 
     public Member toMember(PasswordEncoder passwordEncoder) {

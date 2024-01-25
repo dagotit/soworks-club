@@ -21,7 +21,8 @@ public class GroupResponseDTO {
     private String strEndDate;
     private String strEndTime;
     private Long groupMaxNum;
-    private Integer numberPersons;
+    private Integer groupJoinNum;
+    private String masterYn;
 
     public static GroupResponseDTO of(Group group) {
         return GroupResponseDTO.builder()
@@ -37,11 +38,13 @@ public class GroupResponseDTO {
                 .strEndTime(group.getEndDateTime().toLocalTime().format(DateTimeFormatter.ofPattern("HHmm")))
                 .groupImage(group.getGroupImage())
                 .groupMaxNum(group.getGroupMaxNum())
-                .numberPersons(group.getGroupAttendList().size())
+                .groupJoinNum(group.getGroupAttendList().size())
+                .masterYn("N")
                 .build();
     }
 
-    public void updateGroupImg(String groupImage) {
-        this.groupImage = groupImage;
+    public void updateMasterYn(String masterYn) {
+        this.masterYn = masterYn;
     }
+
 }

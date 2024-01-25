@@ -1,6 +1,7 @@
 package com.gmail.dlwk0807.dagachi.controller;
 
 import com.gmail.dlwk0807.dagachi.dto.member.MemberAuthRequestDTO;
+import com.gmail.dlwk0807.dagachi.dto.member.MemberLoginRequestDTO;
 import com.gmail.dlwk0807.dagachi.dto.token.TokenDTO;
 import com.gmail.dlwk0807.dagachi.service.AuthService;
 import com.gmail.dlwk0807.dagachi.vo.ApiMessageVO;
@@ -49,9 +50,9 @@ public class AuthController {
                     content = @Content(schema = @Schema(implementation = ApiMessageVO.class))),
     })
     @PostMapping("/login")
-    public ApiMessageVO login(@RequestBody MemberAuthRequestDTO memberAuthRequestDto, HttpServletResponse response) {
+    public ApiMessageVO login(@RequestBody MemberLoginRequestDTO memberLoginRequestDTO, HttpServletResponse response) {
 
-        TokenDTO token = authService.login(memberAuthRequestDto);
+        TokenDTO token = authService.login(memberLoginRequestDTO);
         setHeaderCookie(response, token, 7 * 24 * 60 * 60);
 
         return ApiMessageVO.builder()

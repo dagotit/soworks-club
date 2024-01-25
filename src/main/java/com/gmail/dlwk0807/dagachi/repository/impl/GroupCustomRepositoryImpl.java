@@ -5,6 +5,7 @@ import com.gmail.dlwk0807.dagachi.entity.Group;
 import com.gmail.dlwk0807.dagachi.entity.GroupStatus;
 import com.gmail.dlwk0807.dagachi.repository.GroupCustomRepository;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.util.StringUtils;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -52,7 +53,7 @@ public class GroupCustomRepositoryImpl implements GroupCustomRepository {
     }
 
     private BooleanExpression statusNotDone(String status) {
-        return status != null ? group.status.ne(GroupStatus.DONE) : null;
+        return !StringUtils.isNullOrEmpty(status) ? group.status.ne(GroupStatus.DONE) : null;
     }
 
     private BooleanExpression dateBetween(Integer stYear, Integer stMonth, Integer endYear, Integer endMonth) {
@@ -63,11 +64,11 @@ public class GroupCustomRepositoryImpl implements GroupCustomRepository {
     }
 
     private BooleanExpression makeOnly(String makeOnly, Long memberId) {
-        return makeOnly != null ? group.memberId.eq(memberId) : null;
+        return !StringUtils.isNullOrEmpty(makeOnly) ? group.memberId.eq(memberId) : null;
     }
 
     private BooleanExpression joinOnly(String joinOnly, Long memberId) {
-        return joinOnly != null ?
+        return !StringUtils.isNullOrEmpty(joinOnly) ?
                 group.id.in(JPAExpressions.select(groupAttend.group.id)
                         .from(groupAttend)
                         .where(groupAttend.member.id.eq(memberId))) : null;
