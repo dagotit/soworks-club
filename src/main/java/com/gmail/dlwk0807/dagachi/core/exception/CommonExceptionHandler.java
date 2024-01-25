@@ -8,6 +8,7 @@ import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailAuthenticationException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -113,8 +114,8 @@ public class CommonExceptionHandler {
                 .respMsg("외부 리소스 조회 오류 입니다.[자세한 내용은 서버에 문의 주세요]").build(), HttpStatus.GATEWAY_TIMEOUT);
     }
 
-    @ExceptionHandler(BadCredentialsCustomException.class)
-    public ResponseEntity<?> badCredentialsCustomException(BadCredentialsCustomException e) {
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<?> BadCredentialsException(BadCredentialsException e) {
         String respBody = "";
 //        if (getProfile()) {
             respBody = e.getMessage();
