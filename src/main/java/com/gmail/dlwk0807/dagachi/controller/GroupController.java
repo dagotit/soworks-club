@@ -98,8 +98,8 @@ public class GroupController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "Error Code",description = "Error message",
                     content = @Content(schema = @Schema(implementation = ApiMessageVO.class))),
     })
-    @GetMapping("/update-status")
-    public ApiMessageVO updateGroupStatus(GroupStatusRequestDTO groupStatusRequestDTO) {
+    @PostMapping("/update-status")
+    public ApiMessageVO updateGroupStatus(@RequestBody GroupStatusRequestDTO groupStatusRequestDTO) {
 
         return ApiMessageVO.builder()
                 .respMsg(OK_RESP_MSG)
