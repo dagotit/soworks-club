@@ -37,18 +37,18 @@ public class CategoryController {
                 .build();
     }
 
-    @Operation(summary = "카테고리 저장")
-    @ApiResponses({
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200",description = "OK, 성공"),
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "Error Code",description = "Error message",
-                    content = @Content(schema = @Schema(implementation = ApiMessageVO.class))),
-    })
-    @PostMapping("/save")
-    public ApiMessageVO save(@RequestBody List<CategoryRequestDTO> categoryRequestDTO) {
-        return ApiMessageVO.builder()
-                .respMsg(OK_RESP_MSG)
-                .respBody(categoryService.save(categoryRequestDTO))
-                .respCode(OK_RESP_CODE)
-                .build();
-    }
+//    @Operation(summary = "카테고리 저장")
+//    @ApiResponses({
+//            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200",description = "OK, 성공"),
+//            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "Error Code",description = "Error message",
+//                    content = @Content(schema = @Schema(implementation = ApiMessageVO.class))),
+//    })
+//    @PostMapping("/save")
+//    public ApiMessageVO save(@RequestBody List<CategoryRequestDTO> categoryRequestDTO) {
+//        return ApiMessageVO.builder()
+//                .respMsg(OK_RESP_MSG)
+//                .respBody(categoryService.save(categoryRequestDTO))
+//                .respCode(OK_RESP_CODE)
+//                .build();
+//    }
 }

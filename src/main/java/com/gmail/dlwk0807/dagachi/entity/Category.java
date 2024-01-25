@@ -21,14 +21,4 @@ public class Category extends BaseEntity {
     private Long id;
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "upCategoryId")
-    private Category upCategory;
-
-    @Column(name = "depth")
-    private Long depth;
-
-    @OneToMany(mappedBy = "upCategory")
-    private List<Category> children = new ArrayList<>();
-
 }

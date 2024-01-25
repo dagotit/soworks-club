@@ -23,7 +23,6 @@ public class BaseEntity {
     @JsonIgnore
     private String sysRegDbId;
     @CreatedDate
-    @Column(updatable = false, nullable = false)
     @Convert(converter = Jsr310JpaConverters.LocalDateTimeConverter.class)
     @JsonIgnore
     private LocalDateTime createdAt;
@@ -31,7 +30,6 @@ public class BaseEntity {
     @JsonIgnore
     private String sysUpdDbId;
     @LastModifiedDate
-    @Column(nullable = false)
     @Convert(converter = Jsr310JpaConverters.LocalDateTimeConverter.class)
     @JsonIgnore
     private LocalDateTime updatedAt;
