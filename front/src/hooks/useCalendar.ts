@@ -4,6 +4,7 @@ import {
   apiGetMonthCalendar,
 } from '@/services/calendarService';
 import { useMutation, useQueries } from '@tanstack/react-query';
+import { DateTime } from 'luxon';
 
 export interface FilterQueryParamType {
   isAll: boolean;
@@ -12,6 +13,16 @@ export interface FilterQueryParamType {
   isAttendClub: boolean;
   isCreateClub: boolean;
   statusClub: boolean;
+}
+
+export interface CalendarParamType {
+  stYear: number;
+  endYear: number;
+  stMonth: number;
+  endMonth: number;
+  joinOnly: boolean;
+  makeOnly: boolean;
+  statusNotDone: boolean;
 }
 
 /**
@@ -31,7 +42,7 @@ export const useGetAttendance = () => {
  * 2. 모임 리스트 api
  */
 export const useGetCalendarQuerys = (
-  calendarQuery: { month: number; year: number },
+  calendarQuery: CalendarParamType,
   clubListQuery: FilterQueryParamType,
 ) => {
   console.log();
@@ -41,7 +52,7 @@ export const useGetCalendarQuerys = (
         queryKey: ['get-month-calendar', calendarQuery],
         queryFn: () => apiGetMonthCalendar(calendarQuery),
         staleTime: 0,
-        // retry: false,
+        // retry: false, // 실패시 재시도 횟수
       },
       {
         queryKey: ['get-club-list', clubListQuery, calendarQuery],

@@ -5,3 +5,11 @@ export function isEmptyObj(obj: object): boolean {
 
   return false;
 }
+
+export function isEmptyArr(arr: Array<any>): boolean {
+  if (Array.isArray(arr) && arr.length === 0) {
+    return true;
+  }
+
+  return false;
+}

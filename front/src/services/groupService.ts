@@ -32,20 +32,15 @@ export const apiGetGroupInfo = async (id: number) => {
 /**
  * @function
  * 모임 삭제
- * TODO 모임을 삭제하는데 그룹 아이디 빼고 이 정보를 모두 입력하는게 맞나?? 메서드는 왜 delete 를 안쓰지?
  */
-export const apiPostGroupDelete = async () => {
+export const apiPostGroupDelete = async (data: {
+  groupId: number;
+  memberId: number;
+}) => {
   try {
     return await http.post('/api/v1/groups/delete', {
-      memberId: 0,
-      groupId: 0,
-      category: 'string',
-      name: 'string',
-      description: 'string',
-      strStartDateTime: 'string',
-      strEndDateTime: 'string',
-      groupImage: 'string',
-      groupMaxNum: 0,
+      groupId: data.groupId,
+      memberId: data.memberId,
     });
   } catch (e) {
     if (axios.isAxiosError(e) && e.response) {
@@ -65,9 +60,56 @@ export const apiGetUpdateStatus = async (query: {
 }) => {
   console.log('query update status api:', query);
   try {
-    return await http.get(
-      `/api/v1/groups/update-status?memberId=${query.memberId}&groupId=${query.groupId}&status=${query.status}`,
-    );
+    return await http.post('/api/v1/groups/update-status', {
+      memberId: query.memberId,
+      groupId: query.groupId,
+      status: query.status,
+    });
+  } catch (e) {
+    if (axios.isAxiosError(e) && e.response) {
+      throw e.response.data;
+    }
+  }
+};
+
+/**
+ * @function
+ * 모임 참여자 리스트
+ */
+export const apiGetGroupAttendList = async (id: number) => {
+  try {
+    return await http.get(`/api/v1/group-attend/list?groupId=${id}`);
+  } catch (e) {
+    if (axios.isAxiosError(e) && e.response) {
+      throw e.response.data;
+    }
+  }
+};
+
+/**
+ * @function
+ * 모임 참여하기
+ */
+export const apiPostAttendApply = async (id: number) => {
+  try {
+    return await http.post('/api/v1/group-attend/apply', {
+      groupId: id,
+    });
+  } catch (e) {
+    if (axios.isAxiosError(e) && e.response) {
+      throw e.response.data;
+    }
+  }
+};
+/**
+ * @function
+ * 모임 참여 취소하기
+ */
+export const apiPostAttendCancel = async (id: number) => {
+  try {
+    return await http.post('/api/v1/group-attend/cancel', {
+      groupId: id,
+    });
   } catch (e) {
     if (axios.isAxiosError(e) && e.response) {
       throw e.response.data;

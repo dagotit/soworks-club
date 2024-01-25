@@ -5,6 +5,7 @@ import { DateTime } from 'luxon';
 import styles from './CalendarMain.module.css';
 import { Fragment, useCallback, useEffect, useState } from 'react';
 import {
+  CalendarParamType,
   FilterQueryParamType,
   useGetCalendarQuerys,
 } from '@/hooks/useCalendar';
@@ -13,29 +14,33 @@ import useDidMountEffect from '@/utils/useDidMountEffect';
 import Toolbar from '@/components/calendar/Toolbar';
 import CustomDateHeader from '@/components/calendar/CustomDateHeader';
 import List from '@/components/calendar/List';
-import React from 'react';
 import Header from '@/components/Header';
 import ClubListFilter from '@/components/popups/ClubListFilter';
 import HeaderCellContent from '@/components/calendar/HeaderCellContent';
 import { useRouter } from 'next/navigation';
 import { useClubListStore } from '@/store/useClubList';
 
+const DEFAULTSTARTDAY = DateTime.now().toISODate(); // 모임리스트 조회 시작일
+const DEFAULTENDDAY = `${DateTime.now().toFormat('yyyy-MM')}-${new Date(
+  DateTime.now().year,
+  DateTime.now().month,
+  0,
+).getDate()}`; // 모임리스트 조회 종료일
 const CalendarMain = () => {
   const router = useRouter(); // 라우터
   DateTime.local().setLocale('ko-KR'); // 캘린더 한국시간 기준으로 설정
   const localize: DateLocalizer = luxonLocalizer(DateTime); // 달력 데이터 setting
-  const DEFAULTSTARTDAY = DateTime.now().toISODate(); // 모임리스트 조회 시작일
-  const DEFAULTENDDAY = `${DateTime.now().year}-${
-    String(DateTime.now().month).length === 1
-      ? '0' + DateTime.now().month
-      : DateTime.now().month
-  }-${new Date(DateTime.now().year, DateTime.now().month, 0).getDate()}`; // 모임리스트 조회 종료일
-  const [year, setYear] = useState<number>(DateTime.now().year); // 캘린더 조회 년도
-  const [month, setMonth] = useState<number>(DateTime.now().month); // 캘린더 조회 월
-  const calendarStore = useCalendarStore(); // 캘린더 데이터 담기
-  const clubListStore = useClubListStore(); //  모임 리스트 데이터 스토어에 담기
+  const [calendarDate, setCalendarDate] = useState(DateTime.now().toJSDate());
+  const [calendarQuery, setCalendarQuery] = useState<CalendarParamType>({
+    stYear: DateTime.now().year,
+    endYear: DateTime.now().year,
+    stMonth: DateTime.now().month,
+    endMonth: DateTime.now().month,
+    joinOnly: false, // 내가 가입한 모임
+    makeOnly: false, // 내가 만든 모임
+    statusNotDone: true, // 모집중인 모임
+  });
   const [isFilterPopup, setIsFilterPopup] = useState(false); // 필터 팝업 open & close 여부
-  // 필터 옵션
   const [listFilterQuery, setListFilterQuery] = useState<FilterQueryParamType>({
     isAll: true,
     startDate: DEFAULTSTARTDAY,
@@ -43,14 +48,14 @@ const CalendarMain = () => {
     isAttendClub: false,
     isCreateClub: false,
     statusClub: true,
-  });
+  }); // 필터 옵션
+
+  const calendarStore = useCalendarStore(); // 캘린더 데이터 담기
+  const clubListStore = useClubListStore(); //  모임 리스트 데이터 스토어에 담기
 
   // api
   const apiCalendarQuerys = useGetCalendarQuerys(
-    {
-      month,
-      year,
-    },
+    calendarQuery,
     listFilterQuery,
   );
 
@@ -107,19 +112,20 @@ const CalendarMain = () => {
       // 모임 리스트 api 데이터 스토어에 setting
       /**
        * api 데이터
-       *   "groupId": 1,
-       *   "category": "취미",
-       *   "name": "댄스동아리",
-       *   "memberId": 1,
-       *   "description": "방송댄스배우기",
-       *   "status": "WAITING",
-       *   "groupImage": "https://storage.googleapis.com/dagachi-image-bucket/default/group_default.png",
-       *   "strStartDate": "20240127",
-       *   "strStartTime": "1900",
-       *   "strEndDate": "20240127",
-       *   "strEndTime": "2200",
-       *   "groupMaxNum": null,
-       *   "numberPersons": 1
+       * "groupId": 1,
+       * "category": "취미",
+       * "name": "댄스동아리",
+       * "memberId": 1,
+       * "description": "방송댄스배우기",
+       * "status": "WAITING",
+       * "groupImage": "https://storage.googleapis.com/dagachi-image-bucket/default/group_default.png",
+       * "strStartDate": "20240127",
+       * "strStartTime": "1900",
+       * "strEndDate": "20240127",
+       * "strEndTime": "2200",
+       * "groupMaxNum": null,
+       * "groupJoinNum": 1,
+       * "masterYn": "Y"
        * */
       let groupList = [];
       // @ts-ignore
@@ -137,7 +143,7 @@ const CalendarMain = () => {
               'yyyy-MM-dd',
             ),
             status: item.status,
-            personNumber: `참여: ${item.numberPersons}명`,
+            personNumber: `참여: ${item.groupJoinNum}명`,
             images: item.groupImage,
             time: DateTime.fromFormat(item.strStartTime, 'HHmm').toFormat('t'),
           };
@@ -174,8 +180,9 @@ const CalendarMain = () => {
    */
   const handleSetFilterApplyData = useCallback(
     (filterData: FilterQueryParamType) => {
-      setListFilterQuery(filterData);
-      setIsFilterPopup(false);
+      setListFilterQuery(filterData); // 모임 조회 리스트
+      filterCalendar(filterData); // 캘린더
+      setIsFilterPopup(false); // 팝업 닫기
     },
     [],
   );
@@ -200,12 +207,19 @@ const CalendarMain = () => {
    * 다른 월 클릭 시 이벤트
    */
   const handlerMonth = useCallback((e: any) => {
-    console.log('e :', e);
+    setCalendarDate(e); // 캘린더 date 컨트롤
     const clickDay = DateTime.fromJSDate(e).toFormat('yyyy-MM-dd');
     const month = DateTime.fromJSDate(e).toFormat('M');
     const year = DateTime.fromJSDate(e).toFormat('yyyy');
-    setMonth(Number(month));
-    setYear(Number(year));
+
+    // 캘린더 파라미터 변경
+    setCalendarQuery({
+      ...calendarQuery,
+      stYear: Number(year),
+      endYear: Number(year),
+      stMonth: Number(month),
+      endMonth: Number(month),
+    });
 
     // 캘린더 내용 바뀌면 리스트의 날짜도 변경되어야함..?
     setListFilterQuery({
@@ -214,6 +228,28 @@ const CalendarMain = () => {
       endDate: clickDay,
     });
   }, []);
+
+  /**
+   * @function
+   * 필터 조회시 캘린더 파라미터 setting
+   */
+  function filterCalendar(data: FilterQueryParamType) {
+    setCalendarDate(
+      DateTime.fromFormat(data.startDate, 'yyyy-MM-dd').toJSDate(),
+    ); // 캘린더 정보 변경
+    const year = DateTime.fromFormat(data.startDate, 'yyyy-MM-dd').year;
+    const month = DateTime.fromFormat(data.startDate, 'yyyy-MM-dd').month;
+
+    setCalendarQuery({
+      stYear: year,
+      endYear: year,
+      stMonth: month,
+      endMonth: month,
+      joinOnly: data.isAttendClub, // 내가 가입한 모임
+      makeOnly: data.isCreateClub, // 내가 만든 모임
+      statusNotDone: data.statusClub, // 모집중인 모임
+    });
+  }
 
   return (
     <Fragment>
@@ -237,6 +273,7 @@ const CalendarMain = () => {
           <Calendar
             className={styles.calendar}
             localizer={localize}
+            date={calendarDate}
             components={{
               toolbar: Toolbar,
               month: {

@@ -1,20 +1,21 @@
 import http from '@/services/httpService';
 import axios from 'axios';
-import { FilterQueryParamType } from '@/hooks/useCalendar';
+import { CalendarParamType, FilterQueryParamType } from '@/hooks/useCalendar';
 import { DateTime } from 'luxon';
 
 /**
  * @function
  * 달력
  */
-export const apiGetMonthCalendar = async (query: {
-  month: number;
-  year: number;
-}) => {
+export const apiGetMonthCalendar = async (query: CalendarParamType) => {
   console.log('달력:', query);
+  const joinOnly = query.joinOnly ? 'Y' : 'N';
+  const makeOnly = query.makeOnly ? 'Y' : 'N';
+  const statusNotDone = query.statusNotDone ? 'Y' : 'N';
+
   try {
     return await http.get(
-      `/api/v1/calendar/list?month=${query.month}&year=${query.year}`,
+      `/api/v1/calendar/list?stMonth=${query.stMonth}&stYear=${query.stYear}&endYear=${query.endYear}&endMonth=${query.endMonth}&joinOnly=${joinOnly}&makeOnly=${makeOnly}&statusNotDone=${statusNotDone}`,
     );
   } catch (e) {
     if (axios.isAxiosError(e) && e.response) {
