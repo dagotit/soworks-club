@@ -12,6 +12,10 @@ spring:
       max-request-size: 15MB
   profiles:
     default: local
+  sql:
+    init:
+      mode: always
+
 
 springdoc:
   packages-to-scan: com.gmail.dlwk0807.dagachi.controller
