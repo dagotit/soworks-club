@@ -36,6 +36,10 @@ interface CreateGroupType {
   data: FormData;
 }
 
+interface CategoryListType {
+  upCategoryId: string;
+}
+
 /**
  * @function
  * 로그아웃
@@ -169,6 +173,22 @@ export const apiCreateGroup = async (data: FormData): Promise<any> => {
   } catch (e) {
     if (axios.isAxiosError(e) && e.response) {
       console.log('모임생성 실패:::', e.response);
+      throw e.response.data;
+    }
+  }
+};
+
+export const apiGetCategoryList = async (
+  data: CategoryListType,
+): Promise<any> => {
+  try {
+    return await http.get('/api/v1/category/list', {
+      params: {
+        upCategoryId: data.upCategoryId,
+      },
+    });
+  } catch (e) {
+    if (axios.isAxiosError(e) && e.response) {
       throw e.response.data;
     }
   }

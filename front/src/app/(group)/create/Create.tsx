@@ -3,16 +3,22 @@
 import React, { useEffect, useState } from 'react';
 import styles from './Create.module.css';
 import { useDialogStore } from "@/store/useDialog";
-import { usePostCreateGroup } from '@/hooks/useAuth';
+import { usePostCreateGroup, useGetCategoryList } from '@/hooks/useAuth';
 import {APIResponse} from "@/services/api";
 import Header from "@/components/Header";
 
 
 const CreatePage = () => {
   const groupData = new FormData(); // 이미지 form Data
-  const createGroup = usePostCreateGroup(); // be로 보내기
+  const createGroup = usePostCreateGroup(); // 그룹생성 data be로 보내기
+  const categoryList = useGetCategoryList(); // be에서 카테고리 가져오기
   const [category, setCategory] = useState(''); // 카테고리 설정
+  const [mainCategory, setMainCategory] = useState(''); // 카테고리 설정 대분류
+  const [midCategory, setMidCategory] = useState(''); // 카테고리 설정 중분류
+  const [subCategory, setSubCategory] = useState<string[]>([]); // 카테고리 설정 소분류
+  const [upCategoryId, setUpCategoryId] = useState('');
   const [gTitle, setGTitle] = useState(''); // 모임 제목
+  const [maxNumUser, setMaxNumUser] = useState(''); // 모임 인원 수
   const [desc, setDesc] = useState(''); // 모임 설명
   const descLength = 500;
   const [startDate, setStartDate] = useState(''); // 시작 날짜
@@ -27,6 +33,7 @@ const CreatePage = () => {
   let dateError = false;
   const { open, allClose } = useDialogStore();
 
+
   /**
    * @function
    * mount / distory
@@ -34,9 +41,36 @@ const CreatePage = () => {
   useEffect(() => {
     return () => {
       allClose();
+      getCategoryList();
     };
   }, []);
-
+  /**
+     * @function
+     * @DESC 이메일 인증번호 입력 일치 여부 확인
+   */
+  const getCategoryList = (): void => {
+    console.log('ee');
+    categoryList.mutate(
+      { upCategoryId },
+      {
+        onSuccess: (data) => {
+          if (data?.respCode === '00') {
+            // 이메일 인증 성공
+            console.log('data', data);
+            return;
+          }
+          if (data?.respMsg) {
+            open('alert', '카테고리 불러오기 오류', data?.respMsg);
+            return;
+          }
+          open('alert', '카테고리 불러오기 오류', '관리자에게 문의바랍니다.');
+        },
+        onError: (error: any) => {
+          console.log(error);
+        },
+      },
+    );
+  };
   /**
    * 카테고리 설정할 때
    */
@@ -99,58 +133,6 @@ const CreatePage = () => {
     }
   };
 
-  /**
-   * 모임 생성하기 버튼
-   */
-  const handleCreateGroup = () => {
-    if (category.trim() === '') {
-      open('alert', '그룹 생성하기', '카테고리를 입력해주세요.');
-      return;
-    }
-    if (gTitle.trim() === '') {
-      open('alert', '그룹 생성하기', '모임 제목을 입력해주세요.');
-      return;
-    }
-    if (startDate.trim() === '') {
-      open('alert', '그룹 생성하기', '시작 날짜를 입력해주세요.');
-      return;
-    }
-    if (endDate.trim() === '') {
-      open('alert', '그룹 생성하기', '종료 날짜를 입력해주세요.');
-      return;
-    }
-    const groupStrData = {
-      category: category,
-      name: gTitle,
-      description: desc,
-      strStartDateTime: formatStartDate,
-      strEndDateTime: formatEndDate,
-      memberId: '1',
-    };
-
-    // @ts-ignore
-    groupData.append('file', groupImg);
-
-    const blob = new Blob([JSON.stringify(groupStrData)], { type: "application/json" });
-    groupData.append('group', blob);
-
-    createGroup.mutate(
-      groupData,
-      {
-        onSuccess: handlerCreateGroup,
-        onError: (error: any) => {
-          // 요청에 에러가 발생된 경우
-          if (error.respCode !== '') {
-            open('alert', '모임 생성', error.respMsg);
-          }
-        },
-        onSettled: () => {
-          // 요청이 성공하든, 에러가 발생되든 실행하고 싶은 경우
-          console.log('onSettled');
-        },
-      }
-    )
-  }
   const handlerCreateGroup = (data: APIResponse) => {
     // 요청이 성공한 경우
 
@@ -165,7 +147,7 @@ const CreatePage = () => {
    * 시작 날짜 편집하기
    */
   const handleStartDate = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    const userSetDateStart = new Date(e.target.value);
+    const userSetDateStart = new Date(e.target.value); // ex) Sat Jan 06 2024 14:36:00 GMT+0900 (한국 표준시)
 
     const year = userSetDateStart.getFullYear().toString();
     const month = (userSetDateStart.getMonth() + 1).toString().padStart(2, '0');
@@ -222,6 +204,95 @@ const CreatePage = () => {
       }
     }
   };
+  /**
+   *
+   * @DESC 인원수 변경
+   */
+  const handleChangeGNum = (e:React.ChangeEvent<HTMLSelectElement>):void => {
+    const num = e.target.value;
+    setMaxNumUser(num);
+  }
+
+  /**
+   * @DESC 대분류
+   */
+  const changeMainCate = (e:React.ChangeEvent<HTMLSelectElement>) => {
+    setMainCategory(e.target.value);
+  }
+  /**
+   * @DESC 중분류
+   */
+  const changeMidCate = (e:React.ChangeEvent<HTMLSelectElement>) => {
+    setMidCategory(e.target.value);
+  }
+  /**
+   * @DESC 소분류
+   */
+  const changeSubCate = (e:React.ChangeEvent<HTMLSelectElement>) => {
+   setSubCategory(prevSubCateList => [...prevSubCateList, e.target.value]);
+  }
+
+  /**
+   * 모임 생성하기 버튼
+   */
+  const handleCreateGroup = () => {
+    if (category.trim() === '') {
+      open('alert', '그룹 생성하기', '카테고리를 입력해주세요.');
+      return;
+    }
+    if (gTitle.trim() === '') {
+      open('alert', '그룹 생성하기', '모임 제목을 입력해주세요.');
+      return;
+    }
+    if (startDate.trim() === '') {
+      open('alert', '그룹 생성하기', '시작 날짜를 입력해주세요.');
+      return;
+    }
+    if (endDate.trim() === '') {
+      open('alert', '그룹 생성하기', '종료 날짜를 입력해주세요.');
+      return;
+    }
+    if (maxNumUser.trim() === '') {
+      open('alert', '그룹 생성하기', '모임 인원 수를 입력해주세요.');
+      return;
+    }
+    const groupStrData = {
+      category: category,
+      name: gTitle,
+      description: desc,
+      strStartDateTime: formatStartDate,
+      strEndDateTime: formatEndDate,
+      memberId: '1',
+      groupMaxNum: maxNumUser,
+    };
+
+    // @ts-ignore
+    groupData.append('file', groupImg);
+
+    const blob = new Blob([JSON.stringify(groupStrData)], { type: "application/json" });
+    groupData.append('group', blob);
+
+    createGroup.mutate(
+      groupData,
+      {
+        onSuccess: handlerCreateGroup,
+        onError: (error: any) => {
+          // 요청에 에러가 발생된 경우
+          if (error.respCode !== '') {
+            open('alert', '모임 생성', error.respMsg);
+          }
+        },
+        onSettled: () => {
+          // 요청이 성공하든, 에러가 발생되든 실행하고 싶은 경우
+          console.log('onSettled');
+        },
+      }
+    )
+  }
+
+
+
+
 
   // @ts-ignore
   return (
@@ -246,6 +317,25 @@ const CreatePage = () => {
           <div className={styles.cContTit}>모임 제목*</div>
           <div className={styles.cCont}>
             <input type="text" value={gTitle} required placeholder='모임 제목을 입력해 주세요.' onChange={changeGroupName}/>
+          </div>
+        </div>
+        {/* // 모임 제목 */}
+        {/* 모임 인원수 */}
+        <div className={`${styles.cWrapGNum} ${styles.cWrapCont}`}>
+          <div className={styles.cContTit}>모임 인원 수*</div>
+          <div className={styles.cCont}>
+            <select onChange={handleChangeGNum} title="모임 인원 수 선택" defaultValue="1">
+              <option value="1" hidden disabled>인원 수 선택</option>
+              <option value="2">2명</option>
+              <option value="3">3명</option>
+              <option value="4">4명</option>
+              <option value="5">5명</option>
+              <option value="6">6명</option>
+              <option value="7">7명</option>
+              <option value="8">8명</option>
+              <option value="9">9명</option>
+              <option value="10">10명 이상</option>
+            </select>
           </div>
         </div>
         {/* // 모임 제목 */}

@@ -7,6 +7,7 @@ import {
   apiSignup,
   apiUpdatePassword,
   apiCreateGroup,
+  apiGetCategoryList,
 } from '@/services/authService';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
@@ -70,5 +71,12 @@ export const usePostCreateGroup = () => {
   return useMutation({
     mutationKey: ['post-createGroup'],
     mutationFn: apiCreateGroup,
+  });
+};
+
+export const useGetCategoryList = () => {
+  return useMutation({
+    mutationKey: ['get-category-list'],
+    mutationFn: apiGetCategoryList,
   });
 };
