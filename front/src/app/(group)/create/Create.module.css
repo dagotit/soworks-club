@@ -19,6 +19,79 @@
   color: #1fd1f9;
 }
 .cWrap .cWrapContBox {}
+.cWrap .cWrapContBox .cWrapCate .cCont{
+    list-style: none;
+}
+.cWrap .cWrapContBox .cWrapCate .cCont .cContList {
+  display: inline-block;
+  position: relative;
+  height: 30px;
+  margin: 3px 0 3px 10px;
+}
+.cWrap .cWrapContBox .cWrapCate .cCont .cContList input {
+  position: absolute;
+  display: inline-block;
+  opacity: 0;
+  left: 0;
+  top: 0;
+  height: 30px;
+  border-bottom: none;
+  z-index: 9;
+}
+.cWrap .cWrapContBox .cWrapCate .cCont .cContList label {
+    height: 30px;
+    display: flex;
+  flex-flow:row nowrap;
+  align-items: center;
+  font-size: 12px;
+    background-color: rgba(255, 255, 255, .9);
+    border: 2px solid rgba(139, 139, 139, .3);
+    color: #adadad;
+    border-radius: 25px;
+    white-space: nowrap;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: all .2s;
+    padding: 8px 30px;
+    cursor: pointer;
+    position: relative;
+}
+.cWrap .cWrapContBox .cWrapCate .cCont .cContList label::before {
+    display: inline-block;
+    position: absolute;
+  z-index: 8;
+    font-style: normal;
+    font-variant: normal;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    font-weight: 900;
+    font-size: 12px;
+    padding: 2px 6px 2px 2px;
+    content: "+";
+    left: 20px;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    transition: rotate .3s ease-in-out;
+}
+.cWrap .cWrapContBox .cWrapCate .cCont .cContList input[type="checkbox"]:checked + label::before {
+    content: "x";
+    transform: rotate(-360deg) translate(-50%, -60%);
+    transition: rotate .3s ease-in-out;
+}
+
+.cWrap .cWrapContBox .cWrapCate .cCont .cContList input[type="checkbox"]:checked + label {
+    border: 2px solid #3529fb;
+    background-color: #3529fb;
+    color: #fff;
+    transition: all .2s;
+}
+.cWrap .cWrapContBox .cWrapCate .cCont .cContList  input[type="checkbox"]:focus + label {
+  border: 2px solid #e9a1ff;
+}
 .cWrap .cWrapContBox .cWrapCont {
   display: flex;
   flex-flow: column nowrap;

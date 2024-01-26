@@ -6,17 +6,17 @@ import { useDialogStore } from "@/store/useDialog";
 import { usePostCreateGroup, useGetCategoryList } from '@/hooks/useAuth';
 import {APIResponse} from "@/services/api";
 import Header from "@/components/Header";
+import {apiCreateGroup, apiGetCategoryList} from "@/services/authService";
+
 
 
 const CreatePage = () => {
   const groupData = new FormData(); // 이미지 form Data
   const createGroup = usePostCreateGroup(); // 그룹생성 data be로 보내기
   const categoryList = useGetCategoryList(); // be에서 카테고리 가져오기
-  const [category, setCategory] = useState(''); // 카테고리 설정
-  const [mainCategory, setMainCategory] = useState(''); // 카테고리 설정 대분류
-  const [midCategory, setMidCategory] = useState(''); // 카테고리 설정 중분류
-  const [subCategory, setSubCategory] = useState<string[]>([]); // 카테고리 설정 소분류
-  const [upCategoryId, setUpCategoryId] = useState('');
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]); // 선택된 카테고리들
+  const [category, setCategory] = useState<categoryItem[]>([]); // 카테고리 설정
+  const upCategoryId = '';
   const [gTitle, setGTitle] = useState(''); // 모임 제목
   const [maxNumUser, setMaxNumUser] = useState(''); // 모임 인원 수
   const [desc, setDesc] = useState(''); // 모임 설명
@@ -41,41 +41,50 @@ const CreatePage = () => {
   useEffect(() => {
     return () => {
       allClose();
-      getCategoryList();
     };
   }, []);
+
+  interface categoryItem {
+    id: string;
+    name: string;
+  }
+
   /**
      * @function
      * @DESC 이메일 인증번호 입력 일치 여부 확인
    */
-  const getCategoryList = (): void => {
-    console.log('ee');
-    categoryList.mutate(
-      { upCategoryId },
-      {
-        onSuccess: (data) => {
-          if (data?.respCode === '00') {
-            // 이메일 인증 성공
-            console.log('data', data);
-            return;
-          }
-          if (data?.respMsg) {
-            open('alert', '카테고리 불러오기 오류', data?.respMsg);
-            return;
-          }
-          open('alert', '카테고리 불러오기 오류', '관리자에게 문의바랍니다.');
-        },
-        onError: (error: any) => {
-          console.log(error);
-        },
-      },
-    );
+
+
+  const getCategoryList = async (): Promise<void> => {
+    try {  // 훅을 호출하여 mutation 객체를 얻음
+      const data = await apiGetCategoryList();  // mutation.mutateAsync()를 호출하여 비동기 함수를 실행
+
+      if (data?.respCode === '00') {
+        if (data.respBody !== undefined) {
+          setCategory(data?.respBody);
+        }
+      } else if (data?.respMsg !== undefined) {
+        open('alert', '카테고리 불러오기 오류', data?.respMsg);
+      } else {
+        open('alert', '카테고리 불러오기 오류', '관리자에게 문의바랍니다.');
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
+  useEffect( () => {
+    getCategoryList();
+  }, []);
   /**
    * 카테고리 설정할 때
    */
   const handleChangeCate = (event: React.ChangeEvent<HTMLInputElement>):void => {
-    setCategory(event.target.value);
+    const value = event.target.value;
+    if (selectedCategories.includes(value)) {
+      setSelectedCategories(selectedCategories.filter((category) => category !== value));
+    } else {
+      setSelectedCategories([...selectedCategories, value]);
+    }
   }
   /**
    * 모임 제목 바뀔때
@@ -213,30 +222,12 @@ const CreatePage = () => {
     setMaxNumUser(num);
   }
 
-  /**
-   * @DESC 대분류
-   */
-  const changeMainCate = (e:React.ChangeEvent<HTMLSelectElement>) => {
-    setMainCategory(e.target.value);
-  }
-  /**
-   * @DESC 중분류
-   */
-  const changeMidCate = (e:React.ChangeEvent<HTMLSelectElement>) => {
-    setMidCategory(e.target.value);
-  }
-  /**
-   * @DESC 소분류
-   */
-  const changeSubCate = (e:React.ChangeEvent<HTMLSelectElement>) => {
-   setSubCategory(prevSubCateList => [...prevSubCateList, e.target.value]);
-  }
 
   /**
    * 모임 생성하기 버튼
    */
   const handleCreateGroup = () => {
-    if (category.trim() === '') {
+    if (selectedCategories.length === 0) {
       open('alert', '그룹 생성하기', '카테고리를 입력해주세요.');
       return;
     }
@@ -307,9 +298,20 @@ const CreatePage = () => {
         {/* 카테고리 설정 */}
         <div className={`${styles.cWrapCate} ${styles.cWrapCont}`}>
           <div className={styles.cContTit}>카테고리 설정*</div>
-          <div className={styles.cCont}>
-            <input type="text" value={category} required placeholder='카테고리를 입력해 주세요.' onChange={handleChangeCate}/>
-          </div>
+          <ul className={styles.cCont}>
+            {category.map((categoryItem) => (
+              <li className={styles.cContList} key={categoryItem.id}>
+                <input
+                  type="checkbox"
+                  value={categoryItem.name}
+                  name={categoryItem.name}
+                  checked={selectedCategories.includes(categoryItem.name)}
+                  onChange={handleChangeCate}
+                />
+                <label htmlFor={categoryItem.name}>{categoryItem.name}</label>
+              </li>
+            ))}
+          </ul>
         </div>
         {/* // 카테고리 설정 */}
         {/* 모임 제목 */}

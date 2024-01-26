@@ -3,14 +3,14 @@ import { useDaumPostcodePopup } from 'react-daum-postcode';
 import { Jua } from 'next/font/google';
 
 const jua = Jua({weight: ["400"], subsets: ['latin']});
-
-const AddressSearch = ({ onSelectAddress }) => {
+interface AddressSearchProps {
+  onSelectAddress: (addressData: { selectedAddress: string; selectedZipCode: string }) => void;
+}
+const AddressSearch: React.FC<AddressSearchProps> = ({ onSelectAddress }) => {
   const scriptUrl= 'https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js';
   const open = useDaumPostcodePopup(scriptUrl);
-  const [selectedZipCode, setSelectedZipCode] = useState('');
-  const [selectedAddress, setSelectedAddress] = useState('');
 
-  const handleComplete = (data) => {
+  const handleComplete = (data: any) => {
     let fullAddress = data.address;
     let zipCode = data.zonecode;
     let extraAddress = '';
@@ -24,8 +24,6 @@ const AddressSearch = ({ onSelectAddress }) => {
       }
       fullAddress += extraAddress !== '' ? ` (${extraAddress})` : '';
     }
-    setSelectedZipCode(zipCode); // 검색한 우편 번호 저장
-    setSelectedAddress(fullAddress); // 검색한 주소 저장
     onSelectAddress({ selectedAddress: fullAddress, selectedZipCode: zipCode });
   };
 
