@@ -41,7 +41,7 @@ public class Member extends BaseEntity {
     @JsonIgnore
     private Authority authority;
 
-    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JsonIgnore
     private List<Attendance> attendanceList = new ArrayList<>();
 

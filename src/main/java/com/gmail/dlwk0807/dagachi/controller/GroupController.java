@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
@@ -48,7 +49,7 @@ public class GroupController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "Error Code",description = "Error message",
                     content = @Content(schema = @Schema(implementation = ApiMessageVO.class))),
     })
-    @PostMapping("/save")
+    @PostMapping(value = "/save", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApiMessageVO createGroup(@RequestPart(value = "group") GroupSaveRequestDTO groupSaveRequestDto,
                                     @RequestPart(value = "file", required = false) MultipartFile groupImageFile) throws Exception {
         return ApiMessageVO.builder()
@@ -64,7 +65,7 @@ public class GroupController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "Error Code",description = "Error message",
                     content = @Content(schema = @Schema(implementation = ApiMessageVO.class))),
     })
-    @PostMapping("/update")
+    @PostMapping(value = "/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApiMessageVO updateGroup(@RequestPart(value = "group") GroupUpdateRequestDTO groupRequestDto,
                                     @RequestPart(value = "file", required = false) MultipartFile groupImageFile) {
 
@@ -126,14 +127,14 @@ public class GroupController {
                 .build();
     }
 
-    @Operation(summary = "모임 리스트")
+    @Operation(summary = "모임 목록조회")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200",description = "OK, 성공"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "Error Code",description = "Error message",
                     content = @Content(schema = @Schema(implementation = ApiMessageVO.class))),
     })
     @GetMapping("/group-list")
-    public ApiMessageVO listGroup(GroupListRequestDTO groupListRequestDTO) {
+    public ApiMessageVO listGroup(@ModelAttribute GroupListRequestDTO groupListRequestDTO) {
 
         return ApiMessageVO.builder()
                 .respMsg(OK_RESP_MSG)

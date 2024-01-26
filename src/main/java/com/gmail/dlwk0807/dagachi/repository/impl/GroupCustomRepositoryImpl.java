@@ -5,7 +5,6 @@ import com.gmail.dlwk0807.dagachi.entity.Group;
 import com.gmail.dlwk0807.dagachi.entity.GroupStatus;
 import com.gmail.dlwk0807.dagachi.repository.GroupCustomRepository;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.util.StringUtils;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -52,10 +51,6 @@ public class GroupCustomRepositoryImpl implements GroupCustomRepository {
         return month != null ? group.startDateTime.month().eq(month) : null;
     }
 
-    private BooleanExpression statusNotDone(String status) {
-        return !StringUtils.isNullOrEmpty(status) ? group.status.ne(GroupStatus.DONE) : null;
-    }
-
     private BooleanExpression dateBetween(Integer stYear, Integer stMonth, Integer endYear, Integer endMonth) {
         LocalDateTime stDate = LocalDateTime.of(stYear, stMonth, 1, 0, 0);
         LocalDate tmpEndDate = LocalDate.of(endYear, endMonth, 1);
@@ -63,12 +58,16 @@ public class GroupCustomRepositoryImpl implements GroupCustomRepository {
         return stYear != null ? group.startDateTime.between(stDate, endDate) : null;
     }
 
+    private BooleanExpression statusNotDone(String status) {
+        return "Y".equals(status) ? group.status.ne(GroupStatus.DONE) : null;
+    }
+
     private BooleanExpression makeOnly(String makeOnly, Long memberId) {
-        return !StringUtils.isNullOrEmpty(makeOnly) ? group.memberId.eq(memberId) : null;
+        return "Y".equals(makeOnly) ? group.memberId.eq(memberId) : null;
     }
 
     private BooleanExpression joinOnly(String joinOnly, Long memberId) {
-        return !StringUtils.isNullOrEmpty(joinOnly) ?
+        return "Y".equals(joinOnly) ?
                 group.id.in(JPAExpressions.select(groupAttend.group.id)
                         .from(groupAttend)
                         .where(groupAttend.member.id.eq(memberId))) : null;
