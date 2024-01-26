@@ -73,10 +73,12 @@ const Join = () => {
         open('alert', '이메일 인증', '올바른 이메일 주소를 입력해주세요.');
         return;
       } else {
+        const name = onerName;
         setIsClickedCefTopBtn(true);
         setMailSendState(true);
         // 이메일 주소가 유효합니다.
-        creditsEmail.mutate(email, {
+        creditsEmail.mutate(
+          {email, name},{
           onSuccess: () => {
             open('alert', '이메일 인증하기', '이메일 주소로 인증번호를 발송하였습니다.');
             setMailSendState(false);
