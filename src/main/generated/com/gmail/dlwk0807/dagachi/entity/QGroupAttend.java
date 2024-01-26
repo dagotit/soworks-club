@@ -65,7 +65,7 @@ public class QGroupAttend extends EntityPathBase<GroupAttend> {
 
     public QGroupAttend(Class<? extends GroupAttend> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.group = inits.isInitialized("group") ? new QGroup(forProperty("group"), inits.get("group")) : null;
+        this.group = inits.isInitialized("group") ? new QGroup(forProperty("group")) : null;
         this.member = inits.isInitialized("member") ? new QMember(forProperty("member")) : null;
     }
 

@@ -8,24 +8,24 @@ import com.gmail.dlwk0807.dagachi.entity.*;
 import com.gmail.dlwk0807.dagachi.repository.CategoryRepository;
 import com.gmail.dlwk0807.dagachi.repository.GroupAttendRepository;
 import com.gmail.dlwk0807.dagachi.repository.GroupRepository;
-import com.gmail.dlwk0807.dagachi.repository.MemberRepository;
 import com.gmail.dlwk0807.dagachi.repository.impl.GroupCustomRepositoryImpl;
 import com.gmail.dlwk0807.dagachi.util.AuthUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.data.redis.core.ListOperations;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.gmail.dlwk0807.dagachi.util.SecurityUtil.getCurrentMemberId;
-import static java.lang.Boolean.FALSE;
-import static java.lang.Boolean.TRUE;
 
 @Service
 @RequiredArgsConstructor
@@ -39,14 +39,17 @@ public class GroupService {
     private final GroupCustomRepositoryImpl groupCustomRepositoryImpl;
     private final GroupImageService groupImageService;
     private final CategoryRepository categoryRepository;
+    private final RedisTemplate redisTemplate;
 
     public GroupResponseDTO saveGroup(GroupSaveRequestDTO requestDto, MultipartFile groupImageFile) throws Exception {
 
         Member member = authUtil.getCurrentMember();
         Group group = requestDto.toGroup(member);
 
-        Category category = categoryRepository.findById(requestDto.getCategoryId()).orElseThrow(() -> new CustomRespBodyException("카테고리 관리번호를 확인해주세요"));
-        group.updateCategory(category);
+        List<Category> categories = requestDto.getCategoryIds().stream()
+                .map(o -> categoryRepository.findById(o).orElseThrow(() -> new CustomRespBodyException("카테고리 관리번호를 확인해주세요")))
+                .collect(Collectors.toList());
+        group.updateCategory(categories);
 
         LocalDateTime startDateTime = parseToFormatDate(requestDto.getStrStartDateTime());
         LocalDateTime endDateTime = parseToFormatDate(requestDto.getStrEndDateTime());
@@ -87,8 +90,10 @@ public class GroupService {
 
         Group group = groupRepository.findById(requestDto.getGroupId()).orElseThrow(() -> new CustomRespBodyException("모임정보가 없습니다."));
 
-        Category category = categoryRepository.findById(requestDto.getCategoryId()).orElseThrow(() -> new CustomRespBodyException("카테고리 관리번호를 확인해주세요"));
-        group.updateCategory(category);
+        List<Category> categories = requestDto.getCategoryIds().stream()
+                .map(o -> categoryRepository.findById(o).orElseThrow(() -> new CustomRespBodyException("카테고리 관리번호를 확인해주세요")))
+                .collect(Collectors.toList());
+        group.updateCategory(categories);
 
         //모임 이미지 저장, 기존이미지 삭제
         if (groupImageFile != null && !groupImageFile.isEmpty()) {
@@ -158,6 +163,20 @@ public class GroupService {
         Group group = groupRepository.findById(groupId).orElseThrow(() -> new CustomRespBodyException("모임정보가 없습니다."));
         GroupResponseDTO of = GroupResponseDTO.of(group);
         of.updateMasterYn(getCurrentMemberId().equals(group.getMemberId()) ? "Y" : "N");
+
+        //최근 본 모임 저장 [redis]
+        ListOperations<String, GroupResent> listOperations = redisTemplate.opsForList();
+        String key = "userIdx::" + getCurrentMemberId();
+        long size = listOperations.size(key) == null ? 0 : listOperations.size(key); // NPE 체크해야함.
+
+        if (size < 3) {
+            GroupResent groupResent = GroupResent.of(group);
+            groupResent.updateMasterYn(getCurrentMemberId().equals(group.getMemberId()) ? "Y" : "N");
+            //3개 미만이면 redis 저장
+            redisTemplate.opsForList().leftPush(key, groupResent);
+            redisTemplate.expireAt(key, Date.from(ZonedDateTime.now().plusDays(3).toInstant()));
+        }
+
         return of;
     }
 

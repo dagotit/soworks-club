@@ -1,16 +1,19 @@
-package com.gmail.dlwk0807.dagachi.dto.group;
+package com.gmail.dlwk0807.dagachi.entity;
 
-import com.gmail.dlwk0807.dagachi.entity.Category;
-import com.gmail.dlwk0807.dagachi.entity.Group;
-import lombok.Builder;
-import lombok.Getter;
+import com.gmail.dlwk0807.dagachi.dto.group.GroupResponseDTO;
+import lombok.*;
+import org.springframework.data.redis.core.RedisHash;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+@RedisHash("userIdx")
 @Getter
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public class GroupResponseDTO {
+public class GroupResent {
     private Long groupId;
     private List<Category> categories;
     private String name;
@@ -26,8 +29,8 @@ public class GroupResponseDTO {
     private Integer groupJoinNum;
     private String masterYn;
 
-    public static GroupResponseDTO of(Group group) {
-        return GroupResponseDTO.builder()
+    public static GroupResent of(Group group) {
+        return GroupResent.builder()
                 .groupId(group.getId())
                 .categories(group.getCategories())
                 .name(group.getName())
@@ -41,12 +44,10 @@ public class GroupResponseDTO {
                 .groupImage(group.getGroupImage())
                 .groupMaxNum(group.getGroupMaxNum())
                 .groupJoinNum(group.getGroupAttendList().size())
-                .masterYn("N")
                 .build();
     }
 
     public void updateMasterYn(String masterYn) {
         this.masterYn = masterYn;
     }
-
 }

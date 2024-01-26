@@ -10,12 +10,13 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
 public class GroupSaveRequestDTO {
-    @Schema(description = "카테고리관리번호", nullable = true, example = "1")
-    private Long categoryId;
+    @Schema(description = "카테고리관리번호", nullable = true, type = "List", example = "[1, 2, 3]")
+    private List<Long> categoryIds;
     @Schema(description = "모임명", nullable = true, example = "이것은 모임명")
     private String name;
     @Schema(description = "모임설명", nullable = false, example = "모임 설명란")

@@ -18,15 +18,13 @@ public class QGroup extends EntityPathBase<Group> {
 
     private static final long serialVersionUID = 1818524955L;
 
-    private static final PathInits INITS = PathInits.DIRECT2;
-
     public static final QGroup group = new QGroup("group1");
 
     public final QBaseEntity _super = new QBaseEntity(this);
 
     public final StringPath allDay = createString("allDay");
 
-    public final QCategory category;
+    public final ListPath<Category, QCategory> categories = this.<Category, QCategory>createList("categories", Category.class, QCategory.class, PathInits.DIRECT2);
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
@@ -64,24 +62,15 @@ public class QGroup extends EntityPathBase<Group> {
     public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;
 
     public QGroup(String variable) {
-        this(Group.class, forVariable(variable), INITS);
+        super(Group.class, forVariable(variable));
     }
 
     public QGroup(Path<? extends Group> path) {
-        this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
+        super(path.getType(), path.getMetadata());
     }
 
     public QGroup(PathMetadata metadata) {
-        this(metadata, PathInits.getFor(metadata, INITS));
-    }
-
-    public QGroup(PathMetadata metadata, PathInits inits) {
-        this(Group.class, metadata, inits);
-    }
-
-    public QGroup(Class<? extends Group> type, PathMetadata metadata, PathInits inits) {
-        super(type, metadata, inits);
-        this.category = inits.isInitialized("category") ? new QCategory(forProperty("category")) : null;
+        super(Group.class, metadata);
     }
 
 }

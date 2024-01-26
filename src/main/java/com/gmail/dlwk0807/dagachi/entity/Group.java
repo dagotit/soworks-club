@@ -24,9 +24,11 @@ public class Group extends BaseEntity {
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "category_id")
-    private Category category;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "group_category",
+            joinColumns = @JoinColumn(name = "group_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id"))
+    private List<Category> categories = new ArrayList<>();
     private String name;
     private Long memberId;
     private String groupImage;
@@ -64,6 +66,7 @@ public class Group extends BaseEntity {
         this.description = requestDto.getDescription();
         this.startDateTime = startDateTime;
         this.endDateTime = endDateTime;
+        this.groupMaxNum = requestDto.getGroupMaxNum();
     }
 
     public void updateStatus(GroupStatus status) {
@@ -74,7 +77,7 @@ public class Group extends BaseEntity {
         this.groupImage = groupImage;
     }
 
-    public void updateCategory(Category category) {
-        this.category = category;
+    public void updateCategory(List<Category> categories) {
+        this.categories = categories;
     }
 }

@@ -69,7 +69,7 @@ public class QGroupFile extends EntityPathBase<GroupFile> {
 
     public QGroupFile(Class<? extends GroupFile> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.group = inits.isInitialized("group") ? new QGroup(forProperty("group"), inits.get("group")) : null;
+        this.group = inits.isInitialized("group") ? new QGroup(forProperty("group")) : null;
     }
 
 }

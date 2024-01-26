@@ -14,7 +14,8 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
 
     List<Group> findByMemberIdAndStartDateTimeBetween(Long memberId, LocalDateTime strStartDateTime, LocalDateTime strEndDateTime);
 
-    @Query("SELECT g FROM Group g WHERE UPPER(g.name) LIKE CONCAT('%', UPPER(:keyword), '%') OR UPPER(g.category.name) LIKE CONCAT('%', UPPER(:keyword), '%')")
+//    @Query("SELECT g FROM Group g WHERE UPPER(g.name) LIKE CONCAT('%', UPPER(:keyword), '%') OR UPPER(g.categories) LIKE CONCAT('%', UPPER(:keyword), '%')")
+    @Query("SELECT g FROM Group g WHERE UPPER(g.name) LIKE CONCAT('%', UPPER(:keyword), '%') OR g.categories IN (SELECT c.id FROM Category c WHERE UPPER(c.name) LIKE CONCAT('%', UPPER(:keyword), '%'))")
     List<Group> findAllByNameContainingOrCategoryContaining(String keyword);
 
 }
