@@ -83,7 +83,7 @@ public class GroupService {
 
     public GroupResponseDTO updateGroup(GroupUpdateRequestDTO requestDto, MultipartFile groupImageFile) {
 
-        Group group = groupRepository.findById(requestDto.getGroupId()).orElseThrow();
+        Group group = groupRepository.findById(requestDto.getGroupId()).orElseThrow(() -> new CustomRespBodyException("모임정보가 없습니다."));
 
         //모임 이미지 저장, 기존이미지 삭제
         if (groupImageFile != null && !groupImageFile.isEmpty()) {
@@ -101,7 +101,7 @@ public class GroupService {
 
     public GroupResponseDTO updateGroupStatus(GroupStatusRequestDTO groupStatusRequestDTO) {
 
-        Group group = groupRepository.findById(groupStatusRequestDTO.getGroupId()).orElseThrow();
+        Group group = groupRepository.findById(groupStatusRequestDTO.getGroupId()).orElseThrow(() -> new CustomRespBodyException("모임정보가 없습니다."));
         group.updateStatus(GroupStatus.valueOf(groupStatusRequestDTO.getStatus()));
 
         GroupResponseDTO groupResponseDTO = GroupResponseDTO.of(group);
@@ -110,7 +110,7 @@ public class GroupService {
     }
 
     public void deleteGroup(GroupDeleteRequestDTO groupDeleteRequestDTO) {
-        Group group = groupRepository.findById(groupDeleteRequestDTO.getGroupId()).orElseThrow();
+        Group group = groupRepository.findById(groupDeleteRequestDTO.getGroupId()).orElseThrow(() -> new CustomRespBodyException("모임정보가 없습니다."));
 
         String deleteResult = groupImageService.deleteGroupImage(group.getGroupImage());
         log.info("기존 이미지 삭제 결과 : {}", deleteResult);
@@ -132,7 +132,7 @@ public class GroupService {
 
     public String updateGroupAttachFile(GroupAttachFileRequestDTO requestDto, List<MultipartFile> groupFiles) {
 
-        Group group = groupRepository.findById(requestDto.getGroupId()).orElseThrow();
+        Group group = groupRepository.findById(requestDto.getGroupId()).orElseThrow(() -> new CustomRespBodyException("모임정보가 없습니다."));
 
         if (!authUtil.isAdmin()) {
             //모임장 체크
@@ -148,7 +148,7 @@ public class GroupService {
     }
 
     public GroupResponseDTO info(Long groupId) {
-        Group group = groupRepository.findById(groupId).orElseThrow();
+        Group group = groupRepository.findById(groupId).orElseThrow(() -> new CustomRespBodyException("모임정보가 없습니다."));
         GroupResponseDTO of = GroupResponseDTO.of(group);
         of.updateMasterYn(getCurrentMemberId().equals(group.getMemberId()) ? "Y" : "N");
         return of;

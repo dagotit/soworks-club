@@ -42,7 +42,7 @@ public class GroupAttendService {
             throw new DuplicationGroupAttend("이미 모임신청을 하셨습니다.");
         }
 
-        Group group = groupRepository.findById(groupId).orElseThrow(() -> new CustomRespBodyException("잘못된 모임번호입니다."));
+        Group group = groupRepository.findById(groupId).orElseThrow(() -> new CustomRespBodyException("모임정보가 없습니다."));
         GroupAttend groupAttend = GroupAttend.builder()
                 .group(group)
                 .member(member)
