@@ -35,9 +35,15 @@ interface SignUpType {
 interface CreateGroupType {
   data: FormData;
 }
+interface CategoryType {
+  respBody?: Category[];
+  respCode: string;
+  respMsg?: string;
+}
 
-interface CategoryListType {
-  upCategoryId: string;
+interface Category {
+  id: string;
+  name: string;
 }
 
 /**
@@ -178,18 +184,13 @@ export const apiCreateGroup = async (data: FormData): Promise<any> => {
   }
 };
 
-export const apiGetCategoryList = async (
-  data: CategoryListType,
-): Promise<any> => {
+export const apiGetCategoryList = async (): Promise<CategoryType> => {
   try {
-    return await http.get('/api/v1/category/list', {
-      params: {
-        upCategoryId: data.upCategoryId,
-      },
-    });
+    return await http.get('/api/v1/category/list');
   } catch (e) {
     if (axios.isAxiosError(e) && e.response) {
       throw e.response.data;
     }
+    throw e;
   }
 };

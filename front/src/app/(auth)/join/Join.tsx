@@ -21,7 +21,6 @@ const Join = () => {
   const [zipCode, setZipCode] = useState('');
   const [detailAddress, setDetailAddress] = useState('');
   const [isClickedCefTopBtn, setIsClickedCefTopBtn] = useState(false);
-  const [mailSendState, setMailSendState] = useState(false);
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [passwordsMatch, setPasswordsMatch] = useState(false);
@@ -66,6 +65,10 @@ const Join = () => {
    * @DESC 이메일 인증하기 눌렀을때
    */
   const handleClickedCefTopBtn = (): void => {
+    if (onerName.trim() === '') {
+      open('alert', '이메일 인증', '대표자 성함을 입력해주세요.');
+      return;
+    }
     // emailInput.current 이 null 일 경우 통과 x
     if (emailInput.current) {
       if (!isValidEmail(emailInput.current.value)) {
@@ -75,13 +78,11 @@ const Join = () => {
       } else {
         const name = onerName;
         setIsClickedCefTopBtn(true);
-        setMailSendState(true);
         // 이메일 주소가 유효합니다.
         creditsEmail.mutate(
           {email, name},{
           onSuccess: () => {
             open('alert', '이메일 인증하기', '이메일 주소로 인증번호를 발송하였습니다.');
-            setMailSendState(false);
           },
           onError: (error: any) => {
             if (error.respCode !== '' && error.respMsg !== '') {
@@ -313,7 +314,7 @@ const Join = () => {
   }
   const handlerSignupSuccess = (data: APIResponse) => {
     // 요청이 성공한 경우
-    
+    console.log('data', data);
     open('alert', '회원가입', '가입 성공');
     // router.push('/login');
   };
