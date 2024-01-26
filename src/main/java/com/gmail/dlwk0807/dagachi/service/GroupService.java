@@ -4,10 +4,8 @@ import com.gmail.dlwk0807.dagachi.core.exception.AuthenticationNotMatchException
 import com.gmail.dlwk0807.dagachi.core.exception.CustomRespBodyException;
 import com.gmail.dlwk0807.dagachi.core.exception.DuplicationGroup;
 import com.gmail.dlwk0807.dagachi.dto.group.*;
-import com.gmail.dlwk0807.dagachi.entity.Group;
-import com.gmail.dlwk0807.dagachi.entity.GroupAttend;
-import com.gmail.dlwk0807.dagachi.entity.GroupStatus;
-import com.gmail.dlwk0807.dagachi.entity.Member;
+import com.gmail.dlwk0807.dagachi.entity.*;
+import com.gmail.dlwk0807.dagachi.repository.CategoryRepository;
 import com.gmail.dlwk0807.dagachi.repository.GroupAttendRepository;
 import com.gmail.dlwk0807.dagachi.repository.GroupRepository;
 import com.gmail.dlwk0807.dagachi.repository.MemberRepository;
@@ -40,11 +38,15 @@ public class GroupService {
     private final AuthUtil authUtil;
     private final GroupCustomRepositoryImpl groupCustomRepositoryImpl;
     private final GroupImageService groupImageService;
+    private final CategoryRepository categoryRepository;
 
     public GroupResponseDTO saveGroup(GroupSaveRequestDTO requestDto, MultipartFile groupImageFile) throws Exception {
 
         Member member = authUtil.getCurrentMember();
         Group group = requestDto.toGroup(member);
+
+        Category category = categoryRepository.findById(requestDto.getCategoryId()).orElseThrow(() -> new CustomRespBodyException("카테고리 관리번호를 확인해주세요"));
+        group.updateCategory(category);
 
         LocalDateTime startDateTime = parseToFormatDate(requestDto.getStrStartDateTime());
         LocalDateTime endDateTime = parseToFormatDate(requestDto.getStrEndDateTime());
@@ -69,10 +71,10 @@ public class GroupService {
                 .build();
         groupAttendRepository.save(groupAttend);
 
-        GroupResponseDTO groupResponseDTO = GroupResponseDTO.of(group);
-        groupResponseDTO.updateMasterYn("Y");
+        GroupResponseDTO of = GroupResponseDTO.of(group);
+        of.updateMasterYn(getCurrentMemberId().equals(of.getMemberId()) ? "Y" : "N");
 
-        return groupResponseDTO;
+        return of;
     }
 
     private LocalDateTime parseToFormatDate(String date) {
@@ -85,6 +87,9 @@ public class GroupService {
 
         Group group = groupRepository.findById(requestDto.getGroupId()).orElseThrow(() -> new CustomRespBodyException("모임정보가 없습니다."));
 
+        Category category = categoryRepository.findById(requestDto.getCategoryId()).orElseThrow(() -> new CustomRespBodyException("카테고리 관리번호를 확인해주세요"));
+        group.updateCategory(category);
+
         //모임 이미지 저장, 기존이미지 삭제
         if (groupImageFile != null && !groupImageFile.isEmpty()) {
             String imageName = groupImageService.uploadGroupImage(groupImageFile);
@@ -94,9 +99,10 @@ public class GroupService {
         }
         group.update(requestDto);
 
-        GroupResponseDTO groupResponseDTO = GroupResponseDTO.of(group);
+        GroupResponseDTO of = GroupResponseDTO.of(group);
+        of.updateMasterYn(getCurrentMemberId().equals(of.getMemberId()) ? "Y" : "N");
 
-        return groupResponseDTO;
+        return of;
     }
 
     public GroupResponseDTO updateGroupStatus(GroupStatusRequestDTO groupStatusRequestDTO) {
@@ -104,9 +110,10 @@ public class GroupService {
         Group group = groupRepository.findById(groupStatusRequestDTO.getGroupId()).orElseThrow(() -> new CustomRespBodyException("모임정보가 없습니다."));
         group.updateStatus(GroupStatus.valueOf(groupStatusRequestDTO.getStatus()));
 
-        GroupResponseDTO groupResponseDTO = GroupResponseDTO.of(group);
+        GroupResponseDTO of = GroupResponseDTO.of(group);
+        of.updateMasterYn(getCurrentMemberId().equals(of.getMemberId()) ? "Y" : "N");
 
-        return groupResponseDTO;
+        return of;
     }
 
     public void deleteGroup(GroupDeleteRequestDTO groupDeleteRequestDTO) {

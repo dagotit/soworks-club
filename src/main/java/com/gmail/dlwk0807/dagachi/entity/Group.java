@@ -24,7 +24,9 @@ public class Group extends BaseEntity {
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String category;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "category_id")
+    private Category category;
     private String name;
     private Long memberId;
     private String groupImage;
@@ -41,8 +43,7 @@ public class Group extends BaseEntity {
     private List<GroupAttend> groupAttendList = new ArrayList<>();
 
     @Builder
-    public Group(String category, String name, Long memberId, String groupImage, String description, GroupStatus status, String allDay, LocalDateTime startDateTime, LocalDateTime endDateTime, Long groupMaxNum) {
-        this.category = category;
+    public Group(String name, Long memberId, String groupImage, String description, GroupStatus status, String allDay, LocalDateTime startDateTime, LocalDateTime endDateTime, Long groupMaxNum) {
         this.name = name;
         this.memberId = memberId;
         this.groupImage = groupImage;
@@ -59,7 +60,6 @@ public class Group extends BaseEntity {
         LocalDateTime startDateTime = LocalDateTime.parse(requestDto.getStrStartDateTime(), formatter);
         LocalDateTime endDateTime = LocalDateTime.parse(requestDto.getStrEndDateTime(), formatter);
 
-        this.category = requestDto.getCategory();
         this.name = requestDto.getName();
         this.description = requestDto.getDescription();
         this.startDateTime = startDateTime;
@@ -72,5 +72,9 @@ public class Group extends BaseEntity {
 
     public void updateImageName(String groupImage) {
         this.groupImage = groupImage;
+    }
+
+    public void updateCategory(Category category) {
+        this.category = category;
     }
 }

@@ -1,5 +1,6 @@
 package com.gmail.dlwk0807.dagachi.dto.group;
 
+import com.gmail.dlwk0807.dagachi.entity.Category;
 import com.gmail.dlwk0807.dagachi.entity.Group;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,7 +11,7 @@ import java.time.format.DateTimeFormatter;
 @Builder
 public class GroupResponseDTO {
     private Long groupId;
-    private String category;
+    private Category category;
     private String name;
     private Long memberId;
     private String description;

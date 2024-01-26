@@ -16,8 +16,8 @@ import java.time.format.DateTimeFormatter;
 public class GroupUpdateRequestDTO extends AOPMemberIdDTO {
     @Schema(description = "모임관리번호", nullable = true, example = "1")
     private Long groupId;
-    @Schema(description = "카테고리", nullable = true, example = "2")
-    private String category;
+    @Schema(description = "카테고리관리번호", nullable = true, example = "2")
+    private Long categoryId;
     @Schema(description = "모임명", nullable = true, example = "이것은 모임명 수정")
     private String name;
     @Schema(description = "모임설명", nullable = false, example = "모임 설명란 수정")
