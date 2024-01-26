@@ -29,10 +29,10 @@ public class CategoryController {
                     content = @Content(schema = @Schema(implementation = ApiMessageVO.class))),
     })
     @GetMapping("/list")
-    public ApiMessageVO list(@RequestParam(required = false) Long upCategoryId) {
+    public ApiMessageVO list() {
         return ApiMessageVO.builder()
                 .respMsg(OK_RESP_MSG)
-                .respBody(categoryService.list(upCategoryId))
+                .respBody(categoryService.list())
                 .respCode(OK_RESP_CODE)
                 .build();
     }
