@@ -24,7 +24,7 @@ import static com.gmail.dlwk0807.dagachi.global.CommonConstant.OK_RESP_MSG;
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
 @Slf4j
-@Tag(name = "예제 API", description = "Swagger 테스트용 API")
+@Tag(name = "AUTH API", description = "회원가입, 로그인, 토큰재발급, 로그아웃")
 public class AuthController {
     private final AuthService authService;
 

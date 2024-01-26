@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -23,6 +24,7 @@ import static com.gmail.dlwk0807.dagachi.global.CommonConstant.OK_RESP_MSG;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/groups")
+@Tag(name = "GROUP API", description = "모임관련")
 public class GroupController {
 
     private final GroupService groupService;

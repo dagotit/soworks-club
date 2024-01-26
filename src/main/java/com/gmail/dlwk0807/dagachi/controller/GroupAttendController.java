@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,7 @@ import static com.gmail.dlwk0807.dagachi.global.CommonConstant.OK_RESP_MSG;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/group-attend")
+@Tag(name = "GROUP-ATTEND API", description = "모임참가 관련")
 public class GroupAttendController {
 
     private final GroupAttendService groupAttendService;
