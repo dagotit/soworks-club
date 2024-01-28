@@ -40,6 +40,12 @@ const nextConfig = {
   compiler: {
     styledComponents: true,
   },
+  output: 'export',
+  trailingSlash: true,
+  images: {
+    loader: 'akamai',
+    path: '/',
+  },
 };
 
 module.exports = (phase, { defaultConfig }) => {
