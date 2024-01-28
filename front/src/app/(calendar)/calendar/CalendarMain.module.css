@@ -12,12 +12,12 @@
     color: #000;
 }
 .rbcBtnGroup {
-    display: flex;
+    display: flex !important;
     flex-direction: row;
 }
 .rbcToolbar {
     display: flex;
-    justify-content: start;
+    justify-content: start !important;
     margin: 10px 0px 10px 0px;
 }
 .calendar .rbcToolbar .rbcToolbarLabel {

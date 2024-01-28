@@ -8,14 +8,15 @@
     "start": "next start",
     "lint": "next lint",
     "format": "prettier --check --ignore-path .gitignore .",
-    "format:fix": "prettier --write --ignore-path .gitignore ."
+    "format:fix": "prettier --write --ignore-path .gitignore .",
+    "deploy": "next build && next export"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.0.5",
     "@tanstack/react-query-devtools": "^5.4.2",
     "axios": "^1.6.0",
     "luxon": "^3.4.4",
-    "next": "14.0.0",
+    "next": "13.4.13",
     "react": "^18",
     "react-big-calendar": "^1.8.5",
     "react-daum-postcode": "^3.1.3",
