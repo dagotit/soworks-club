@@ -34,7 +34,15 @@ app.interceptors.response.use(
   async (err) => {
     if (!isEmptyObj(err.response.data)) {
       const data = err.response.data;
+      if (
+        data.respCode === 'BIZ_007' &&
+        err.config.url === '/api/v1/auth/login'
+      ) {
+        // 로그인 계정 없을 경우 [ 로그인 api 호출 시에 ]
+        return Promise.reject(err);
+      }
       if (data.respCode === 'BIZ_007') {
+        // login api 가 아닐 경우에만 401 에러를 처리한다
         const originalConfig = err.config;
         if (
           err.response.status === 401 &&

@@ -139,7 +139,9 @@ const Login = () => {
     );
   };
 
-  const handlerLoginSuccess = (data: APIResponse) => {
+  const handlerLoginSuccess = (data: any) => {
+    console.log('login 성곧', data);
+    return;
     // 요청이 성공한 경우
     router.push('/');
   };
