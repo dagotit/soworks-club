@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -178,6 +179,22 @@ public class GroupService {
         }
 
         return of;
+    }
+
+    public List<GroupResent> recentList() {
+
+        //최근 본 모임 조회 [redis]
+        List<GroupResent> range = new ArrayList<>();
+        ListOperations<String, GroupResent> listOperations = redisTemplate.opsForList();
+        String key = "userIdx::" + getCurrentMemberId();
+        long size = listOperations.size(key) == null ? 0 : listOperations.size(key); // NPE 체크해야함.
+
+        if (size > 0) {
+            //redis 데이터 있으면 조회
+            range = redisTemplate.opsForList().range(key, 0, -1);
+        }
+
+        return range;
     }
 
 }

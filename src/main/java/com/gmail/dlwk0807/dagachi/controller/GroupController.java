@@ -145,4 +145,20 @@ public class GroupController {
                 .build();
     }
 
+    @Operation(summary = "최근 본 모임")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200",description = "OK, 성공"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "Error Code",description = "Error message",
+                    content = @Content(schema = @Schema(implementation = ApiMessageVO.class))),
+    })
+    @GetMapping("/recent-list")
+    public ApiMessageVO recentList() {
+
+        return ApiMessageVO.builder()
+                .respMsg(OK_RESP_MSG)
+                .respBody(groupService.recentList())
+                .respCode(OK_RESP_CODE)
+                .build();
+    }
+
 }
