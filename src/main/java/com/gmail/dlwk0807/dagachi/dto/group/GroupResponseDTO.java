@@ -2,11 +2,14 @@ package com.gmail.dlwk0807.dagachi.dto.group;
 
 import com.gmail.dlwk0807.dagachi.entity.Category;
 import com.gmail.dlwk0807.dagachi.entity.Group;
+import com.gmail.dlwk0807.dagachi.entity.GroupAttend;
 import lombok.Builder;
 import lombok.Getter;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+
+import static com.gmail.dlwk0807.dagachi.util.SecurityUtil.getCurrentMemberId;
 
 @Getter
 @Builder
@@ -25,8 +28,11 @@ public class GroupResponseDTO {
     private Long groupMaxNum;
     private Integer groupJoinNum;
     private String masterYn;
+    private String joinYn;
 
     public static GroupResponseDTO of(Group group) {
+
+
         return GroupResponseDTO.builder()
                 .groupId(group.getId())
                 .categories(group.getCategories())
@@ -41,12 +47,18 @@ public class GroupResponseDTO {
                 .groupImage(group.getGroupImage())
                 .groupMaxNum(group.getGroupMaxNum())
                 .groupJoinNum(group.getGroupAttendList().size())
-                .masterYn("N")
+                .masterYn(updateMasterYn(group))
+                .joinYn(updateJoinYn(group, getCurrentMemberId()))
                 .build();
     }
 
-    public void updateMasterYn(String masterYn) {
-        this.masterYn = masterYn;
+    public static String updateMasterYn(Group group) {
+        return getCurrentMemberId().equals(group.getMemberId()) ? "Y" : "N";
+    }
+
+    public static String updateJoinYn(Group group, Long currentMemberId) {
+        return group.getGroupAttendList().stream()
+                .anyMatch(ga -> ga.getMember().getId().equals(currentMemberId)) ? "Y" : "N";
     }
 
 }

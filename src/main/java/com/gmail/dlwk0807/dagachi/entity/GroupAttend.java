@@ -20,10 +20,10 @@ public class GroupAttend extends BaseEntity {
     @Column(length = 5)
     private String attendYn;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "GROUP_ID")
     private Group group;
 

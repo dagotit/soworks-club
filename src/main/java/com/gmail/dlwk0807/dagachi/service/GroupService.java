@@ -74,10 +74,10 @@ public class GroupService {
                 .group(group)
                 .member(member)
                 .build();
-        groupAttendRepository.save(groupAttend);
+        GroupAttend attend = groupAttendRepository.save(groupAttend);
+        group.getGroupAttendList().add(attend);
 
         GroupResponseDTO of = GroupResponseDTO.of(group);
-        of.updateMasterYn(getCurrentMemberId().equals(of.getMemberId()) ? "Y" : "N");
 
         return of;
     }
@@ -107,7 +107,6 @@ public class GroupService {
         group.update(requestDto);
 
         GroupResponseDTO of = GroupResponseDTO.of(group);
-        of.updateMasterYn(getCurrentMemberId().equals(of.getMemberId()) ? "Y" : "N");
 
         return of;
     }
@@ -118,7 +117,6 @@ public class GroupService {
         group.updateStatus(GroupStatus.valueOf(groupStatusRequestDTO.getStatus()));
 
         GroupResponseDTO of = GroupResponseDTO.of(group);
-        of.updateMasterYn(getCurrentMemberId().equals(of.getMemberId()) ? "Y" : "N");
 
         return of;
     }
@@ -136,11 +134,7 @@ public class GroupService {
 
     public List<GroupResponseDTO> listGroup(GroupListRequestDTO groupListRequestDTO) {
         return groupCustomRepositoryImpl.findAllByFilter(groupListRequestDTO, getCurrentMemberId()).stream()
-                .map(o -> {
-                    GroupResponseDTO of = GroupResponseDTO.of(o);
-                    of.updateMasterYn(getCurrentMemberId().equals(o.getMemberId()) ? "Y" : "N");
-                    return of;
-                })
+                .map(GroupResponseDTO::of)
                 .collect(Collectors.toList());
     }
 
@@ -164,7 +158,6 @@ public class GroupService {
     public GroupResponseDTO info(Long groupId) {
         Group group = groupRepository.findById(groupId).orElseThrow(() -> new CustomRespBodyException("모임정보가 없습니다."));
         GroupResponseDTO of = GroupResponseDTO.of(group);
-        of.updateMasterYn(getCurrentMemberId().equals(group.getMemberId()) ? "Y" : "N");
 
         //최근 본 모임 저장 [redis]
         ZSetOperations<String, GroupResent> zSetOps = redisTemplate.opsForZSet();
@@ -174,7 +167,6 @@ public class GroupService {
 
         if (size < 5) {
             GroupResent groupResent = GroupResent.of(group);
-            groupResent.updateMasterYn(getCurrentMemberId().equals(group.getMemberId()) ? "Y" : "N");
             //5개 미만이면 redis 저장
             zSetOps.add(key, groupResent, new java.util.Date().getTime()); // score은 타임스탬프(최신 읽은 순대로 정렬위해)
             redisTemplate.expireAt(key, Date.from(ZonedDateTime.now().plusDays(3).toInstant())); // 유효기간
