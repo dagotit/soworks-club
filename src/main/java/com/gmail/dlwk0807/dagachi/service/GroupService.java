@@ -1,5 +1,7 @@
 package com.gmail.dlwk0807.dagachi.service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gmail.dlwk0807.dagachi.core.exception.AuthenticationNotMatchException;
 import com.gmail.dlwk0807.dagachi.core.exception.CustomRespBodyException;
 import com.gmail.dlwk0807.dagachi.core.exception.DuplicationGroup;
@@ -14,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,9 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.gmail.dlwk0807.dagachi.util.SecurityUtil.getCurrentMemberId;
@@ -40,7 +41,7 @@ public class GroupService {
     private final GroupCustomRepositoryImpl groupCustomRepositoryImpl;
     private final GroupImageService groupImageService;
     private final CategoryRepository categoryRepository;
-    private final RedisTemplate redisTemplate;
+    private final RedisTemplate<String, GroupResent> redisTemplate;
 
     public GroupResponseDTO saveGroup(GroupSaveRequestDTO requestDto, MultipartFile groupImageFile) throws Exception {
 
@@ -166,35 +167,34 @@ public class GroupService {
         of.updateMasterYn(getCurrentMemberId().equals(group.getMemberId()) ? "Y" : "N");
 
         //최근 본 모임 저장 [redis]
-        ListOperations<String, GroupResent> listOperations = redisTemplate.opsForList();
-        String key = "userIdx::" + getCurrentMemberId();
-        long size = listOperations.size(key) == null ? 0 : listOperations.size(key); // NPE 체크해야함.
+        ZSetOperations<String, GroupResent> zSetOps = redisTemplate.opsForZSet();
+        String key = setKey(getCurrentMemberId());
 
-        if (size < 3) {
+        Long size = zSetOps.size(key);
+
+        if (size < 5) {
             GroupResent groupResent = GroupResent.of(group);
             groupResent.updateMasterYn(getCurrentMemberId().equals(group.getMemberId()) ? "Y" : "N");
-            //3개 미만이면 redis 저장
-            redisTemplate.opsForList().leftPush(key, groupResent);
-            redisTemplate.expireAt(key, Date.from(ZonedDateTime.now().plusDays(3).toInstant()));
+            //5개 미만이면 redis 저장
+            zSetOps.add(key, groupResent, new java.util.Date().getTime()); // score은 타임스탬프(최신 읽은 순대로 정렬위해)
+            redisTemplate.expireAt(key, Date.from(ZonedDateTime.now().plusDays(3).toInstant())); // 유효기간
         }
 
         return of;
     }
 
+    private String setKey(Long memberId){
+        return "userIdx::" + memberId;
+    }
+
     public List<GroupResent> recentList() {
 
         //최근 본 모임 조회 [redis]
-        List<GroupResent> range = new ArrayList<>();
-        ListOperations<String, GroupResent> listOperations = redisTemplate.opsForList();
-        String key = "userIdx::" + getCurrentMemberId();
-        long size = listOperations.size(key) == null ? 0 : listOperations.size(key); // NPE 체크해야함.
-
-        if (size > 0) {
-            //redis 데이터 있으면 조회
-            range = redisTemplate.opsForList().range(key, 0, -1);
-        }
-
-        return range;
+        ZSetOperations<String, GroupResent> zSetOps = redisTemplate.opsForZSet();
+        Set<GroupResent> groupResents = zSetOps.reverseRange(setKey(getCurrentMemberId()), 0, -1);
+        List<GroupResent> result = new ObjectMapper().convertValue(Objects.requireNonNull(zSetOps.reverseRange(setKey(getCurrentMemberId()), 0, -1)),
+                new TypeReference<List<GroupResent>>() {});
+        return result.stream().collect(Collectors.toList());
     }
 
 }

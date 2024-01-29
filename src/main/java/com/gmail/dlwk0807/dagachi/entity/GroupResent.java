@@ -1,6 +1,5 @@
 package com.gmail.dlwk0807.dagachi.entity;
 
-import com.gmail.dlwk0807.dagachi.dto.group.GroupResponseDTO;
 import lombok.*;
 import org.springframework.data.redis.core.RedisHash;
 
