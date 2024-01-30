@@ -3,22 +3,19 @@
 import React, { useEffect, useState } from 'react';
 import styles from './Create.module.css';
 import { useDialogStore } from "@/store/useDialog";
-import { usePostCreateGroup, useGetCategoryList } from '@/hooks/useAuth';
-import {APIResponse} from "@/services/api";
+import { usePostCreateGroup } from '@/hooks/useAuth';
 import Header from "@/components/Header";
-import {apiCreateGroup, apiGetCategoryList} from "@/services/authService";
+import {apiGetCategoryList} from "@/services/authService";
 
 
 
 const CreatePage = () => {
   const groupData = new FormData(); // 이미지 form Data
   const createGroup = usePostCreateGroup(); // 그룹생성 data be로 보내기
-  const categoryList = useGetCategoryList(); // be에서 카테고리 가져오기
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]); // 선택된 카테고리들
+  const [selectedCategories, setSelectedCategories] = useState<any[]>([]); // 선택된 카테고리들
   const [category, setCategory] = useState<categoryItem[]>([]); // 카테고리 설정
-  const upCategoryId = '';
   const [gTitle, setGTitle] = useState(''); // 모임 제목
-  const [maxNumUser, setMaxNumUser] = useState(''); // 모임 인원 수
+  const [maxNumUser, setMaxNumUser] = useState<number>(1); // 모임 인원 수
   const [desc, setDesc] = useState(''); // 모임 설명
   const descLength = 500;
   const [startDate, setStartDate] = useState(''); // 시작 날짜
@@ -28,7 +25,7 @@ const CreatePage = () => {
   // img 태그안에 경로 입력할경우 /create 부터 시작하는 문제가 있어 경로를 별도로 지정했음.
   const defaultImg = '/images/contDefaultImg.png';
   const [mainImg, setMainImg] = useState(''); // 대표 이미지
-  const [groupImg, setGroupImg] = useState<File | null>(null);
+  const [groupImg, setGroupImg] = useState<File | null>();
   const [groupImgName, setGroupImgName] = useState(''); // 대표이미지 이름 저장
   let dateError = false;
   const { open, allClose } = useDialogStore();
@@ -73,17 +70,18 @@ const CreatePage = () => {
     }
   };
   useEffect( () => {
-    getCategoryList();
+    getCategoryList().then(() => {});
   }, []);
   /**
    * 카테고리 설정할 때
    */
   const handleChangeCate = (event: React.ChangeEvent<HTMLInputElement>):void => {
     const value = event.target.value;
-    if (selectedCategories.includes(value)) {
-      setSelectedCategories(selectedCategories.filter((category) => category !== value));
+    const numValue = parseInt(value, 10);
+    if (selectedCategories.includes(numValue)) {
+      setSelectedCategories(selectedCategories.filter((category) => category !== numValue));
     } else {
-      setSelectedCategories([...selectedCategories, value]);
+      setSelectedCategories([...selectedCategories, numValue]);
     }
   }
   /**
@@ -142,7 +140,7 @@ const CreatePage = () => {
     }
   };
 
-  const handlerCreateGroup = (data: APIResponse) => {
+  const handlerCreateGroup = () => {
     // 요청이 성공한 경우
 
     open('alert', '모임 생성', '생성 성공');
@@ -218,7 +216,7 @@ const CreatePage = () => {
    * @DESC 인원수 변경
    */
   const handleChangeGNum = (e:React.ChangeEvent<HTMLSelectElement>):void => {
-    const num = e.target.value;
+    const num = parseInt(e.target.value, 10);
     setMaxNumUser(num);
   }
 
@@ -243,22 +241,24 @@ const CreatePage = () => {
       open('alert', '그룹 생성하기', '종료 날짜를 입력해주세요.');
       return;
     }
-    if (maxNumUser.trim() === '') {
+    if (maxNumUser === 1) {
       open('alert', '그룹 생성하기', '모임 인원 수를 입력해주세요.');
       return;
     }
     const groupStrData = {
-      category: category,
+      categoryIds: selectedCategories,
       name: gTitle,
       description: desc,
       strStartDateTime: formatStartDate,
       strEndDateTime: formatEndDate,
-      memberId: '1',
       groupMaxNum: maxNumUser,
     };
 
+    // 빈값이여도 공란으로 보내야함
     // @ts-ignore
     groupData.append('file', groupImg);
+
+
 
     const blob = new Blob([JSON.stringify(groupStrData)], { type: "application/json" });
     groupData.append('group', blob);
@@ -275,7 +275,6 @@ const CreatePage = () => {
         },
         onSettled: () => {
           // 요청이 성공하든, 에러가 발생되든 실행하고 싶은 경우
-          console.log('onSettled');
         },
       }
     )
@@ -303,9 +302,9 @@ const CreatePage = () => {
               <li className={styles.cContList} key={categoryItem.id}>
                 <input
                   type="checkbox"
-                  value={categoryItem.name}
+                  value={categoryItem.id.toString()}
                   name={categoryItem.name}
-                  checked={selectedCategories.includes(categoryItem.name)}
+                  checked={selectedCategories.includes(categoryItem.id)}
                   onChange={handleChangeCate}
                 />
                 <label htmlFor={categoryItem.name}>{categoryItem.name}</label>
