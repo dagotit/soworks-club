@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gmail.dlwk0807.dagachi.dto.member.MemberUpdateDTO;
 import io.micrometer.common.util.StringUtils;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -21,6 +22,7 @@ public class Member extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Email
     private String email;
     @JsonIgnore
     private String password;

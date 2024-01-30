@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -29,39 +30,25 @@ public class CalendarService {
         GroupListRequestDTO groupListRequestDTO = new GroupListRequestDTO(request.getStYear(), request.getEndYear(), request.getStMonth(), request.getEndMonth(), request.getJoinOnly(), request.getMakeOnly(), request.getStatusNotDone());
         List<Group> allGroups = groupCustomRepository.findAllByFilter(groupListRequestDTO, getCurrentMemberId());
         List<Attendance> allAttendances = attendanceCustomRepository.findAllByMonthAndYear(request.getStMonth(), request.getStYear());
-        List<CalendarResponseDTO> calendars = new ArrayList<>();
-        AtomicInteger count = new AtomicInteger(1);
+        HashMap<LocalDate, CalendarResponseDTO> calendarMap = new HashMap<>();
+        int count = 0;
 
-        if (!allGroups.isEmpty()) {
-            allGroups.forEach(g -> {
-                LocalDate groupDate = g.getStartDateTime().toLocalDate();
-                allAttendances.forEach(a -> {
-                    LocalDate attendDate = a.getAttendDate();
-                    if (groupDate.isBefore(attendDate)) {
-                        calendars.add(CalendarResponseDTO.of(count.get(), g, null));
-                        count.getAndIncrement();
-                    } else if (groupDate.isEqual(attendDate)) {
-                        calendars.add(CalendarResponseDTO.of(count.get(), g, attendDate));
-                        count.getAndIncrement();
-                    } else {
-                        calendars.add(CalendarResponseDTO.of(count.get(), null, attendDate));
-                        count.getAndIncrement();
-                    }
-                });
-                if (allAttendances.isEmpty()) {
-                    calendars.add(CalendarResponseDTO.of(count.get(), g, null));
-                    count.getAndIncrement();
-                }
-            });
-        }
-        else {
-            allAttendances.forEach(a -> {
-                LocalDate attendDate = a.getAttendDate();
-                calendars.add(CalendarResponseDTO.of(count.get(), null, attendDate));
-                count.getAndIncrement();
-            });
+        for (Group group : allGroups) {
+            LocalDate groupDate = group.getStartDateTime().toLocalDate();
+            calendarMap.put(groupDate, CalendarResponseDTO.of(++count, group, null));
         }
 
-        return calendars;
+        for (Attendance attendance : allAttendances) {
+            LocalDate attendDate = attendance.getAttendDate();
+            CalendarResponseDTO calendarResponseDTO = calendarMap.get(attendDate);
+
+            if (calendarResponseDTO != null) {
+                calendarResponseDTO.updateAttendanceDate(attendDate.toString());
+            } else {
+                calendarMap.put(attendDate, CalendarResponseDTO.of(++count, null, attendDate));
+            }
+        }
+
+        return new ArrayList<>(calendarMap.values());
     }
 }

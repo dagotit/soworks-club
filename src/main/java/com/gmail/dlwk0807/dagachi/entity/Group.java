@@ -3,6 +3,8 @@ package com.gmail.dlwk0807.dagachi.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gmail.dlwk0807.dagachi.dto.group.GroupUpdateRequestDTO;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -38,6 +40,7 @@ public class Group extends BaseEntity {
     private String allDay;
     private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;
+    @Min(value = 2)
     private Long groupMaxNum;
 
     @OneToMany(mappedBy = "group", cascade = CascadeType.REMOVE)

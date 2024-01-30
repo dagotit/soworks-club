@@ -2,7 +2,6 @@ package com.gmail.dlwk0807.dagachi.dto.group;
 
 import com.gmail.dlwk0807.dagachi.entity.Category;
 import com.gmail.dlwk0807.dagachi.entity.Group;
-import com.gmail.dlwk0807.dagachi.entity.GroupAttend;
 import lombok.Builder;
 import lombok.Getter;
 

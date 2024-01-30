@@ -2,6 +2,7 @@ package com.gmail.dlwk0807.dagachi.core.exception;
 
 import com.gmail.dlwk0807.dagachi.vo.ApiMessageVO;
 import io.micrometer.common.util.StringUtils;
+import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.ConfigurableEnvironment;
@@ -256,7 +257,7 @@ public class CommonExceptionHandler {
         return new ResponseEntity<ApiMessageVO>(ApiMessageVO.builder()
                 .respCode("BIZ_018")
                 .respBody(respBody)
-                .respMsg("오류가 발생했습니다.").build(), HttpStatus.OK);
+                .respMsg("오류가 발생했습니다. 메세지를 확인해주세요.").build(), HttpStatus.OK);
     }
 
     @ExceptionHandler(AccessDeniedCustomException.class)
@@ -270,7 +271,16 @@ public class CommonExceptionHandler {
                 .respMsg("접근권한이 없습니다.").build(), HttpStatus.OK);
     }
 
-
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<?> constraintViolationException(ConstraintViolationException e) {
+        String respBody = "";
+        respBody = e.getMessage();
+        log.error(this.getClass().getName(), e);
+        return new ResponseEntity<ApiMessageVO>(ApiMessageVO.builder()
+                .respCode("BIZ_020")
+                .respBody(respBody)
+                .respMsg("요청값이 정확하지 않습니다").build(), HttpStatus.OK);
+    }
 
     private boolean getProfile() {
         try {

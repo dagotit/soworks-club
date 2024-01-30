@@ -2,13 +2,13 @@ package com.gmail.dlwk0807.dagachi.dto.calendar;
 
 import com.gmail.dlwk0807.dagachi.entity.Group;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 
 import java.time.LocalDate;
 
 import static com.gmail.dlwk0807.dagachi.util.SecurityUtil.getCurrentMemberId;
 
-@Data
+@Getter
 @Builder
 public class CalendarResponseDTO {
     private String id;
@@ -45,5 +45,7 @@ public class CalendarResponseDTO {
                 .build();
     }
 
-
+    public void updateAttendanceDate(String attendanceDate) {
+        this.attendanceDate = attendanceDate;
+    }
 }

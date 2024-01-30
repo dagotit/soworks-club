@@ -20,7 +20,7 @@ public class MemberCustomRepositoryImpl implements MemberCustomRepository {
     @Override
     public List<Member> findAllByGroupId(Long groupId) {
         return query.selectFrom(member)
-                .join(groupAttend).on(groupAttend.id.eq(member.id))
+                .join(groupAttend).on(groupAttend.member.id.eq(member.id))
                 .where(groupAttend.group.id.eq(groupId))
                 .fetch();
     }
