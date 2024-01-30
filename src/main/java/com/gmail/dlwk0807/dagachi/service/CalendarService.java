@@ -27,7 +27,7 @@ public class CalendarService {
     private final AttendanceCustomRepository attendanceCustomRepository;
 
     public List<CalendarResponseDTO> list(CalendarRequestDTO request) {
-        GroupListRequestDTO groupListRequestDTO = new GroupListRequestDTO(request.getStYear(), request.getEndYear(), request.getStMonth(), request.getEndMonth(), request.getJoinOnly(), request.getMakeOnly(), request.getStatusNotDone());
+        GroupListRequestDTO groupListRequestDTO = new GroupListRequestDTO(request.getStYear(), request.getEndYear(), request.getStMonth(), request.getEndMonth(), request.getJoinOnly(), request.getMakeOnly(), request.getStatusNotDone(), null);
         List<Group> allGroups = groupCustomRepository.findAllByFilter(groupListRequestDTO, getCurrentMemberId());
         List<Attendance> allAttendances = attendanceCustomRepository.findAllByMonthAndYear(request.getStMonth(), request.getStYear());
         HashMap<LocalDate, CalendarResponseDTO> calendarMap = new HashMap<>();

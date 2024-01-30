@@ -24,4 +24,6 @@ public class GroupListRequestDTO {
     private String makeOnly;
     @Schema(description = "모집중인 모임", nullable = false, example = "Y")
     private String statusNotDone;
+    @Schema(description = "일", nullable = false, example = "12")
+    private Integer findDate;
 }

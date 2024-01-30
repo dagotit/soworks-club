@@ -49,7 +49,7 @@ public class GroupCustomRepositoryImpl implements GroupCustomRepository {
 
         return query.selectFrom(group)
                 .where(statusNotDone(dto.getStatusNotDone())
-                        , dateBetween(dto.getStYear(), dto.getStMonth(), dto.getEndYear(), dto.getEndMonth())
+                        , dateBetween(dto.getStYear(), dto.getStMonth(), dto.getEndYear(), dto.getEndMonth(), dto.getFindDate())
                         , makeOnly(dto.getMakeOnly(), memberId)
                         , joinOnly(dto.getJoinOnly(), memberId)
                 )
@@ -64,10 +64,14 @@ public class GroupCustomRepositoryImpl implements GroupCustomRepository {
         return month != null ? group.startDateTime.month().eq(month) : null;
     }
 
-    private BooleanExpression dateBetween(Integer stYear, Integer stMonth, Integer endYear, Integer endMonth) {
+    private BooleanExpression dateBetween(Integer stYear, Integer stMonth, Integer endYear, Integer endMonth, Integer findDate) {
         LocalDateTime stDate = LocalDateTime.of(stYear, stMonth, 1, 0, 0);
         LocalDate tmpEndDate = LocalDate.of(endYear, endMonth, 1);
         LocalDateTime endDate = LocalDateTime.of(endYear, endMonth, tmpEndDate.with(TemporalAdjusters.lastDayOfMonth()).getDayOfMonth(), 23, 59);
+        if (findDate != null) {
+            stDate = LocalDateTime.of(stYear, stMonth, findDate, 0, 0);
+            endDate = LocalDateTime.of(stYear, stMonth, findDate, 23, 59);
+        }
         return stYear != null ? group.startDateTime.between(stDate, endDate) : null;
     }
 
