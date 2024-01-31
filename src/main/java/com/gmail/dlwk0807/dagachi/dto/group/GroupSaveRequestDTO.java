@@ -5,6 +5,7 @@ import com.gmail.dlwk0807.dagachi.entity.GroupStatus;
 import com.gmail.dlwk0807.dagachi.entity.Member;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -23,9 +24,11 @@ public class GroupSaveRequestDTO {
     private String description;
     @Schema(description = "시작일시", nullable = true, example = "202401181900")
     @NotBlank(message = "시작일시는 필수입니다.")
+    @Pattern(regexp = "\\d{12}", message = "시작일자는 12자리 숫자입니다.")
     private String strStartDateTime;
     @Schema(description = "카테고리", nullable = true, example = "202401182200")
     @NotBlank(message = "종료일시는 필수입니다.")
+    @Pattern(regexp = "\\d{12}", message = "시작일자는 12자리 숫자입니다.")
     private String strEndDateTime;
     @Schema(description = "최대인원", nullable = false, example = "7")
     private Long groupMaxNum;

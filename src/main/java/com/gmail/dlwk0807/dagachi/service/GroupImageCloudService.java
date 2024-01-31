@@ -18,7 +18,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Transactional
 @Slf4j
-public class GroupImageCloudServiceImpl implements GroupImageService{
+public class GroupImageCloudService implements GroupImageService{
 
     private final Storage storage;
 

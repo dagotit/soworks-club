@@ -5,7 +5,9 @@ import com.gmail.dlwk0807.dagachi.dto.member.MemberUpdateDTO;
 import io.micrometer.common.util.StringUtils;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Size;
 import lombok.*;
+import org.hibernate.validator.constraints.Length;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

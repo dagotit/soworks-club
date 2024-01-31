@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseCookie;
@@ -35,7 +36,7 @@ public class AuthController {
                     content = @Content(schema = @Schema(implementation = ApiMessageVO.class))),
     })
     @PostMapping("/signup")
-    public ApiMessageVO signup(@RequestBody MemberAuthRequestDTO memberAuthRequestDto) {
+    public ApiMessageVO signup(@Valid @RequestBody MemberAuthRequestDTO memberAuthRequestDto) {
         return ApiMessageVO.builder()
                 .respMsg(OK_RESP_MSG)
                 .respBody(authService.signup(memberAuthRequestDto))

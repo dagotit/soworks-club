@@ -37,7 +37,7 @@ public class QGroupFile extends EntityPathBase<GroupFile> {
 
     public final StringPath saveName = createString("saveName");
 
-    public final StringPath size = createString("size");
+    public final NumberPath<Long> size = createNumber("size", Long.class);
 
     //inherited
     public final StringPath sysRegDbId = _super.sysRegDbId;

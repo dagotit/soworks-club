@@ -38,3 +38,4 @@ logging:
 # file path
 file.profileImagePath: prod/profileImages/
 file.groupImagePath: prod/groupImages/
+file.groupFilePath: prod/groupFiles/

@@ -3,12 +3,12 @@ package com.gmail.dlwk0807.dagachi.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gmail.dlwk0807.dagachi.dto.group.GroupUpdateRequestDTO;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -47,6 +47,10 @@ public class Group extends BaseEntity {
     @JsonIgnore
     private List<GroupAttend> groupAttendList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "group", cascade = CascadeType.REMOVE)
+    @JsonIgnore
+    private List<GroupFile> groupFileList = new ArrayList<>();
+
     @Builder
     public Group(String name, Long memberId, String groupImage, String description, GroupStatus status, String allDay, LocalDateTime startDateTime, LocalDateTime endDateTime, Long groupMaxNum) {
         this.name = name;
@@ -62,14 +66,22 @@ public class Group extends BaseEntity {
 
     public void update(GroupUpdateRequestDTO requestDto) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
-        LocalDateTime startDateTime = LocalDateTime.parse(requestDto.getStrStartDateTime(), formatter);
-        LocalDateTime endDateTime = LocalDateTime.parse(requestDto.getStrEndDateTime(), formatter);
 
-        this.name = requestDto.getName();
-        this.description = requestDto.getDescription();
-        this.startDateTime = startDateTime;
-        this.endDateTime = endDateTime;
-        this.groupMaxNum = requestDto.getGroupMaxNum();
+        if (StringUtils.isNotBlank(requestDto.getName())) {
+            this.name = requestDto.getName();
+        }
+        if (StringUtils.isNotBlank(requestDto.getDescription())) {
+            this.description = requestDto.getDescription();
+        }
+        if (StringUtils.isNotBlank(requestDto.getStrStartDateTime())) {
+            this.startDateTime = LocalDateTime.parse(requestDto.getStrStartDateTime(), formatter);
+        }
+        if (StringUtils.isNotBlank(requestDto.getStrEndDateTime())) {
+            this.endDateTime = LocalDateTime.parse(requestDto.getStrEndDateTime(), formatter);
+        }
+        if (requestDto.getGroupMaxNum() != null) {
+            this.groupMaxNum = requestDto.getGroupMaxNum();
+        }
     }
 
     public void updateStatus(GroupStatus status) {

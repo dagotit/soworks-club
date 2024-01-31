@@ -9,12 +9,12 @@ import com.gmail.dlwk0807.dagachi.dto.group.*;
 import com.gmail.dlwk0807.dagachi.entity.*;
 import com.gmail.dlwk0807.dagachi.repository.CategoryRepository;
 import com.gmail.dlwk0807.dagachi.repository.GroupAttendRepository;
+import com.gmail.dlwk0807.dagachi.repository.GroupFileRepository;
 import com.gmail.dlwk0807.dagachi.repository.GroupRepository;
 import com.gmail.dlwk0807.dagachi.repository.impl.GroupCustomRepositoryImpl;
 import com.gmail.dlwk0807.dagachi.util.AuthUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
@@ -41,6 +41,8 @@ public class GroupService {
     private final GroupCustomRepositoryImpl groupCustomRepositoryImpl;
     private final GroupImageService groupImageService;
     private final CategoryRepository categoryRepository;
+    private final GroupFileRepository groupFileRepository;
+    private final GroupFileCloudService groupFileCloudService;
     private final RedisTemplate<String, GroupResent> redisTemplate;
 
     public GroupResponseDTO saveGroup(GroupSaveRequestDTO requestDto, MultipartFile groupImageFile) throws Exception {
@@ -128,6 +130,7 @@ public class GroupService {
         log.info("기존 이미지 삭제 결과 : {}", deleteResult);
 
         //delete group 첨부파일 작업필요
+        groupFileCloudService.deleteGroupImageFolder(group.getId());
 
         groupRepository.delete(group);
     }
@@ -150,7 +153,21 @@ public class GroupService {
         }
 
         //파일 업로드
+        for(MultipartFile file : groupFiles) {
+            String originalName = file.getOriginalFilename();
+            long size = file.getSize();
 
+            String saveName = groupFileCloudService.uploadGroupFile(file, group.getId());
+
+            GroupFile groupFile = GroupFile.builder()
+                    .group(group)
+                    .size(size)
+                    .saveName(saveName)
+                    .originalName(originalName)
+                    .build();
+            groupFileRepository.save(groupFile);
+
+        }
 
         return "ok";
     }
@@ -165,9 +182,9 @@ public class GroupService {
 
         Long size = zSetOps.size(key);
 
-        if (size < 5) {
+        if (size < 4) {
             GroupResent groupResent = GroupResent.of(group);
-            //5개 미만이면 redis 저장
+            //4개 미만이면 redis 저장
             zSetOps.add(key, groupResent, new java.util.Date().getTime()); // score은 타임스탬프(최신 읽은 순대로 정렬위해)
             redisTemplate.expireAt(key, Date.from(ZonedDateTime.now().plusDays(3).toInstant())); // 유효기간
         }

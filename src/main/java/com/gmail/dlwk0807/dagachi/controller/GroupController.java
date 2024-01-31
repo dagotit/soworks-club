@@ -52,7 +52,7 @@ public class GroupController {
                     content = @Content(schema = @Schema(implementation = ApiMessageVO.class))),
     })
     @PostMapping(value = "/save", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ApiMessageVO createGroup(@RequestPart(value = "group") GroupSaveRequestDTO groupSaveRequestDto,
+    public ApiMessageVO createGroup(@Valid @RequestPart(value = "group") GroupSaveRequestDTO groupSaveRequestDto,
                                     @RequestPart(value = "file", required = false) MultipartFile groupImageFile) throws Exception {
         return ApiMessageVO.builder()
                 .respMsg(OK_RESP_MSG)
@@ -84,7 +84,7 @@ public class GroupController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "Error Code",description = "Error message",
                     content = @Content(schema = @Schema(implementation = ApiMessageVO.class))),
     })
-    @PostMapping("/update-attach-file")
+    @PostMapping(value = "/update-attach-file", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApiMessageVO updateAttachFile(@RequestPart(value = "group") GroupAttachFileRequestDTO groupAttachFileRequestDTO,
                                     @RequestPart(value = "groupFiles", required = false) List<MultipartFile> groupFiles) {
 
@@ -136,7 +136,7 @@ public class GroupController {
                     content = @Content(schema = @Schema(implementation = ApiMessageVO.class))),
     })
     @GetMapping("/group-list")
-    public ApiMessageVO listGroup(@ModelAttribute GroupListRequestDTO groupListRequestDTO) {
+    public ApiMessageVO listGroup(@Valid @ModelAttribute GroupListRequestDTO groupListRequestDTO) {
 
         return ApiMessageVO.builder()
                 .respMsg(OK_RESP_MSG)

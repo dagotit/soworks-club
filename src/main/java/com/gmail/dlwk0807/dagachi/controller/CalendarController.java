@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -31,7 +32,7 @@ public class CalendarController {
                     content = @Content(schema = @Schema(implementation = ApiMessageVO.class))),
     })
     @GetMapping("/list")
-    public ApiMessageVO list(@ModelAttribute CalendarRequestDTO calendarRequestDTO) {
+    public ApiMessageVO list(@Valid @ModelAttribute CalendarRequestDTO calendarRequestDTO) {
 
         return ApiMessageVO.builder()
                 .respMsg(OK_RESP_MSG)

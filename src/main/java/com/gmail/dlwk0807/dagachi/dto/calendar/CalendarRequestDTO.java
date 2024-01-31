@@ -7,7 +7,7 @@ import lombok.Data;
 public class CalendarRequestDTO {
     @Schema(description = "시작년도", nullable = true, example = "2024")
     private int stYear;
-    @Schema(description = "시작년도", nullable = true, example = "2024")
+    @Schema(description = "종료년도", nullable = true, example = "2024")
     private int endYear;
     @Schema(description = "시작월", nullable = true, example = "1")
     private int stMonth;

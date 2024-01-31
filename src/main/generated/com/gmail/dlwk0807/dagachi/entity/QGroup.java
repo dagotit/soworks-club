@@ -35,6 +35,8 @@ public class QGroup extends EntityPathBase<Group> {
 
     public final ListPath<GroupAttend, QGroupAttend> groupAttendList = this.<GroupAttend, QGroupAttend>createList("groupAttendList", GroupAttend.class, QGroupAttend.class, PathInits.DIRECT2);
 
+    public final ListPath<GroupFile, QGroupFile> groupFileList = this.<GroupFile, QGroupFile>createList("groupFileList", GroupFile.class, QGroupFile.class, PathInits.DIRECT2);
+
     public final StringPath groupImage = createString("groupImage");
 
     public final NumberPath<Long> groupMaxNum = createNumber("groupMaxNum", Long.class);

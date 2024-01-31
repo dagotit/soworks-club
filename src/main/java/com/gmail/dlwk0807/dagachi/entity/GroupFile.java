@@ -1,13 +1,19 @@
 package com.gmail.dlwk0807.dagachi.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Table(name = "GROUP_FILE")
 @NoArgsConstructor
 @Getter
+@AllArgsConstructor
+@Builder
 public class GroupFile extends BaseEntity{
 
     @Id
@@ -17,9 +23,9 @@ public class GroupFile extends BaseEntity{
     private String originalName;
     private String saveName;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "GROUP_ID")
+    @JsonIgnore
     private Group group;
-    private String size;
-    private String delete_yn;
+    private Long size;
 }

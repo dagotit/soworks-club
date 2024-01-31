@@ -2,6 +2,7 @@ package com.gmail.dlwk0807.dagachi.dto.group;
 
 import com.gmail.dlwk0807.dagachi.entity.Category;
 import com.gmail.dlwk0807.dagachi.entity.Group;
+import com.gmail.dlwk0807.dagachi.entity.GroupFile;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -28,6 +29,7 @@ public class GroupResponseDTO {
     private Integer groupJoinNum;
     private String masterYn;
     private String joinYn;
+    private List<GroupFile> groupFiles;
 
     public static GroupResponseDTO of(Group group) {
 
@@ -48,6 +50,7 @@ public class GroupResponseDTO {
                 .groupJoinNum(group.getGroupAttendList().size())
                 .masterYn(updateMasterYn(group))
                 .joinYn(updateJoinYn(group, getCurrentMemberId()))
+                .groupFiles(group.getGroupFileList())
                 .build();
     }
 

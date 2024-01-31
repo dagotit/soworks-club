@@ -3,7 +3,6 @@ package com.gmail.dlwk0807.dagachi.repository.impl;
 import com.gmail.dlwk0807.dagachi.dto.group.GroupListRequestDTO;
 import com.gmail.dlwk0807.dagachi.entity.Group;
 import com.gmail.dlwk0807.dagachi.entity.GroupStatus;
-import com.gmail.dlwk0807.dagachi.entity.QCategory;
 import com.gmail.dlwk0807.dagachi.repository.GroupCustomRepository;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPAExpressions;
@@ -34,8 +33,6 @@ public class GroupCustomRepositoryImpl implements GroupCustomRepository {
                 .fetch();
     }
 
-    //    @Query("SELECT g FROM Group g WHERE UPPER(g.name) LIKE CONCAT('%', UPPER(:keyword), '%') OR UPPER(g.categories) LIKE CONCAT('%', UPPER(:keyword), '%')")
-//    @Query("SELECT g FROM Group g WHERE UPPER(g.name) LIKE CONCAT('%', UPPER(:keyword), '%') OR g.categories IN (SELECT c.id FROM Category c WHERE UPPER(c.name) LIKE CONCAT('%', UPPER(:keyword), '%'))")
     @Override
     public List<Group> findAllByNameContainingOrCategoryContaining(String keyword) {
         return query.selectFrom(group)
@@ -65,12 +62,16 @@ public class GroupCustomRepositoryImpl implements GroupCustomRepository {
     }
 
     private BooleanExpression dateBetween(Integer stYear, Integer stMonth, Integer endYear, Integer endMonth, Integer findDate) {
-        LocalDateTime stDate = LocalDateTime.of(stYear, stMonth, 1, 0, 0);
-        LocalDate tmpEndDate = LocalDate.of(endYear, endMonth, 1);
-        LocalDateTime endDate = LocalDateTime.of(endYear, endMonth, tmpEndDate.with(TemporalAdjusters.lastDayOfMonth()).getDayOfMonth(), 23, 59);
+        LocalDateTime stDate = null;
+        LocalDate tmpEndDate = null;
+        LocalDateTime endDate = null;
         if (findDate != null) {
             stDate = LocalDateTime.of(stYear, stMonth, findDate, 0, 0);
             endDate = LocalDateTime.of(stYear, stMonth, findDate, 23, 59);
+        } else {
+            stDate = LocalDateTime.of(stYear, stMonth, 1, 0, 0);
+            tmpEndDate = LocalDate.of(endYear, endMonth, 1);
+            endDate = LocalDateTime.of(endYear, endMonth, tmpEndDate.with(TemporalAdjusters.lastDayOfMonth()).getDayOfMonth(), 23, 59);
         }
         return stYear != null ? group.startDateTime.between(stDate, endDate) : null;
     }
