@@ -31,6 +31,16 @@ export const useGetDetailGroup = (id: number) => {
 };
 
 /**
+ *
+ */
+export const useGetAttendGroup = () => {
+  return useMutation({
+    mutationKey: ['get-attend-group'],
+    mutationFn: apiGetGroupAttendList,
+  });
+};
+
+/**
  * @function
  * 상단 헤더 검색
  */

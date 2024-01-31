@@ -6,7 +6,7 @@ const HeaderCellContent = memo((props: any) => {
   function text(): string {
     return label;
   }
-  return <span className="dfas">{label}</span>;
+  return <span className="test">{label}</span>;
 });
 
 export default HeaderCellContent;

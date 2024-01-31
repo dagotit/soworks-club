@@ -13,6 +13,7 @@ export interface FilterQueryParamType {
   isAttendClub: boolean;
   isCreateClub: boolean;
   statusClub: boolean;
+  findDate?: any;
 }
 
 export interface CalendarParamType {

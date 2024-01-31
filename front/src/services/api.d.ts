@@ -1,5 +1,5 @@
 export interface APIResponse {
-  data: Object | undefined;
+  data: Object | undefined | Array<any>;
 }
 
 export interface ResponseSuccess {
