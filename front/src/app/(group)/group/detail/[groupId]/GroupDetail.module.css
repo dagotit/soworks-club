@@ -1,13 +1,13 @@
 .detailWrap{
     color: #d9d9d9;
-    padding: 75px 15px 15px;
+    padding: 0 0 15px;
 }
 .headerWrap{
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
     justify-content: space-between;
-    margin-bottom: 30px;
+    margin: 30px 15px 15px;
 }
 .groupPerson {
     display: flex;
@@ -22,19 +22,29 @@
     font-size: 0;
 }
 
+.categoryList {
+    margin: 0 15px 30px;
+    display: flex;
+    flex-wrap: wrap;
+}
 .categoryList > span {
     border: 2px solid #136a8f;
     padding: 5px 15px;
-    border-radius: 50%;
+    color: #136a8f;
     margin-right: 5px;
+    /*border-radius: 50%;*/
 }
+.categoryList > span:last-child {
+    margin-right: 0;
+}
+
 .imagesWrap {
-    border: 1px solid blueviolet;
-    height: 30vh;
+    background-color: #606060;
+    height: 40vh;
     overflow: hidden;
     display: flex;
     align-items: center;
-    margin: 30px 0;
+    margin-top: 52px;
 }
 .imagesWrap > img {
     width: 100%;
@@ -45,25 +55,47 @@
     flex-direction: column;
 }
 .actionWrap > div {
-    margin-bottom: 15px;
+    margin-bottom: 5px;
 }
 .actionWrap > div > button {
     padding: 1vh 7vw;
-    background-color: #3529fb;
+    background-color: #9caab7;
     border: none;
     font-size: 16px;
-    color: #fff;
+    color: #e3e5e9;
     cursor: pointer;
+    border-radius: 5px;
 }
 .actionWrap > div > button.groupDelete {
     margin-right: 15px;
+    background-color: transparent;
+    border: 1px solid #d8656b;
+    color: #ce404a;
+}
+.groupModify {
+    display: block;
+    text-decoration: none;
+    padding: 1vh 7vw;
+    background-color: #9caab7;
+    color:  #e3e5e9;
+    border-radius: 5px;
+}
+/** 모임 수정 삭제 */
+.actionBtnWrap {
+    display: flex;
+    flex-wrap: wrap;
 }
 .statusWrap {
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
-    justify-content: space-between;
+    /*justify-content: space-between;*/
     align-items: center;
+    color: #40444b;
+}
+.statusWrap > select {
+    padding: 1vh 3vw;
+    margin-right: 5px;
 }
 
 .loadingText {
@@ -77,8 +109,8 @@
     position: relative;
     left: 50%;
     top: 50%;
-    width: 150px;
-    height: 150px;
+    width: 120px;
+    height: 120px;
     margin: -75px 0 0 -75px;
     border-radius: 50%;
     border: 3px solid transparent;
@@ -155,6 +187,36 @@
     /* border-width: thin; */
 }
 
+.groupInfo {
+    background-color: #f3f5f7;
+    border: 1px solid #c4cdd7;
+    margin: 0 15px 30px;
+    border-radius: 5px;
+    padding: 10px;
+}
+.groupInfo > div {
+    margin-bottom: 5px;
+}
+.groupInfo > div:last-child {
+    margin-bottom: 0;
+}
+.groupInfoTime, .groupInfoNum > div {
+    color: #40444b;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: start;
+}
+.groupInfoTime > p, .groupInfoNum > div > p, .statusWrap > p {
+    font-weight: bold;
+    width: 100px;
+}
+.groupInfoNum > span {
+    color: #b60808;
+    font-size: 12px;
+}
+.groupDescription {
+    margin: 0 15px;
+}
 
 
 @-webkit-keyframes spin {

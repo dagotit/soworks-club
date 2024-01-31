@@ -3,6 +3,7 @@
     z-index: 1000;
     height: 7vh;
     width: 100%;
+    top: 0;
     /*background-color: #303134;*/
     box-shadow: 0 1px 6px 0 rgba(0,0,0,0.2);
 }

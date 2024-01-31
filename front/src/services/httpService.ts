@@ -81,6 +81,7 @@ app.interceptors.response.use(
 
     const code = String(err.response.status);
     if (code.startsWith('5')) {
+      // 서버 오류나면 에러 페이지로 이동
       location.href = `${process.env.NEXT_PUBLIC_DOMAIN}error?msg=${err.response.data.respMsg}`;
     }
     return Promise.reject(err);

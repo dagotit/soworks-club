@@ -52,10 +52,13 @@ export const apiGetClubList = async (query: FilterQueryParamType) => {
   const makeOnly = query.isCreateClub ? 'Y' : 'N';
   const statusNotDone = query.statusClub ? 'Y' : 'N';
 
+  let url = `/api/v1/groups/group-list?stYear=${stYear}&stMonth=${stMonth}&endYear=${endYear}&endMonth=${endMonth}&joinOnly=${joinOnly}&makeOnly=${makeOnly}&statusNotDone=${statusNotDone}`;
+
+  if (query.findDate) {
+    url += `&findDate=${DateTime.fromFormat(query.findDate, 'yyyy-MM-dd').day}`;
+  }
   try {
-    return await http.get(
-      `/api/v1/groups/group-list?stYear=${stYear}&stMonth=${stMonth}&endYear=${endYear}&endMonth=${endMonth}&joinOnly=${joinOnly}&makeOnly=${makeOnly}&statusNotDone=${statusNotDone}`,
-    );
+    return await http.get(url);
   } catch (e) {
     if (axios.isAxiosError(e) && e.response) {
       throw e.response.data;

@@ -13,12 +13,14 @@ import { ListType, useCalendarStore } from '@/store/useCalendar';
 import useDidMountEffect from '@/utils/useDidMountEffect';
 import Toolbar from '@/components/calendar/Toolbar';
 import CustomDateHeader from '@/components/calendar/CustomDateHeader';
+import CustomEvent from '@/components/calendar/CustomEvent';
 import List from '@/components/calendar/List';
 import Header from '@/components/Header';
 import ClubListFilter from '@/components/popups/ClubListFilter';
 import HeaderCellContent from '@/components/calendar/HeaderCellContent';
 import { useRouter } from 'next/navigation';
 import { useClubListStore } from '@/store/useClubList';
+import { it } from 'node:test';
 
 const DEFAULTSTARTDAY = DateTime.now().toISODate(); // 모임리스트 조회 시작일
 const DEFAULTENDDAY = `${DateTime.now().toFormat('yyyy-MM')}-${new Date(
@@ -143,7 +145,7 @@ const CalendarMain = () => {
               'yyyy-MM-dd',
             ),
             status: item.status,
-            personNumber: `참여: ${item.groupJoinNum}명`,
+            personNumber: `참여: ${item.groupJoinNum} | ${item.groupMaxNum}명`,
             images: item.groupImage,
             time: DateTime.fromFormat(item.strStartTime, 'HHmm').toFormat('t'),
           };
@@ -155,10 +157,16 @@ const CalendarMain = () => {
 
   /**
    * @function
-   * 등록된 이벤트 클릭했을 때
+   * 캘린더에 등록된 이벤트 클릭했을 때
    */
   function onClickScheduler(item: ListType) {
-    router.push(`/group/detail/${item.id}`);
+    setListFilterQuery({
+      ...listFilterQuery,
+      startDate: DateTime.fromJSDate(item.start).toFormat('yyyy-MM-dd'),
+      endDate: DateTime.fromJSDate(item.end).toFormat('yyyy-MM-dd'),
+      findDate: DateTime.fromJSDate(item.start).toFormat('yyyy-MM-dd'),
+    });
+    // router.push(`/group/detail/${item.id}`);
   }
 
   function handlerViewChange(val: any) {
@@ -221,9 +229,14 @@ const CalendarMain = () => {
       endMonth: Number(month),
     });
 
+    const tempList = { ...listFilterQuery };
+    if (!!listFilterQuery.findDate) {
+      delete tempList.findDate;
+    }
+
     // 캘린더 내용 바뀌면 리스트의 날짜도 변경되어야함..?
     setListFilterQuery({
-      ...listFilterQuery,
+      ...tempList,
       startDate: clickDay,
       endDate: clickDay,
     });
@@ -255,7 +268,16 @@ const CalendarMain = () => {
     <Fragment>
       <main>
         <Header />
+        <div className={styles.loadingText}>
+          <div className={styles.loader}></div>
 
+          <div
+            className={`${styles.loaderSection} ${styles.sectionLeft}`}
+          ></div>
+          <div
+            className={`${styles.loaderSection} ${styles.sectionRight}`}
+          ></div>
+        </div>
         {apiCalendarQuerys[0].isLoading && (
           <div className={styles.loadingText}>
             <div className={styles.loader}></div>
@@ -279,6 +301,7 @@ const CalendarMain = () => {
               month: {
                 header: HeaderCellContent,
                 dateHeader: CustomDateHeader,
+                // event: CustomEvent,
               },
             }}
             events={calendarStore.calendarList || []}
