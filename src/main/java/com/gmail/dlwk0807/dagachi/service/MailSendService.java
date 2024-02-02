@@ -17,7 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.gmail.dlwk0807.dagachi.util.CommonUtil.createCode;
+import static com.gmail.dlwk0807.dagachi.util.CommonUtils.createCode;
 
 @Service
 @RequiredArgsConstructor

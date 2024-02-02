@@ -10,16 +10,26 @@ import com.querydsl.core.types.Path;
 
 
 /**
- * QMemberRole is a Querydsl query type for MemberRole
+ * QCompany is a Querydsl query type for Company
  */
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
-public class QMemberRole extends EntityPathBase<MemberRole> {
+public class QCompany extends EntityPathBase<Company> {
 
-    private static final long serialVersionUID = -1761420012L;
+    private static final long serialVersionUID = 207850521L;
 
-    public static final QMemberRole memberRole = new QMemberRole("memberRole");
+    public static final QCompany company = new QCompany("company");
 
     public final QBaseEntity _super = new QBaseEntity(this);
+
+    public final StringPath address = createString("address");
+
+    public final StringPath addressDtl = createString("addressDtl");
+
+    public final StringPath bizNo = createString("bizNo");
+
+    public final StringPath companyDate = createString("companyDate");
+
+    public final StringPath companyName = createString("companyName");
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
@@ -38,16 +48,16 @@ public class QMemberRole extends EntityPathBase<MemberRole> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;
 
-    public QMemberRole(String variable) {
-        super(MemberRole.class, forVariable(variable));
+    public QCompany(String variable) {
+        super(Company.class, forVariable(variable));
     }
 
-    public QMemberRole(Path<? extends MemberRole> path) {
+    public QCompany(Path<? extends Company> path) {
         super(path.getType(), path.getMetadata());
     }
 
-    public QMemberRole(PathMetadata metadata) {
-        super(MemberRole.class, metadata);
+    public QCompany(PathMetadata metadata) {
+        super(Company.class, metadata);
     }
 
 }

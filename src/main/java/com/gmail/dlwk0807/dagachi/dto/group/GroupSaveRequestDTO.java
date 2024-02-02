@@ -47,6 +47,7 @@ public class GroupSaveRequestDTO {
                 .startDateTime(startDateTime)
                 .endDateTime(endDateTime)
                 .groupMaxNum(groupMaxNum)
+                .company(member.getCompany())
                 .build();
     }
 

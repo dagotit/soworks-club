@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class GroupDeleteRequestDTO extends AOPMemberIdDTO {
-    @Schema(description = "모입관리번호", nullable = true, example = "1")
+    @Schema(description = "모임관리번호", example = "1")
     private Long groupId;
 
 }

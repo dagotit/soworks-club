@@ -6,7 +6,7 @@ import lombok.Getter;
 
 import java.time.LocalDate;
 
-import static com.gmail.dlwk0807.dagachi.util.SecurityUtil.getCurrentMemberId;
+import static com.gmail.dlwk0807.dagachi.util.SecurityUtils.getCurrentMemberId;
 
 @Getter
 @Builder

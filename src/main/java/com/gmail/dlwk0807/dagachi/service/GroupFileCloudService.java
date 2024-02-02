@@ -2,11 +2,6 @@ package com.gmail.dlwk0807.dagachi.service;
 
 import com.gmail.dlwk0807.dagachi.entity.GroupFile;
 import com.gmail.dlwk0807.dagachi.repository.GroupFileRepository;
-import com.gmail.dlwk0807.dagachi.util.GCSCloudUtil;
-import com.google.api.gax.paging.Page;
-import com.google.cloud.storage.Blob;
-import com.google.cloud.storage.BlobId;
-import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,11 +11,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
-import static com.gmail.dlwk0807.dagachi.util.GCSCloudUtil.*;
+import static com.gmail.dlwk0807.dagachi.util.GCSCloudUtils.*;
 
 @Service
 @RequiredArgsConstructor

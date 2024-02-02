@@ -16,7 +16,7 @@ import java.io.IOException;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class GCSCloudUtil {
+public class GCSCloudUtils {
 
     public static String uploadFile(Storage storage, String bucketName, String fileName, MultipartFile file) {
         BlobId blobId = BlobId.of(bucketName, fileName);

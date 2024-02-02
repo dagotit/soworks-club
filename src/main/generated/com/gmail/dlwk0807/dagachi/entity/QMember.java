@@ -18,13 +18,11 @@ public class QMember extends EntityPathBase<Member> {
 
     private static final long serialVersionUID = 699389822L;
 
+    private static final PathInits INITS = PathInits.DIRECT2;
+
     public static final QMember member = new QMember("member1");
 
     public final QBaseEntity _super = new QBaseEntity(this);
-
-    public final StringPath address = createString("address");
-
-    public final StringPath addressDtl = createString("addressDtl");
 
     public final ListPath<Attendance, QAttendance> attendanceList = this.<Attendance, QAttendance>createList("attendanceList", Attendance.class, QAttendance.class, PathInits.DIRECT2);
 
@@ -32,11 +30,7 @@ public class QMember extends EntityPathBase<Member> {
 
     public final StringPath birth = createString("birth");
 
-    public final StringPath bizNo = createString("bizNo");
-
-    public final StringPath companyDate = createString("companyDate");
-
-    public final StringPath companyName = createString("companyName");
+    public final QCompany company;
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
@@ -72,15 +66,24 @@ public class QMember extends EntityPathBase<Member> {
     public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;
 
     public QMember(String variable) {
-        super(Member.class, forVariable(variable));
+        this(Member.class, forVariable(variable), INITS);
     }
 
     public QMember(Path<? extends Member> path) {
-        super(path.getType(), path.getMetadata());
+        this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
     }
 
     public QMember(PathMetadata metadata) {
-        super(Member.class, metadata);
+        this(metadata, PathInits.getFor(metadata, INITS));
+    }
+
+    public QMember(PathMetadata metadata, PathInits inits) {
+        this(Member.class, metadata, inits);
+    }
+
+    public QMember(Class<? extends Member> type, PathMetadata metadata, PathInits inits) {
+        super(type, metadata, inits);
+        this.company = inits.isInitialized("company") ? new QCompany(forProperty("company")) : null;
     }
 
 }

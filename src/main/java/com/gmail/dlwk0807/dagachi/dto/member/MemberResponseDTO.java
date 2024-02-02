@@ -16,9 +16,10 @@ public class MemberResponseDTO {
     private String nickname;
     private Long memberId;
     private String profileImage;
+    private String companyName;
 
     public static MemberResponseDTO of(Member member) {
-        return new MemberResponseDTO(member.getEmail(), member.getName(), member.getNickname(), member.getId(), member.getProfileImage());
+        return new MemberResponseDTO(member.getEmail(), member.getName(), member.getNickname(), member.getId(), member.getProfileImage(), member.getCompany().getCompanyName());
     }
 
 }

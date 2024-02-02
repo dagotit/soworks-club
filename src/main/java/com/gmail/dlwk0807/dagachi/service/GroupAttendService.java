@@ -12,16 +12,15 @@ import com.gmail.dlwk0807.dagachi.entity.Member;
 import com.gmail.dlwk0807.dagachi.repository.GroupAttendRepository;
 import com.gmail.dlwk0807.dagachi.repository.GroupRepository;
 import com.gmail.dlwk0807.dagachi.repository.impl.MemberCustomRepositoryImpl;
-import com.gmail.dlwk0807.dagachi.util.AuthUtil;
+import com.gmail.dlwk0807.dagachi.util.AuthUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.gmail.dlwk0807.dagachi.util.SecurityUtil.getCurrentMemberId;
+import static com.gmail.dlwk0807.dagachi.util.SecurityUtils.getCurrentMemberId;
 
 
 @Service
@@ -32,19 +31,20 @@ public class GroupAttendService {
     private final GroupAttendRepository groupAttendRepository;
     private final GroupRepository groupRepository;
     private final MemberCustomRepositoryImpl memberCustomRepository;
-    private final AuthUtil authUtil;
+    private final AuthUtils authUtils;
 
 
     public GroupResponseDTO applyGroupAttend(GroupAttendRequestDTO groupAttendRequestDto) throws Exception {
 
         long groupId = groupAttendRequestDto.getGroupId();
-        Member member = authUtil.getCurrentMember();
+        Member member = authUtils.getCurrentMember();
         //중복체크
         if (groupAttendRepository.existsByGroupIdAndMemberId(groupId, member.getId())) {
             throw new DuplicationGroupAttend("이미 모임신청을 하셨습니다.");
         }
 
         Group group = groupRepository.findById(groupId).orElseThrow(() -> new CustomRespBodyException("모임정보가 없습니다."));
+        authUtils.checkDiffCompany(group);
 
         //모임 최대인원 확인
         Long groupMaxNum = group.getGroupMaxNum();
@@ -68,6 +68,10 @@ public class GroupAttendService {
     }
 
     public List<MemberAttendResponseDTO> listGroupAttend(Long groupId) {
+
+        Group group = groupRepository.findById(groupId).orElseThrow(() -> new CustomRespBodyException("모임정보가 없습니다."));
+        authUtils.checkDiffCompany(group);
+
         List<Member> memberList = memberCustomRepository.findAllByGroupId(groupId);
         return memberList.stream().map(MemberAttendResponseDTO::of)
                 .collect(Collectors.toList());
@@ -87,6 +91,8 @@ public class GroupAttendService {
             throw new CustomRespBodyException("모임장은 참여 취소를 할 수 없습니다.");
         }
 
+        authUtils.checkDiffCompany(group);
+
         GroupAttend groupAttend = groupAttendRepository.findByGroupIdAndMemberId(groupId, currentMemberId).orElseThrow(() -> new CustomRespBodyException("참여하지 않은 모임입니다."));
         groupAttendRepository.delete(groupAttend);
 
@@ -99,4 +105,5 @@ public class GroupAttendService {
 
         return "ok";
     }
+
 }

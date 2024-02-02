@@ -10,19 +10,19 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MemberUpdateDTO {
 
-    @Schema(description = "주소", nullable = false, example = "수정주소")
+    @Schema(description = "회사주소", nullable = false, example = "수정주소")
     private String address;
-    @Schema(description = "패스워드", nullable = false, example = "수정 상세주소")
+    @Schema(description = "회사상세주소", nullable = false, example = "수정 상세주소")
     private String addressDtl;
     @Schema(description = "사업자번호", nullable = false, example = "7777-777-7777")
     private String bizNo;
-    @Schema(description = "이름", nullable = false, example = "홍수정")
-    private String name;
     @Schema(description = "회사명", nullable = false, example = "수정 소웍")
     private String companyName;
     @Schema(description = "창립일", nullable = false, example = "20191111")
     @Pattern(regexp = "\\d{8}", message = "창립일은 8자리 숫자입니다.")
     private String companyDate;
+    @Schema(description = "이름", nullable = false, example = "홍수정")
+    private String name;
     @Schema(description = "별명", nullable = false, example = "을지로불주먹")
     @Size(max = 12)
     private String nickname;

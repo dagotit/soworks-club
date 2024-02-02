@@ -3,7 +3,7 @@ package com.gmail.dlwk0807.dagachi.controller;
 import com.gmail.dlwk0807.dagachi.dto.member.MemberUpdateDTO;
 import com.gmail.dlwk0807.dagachi.dto.member.RequestPasswordDTO;
 import com.gmail.dlwk0807.dagachi.service.MemberService;
-import com.gmail.dlwk0807.dagachi.util.SecurityUtil;
+import com.gmail.dlwk0807.dagachi.util.SecurityUtils;
 import com.gmail.dlwk0807.dagachi.vo.ApiMessageVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -36,7 +36,7 @@ public class MemberController {
     public ApiMessageVO findMemberInfoById() {
         return ApiMessageVO.builder()
                 .respMsg(OK_RESP_MSG)
-                .respBody(memberService.findMemberInfoById(SecurityUtil.getCurrentMemberId()))
+                .respBody(memberService.findMemberInfoById(SecurityUtils.getCurrentMemberId()))
                 .respCode(OK_RESP_CODE)
                 .build();
     }
@@ -101,7 +101,7 @@ public class MemberController {
     public ApiMessageVO checkAdmin() {
         return ApiMessageVO.builder()
                 .respMsg(OK_RESP_MSG)
-                .respBody(memberService.checkAdmin(SecurityUtil.getCurrentMemberId()))
+                .respBody(memberService.checkAdmin(SecurityUtils.getCurrentMemberId()))
                 .respCode(OK_RESP_CODE)
                 .build();
     }

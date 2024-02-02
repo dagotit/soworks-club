@@ -6,7 +6,7 @@ import org.springframework.data.redis.core.RedisHash;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-import static com.gmail.dlwk0807.dagachi.util.SecurityUtil.getCurrentMemberId;
+import static com.gmail.dlwk0807.dagachi.util.SecurityUtils.getCurrentMemberId;
 
 @RedisHash("userIdx")
 @Getter

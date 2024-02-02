@@ -20,6 +20,7 @@ import java.util.List;
 @AllArgsConstructor
 @Table(name = "GROUP_MST")
 @Entity
+@Builder
 public class Group extends BaseEntity {
 
     @Id
@@ -33,6 +34,12 @@ public class Group extends BaseEntity {
     private List<Category> categories = new ArrayList<>();
     private String name;
     private Long memberId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "COMPANY_ID")
+    @JsonIgnore
+    private Company company;
+
     private String groupImage;
     private String description;
     @Enumerated(EnumType.STRING)
@@ -45,24 +52,14 @@ public class Group extends BaseEntity {
 
     @OneToMany(mappedBy = "group", cascade = CascadeType.REMOVE)
     @JsonIgnore
+    @Builder.Default
     private List<GroupAttend> groupAttendList = new ArrayList<>();
 
     @OneToMany(mappedBy = "group", cascade = CascadeType.REMOVE)
     @JsonIgnore
+    @Builder.Default
     private List<GroupFile> groupFileList = new ArrayList<>();
 
-    @Builder
-    public Group(String name, Long memberId, String groupImage, String description, GroupStatus status, String allDay, LocalDateTime startDateTime, LocalDateTime endDateTime, Long groupMaxNum) {
-        this.name = name;
-        this.memberId = memberId;
-        this.groupImage = groupImage;
-        this.description = description;
-        this.status = status;
-        this.allDay = allDay;
-        this.startDateTime = startDateTime;
-        this.endDateTime = endDateTime;
-        this.groupMaxNum = groupMaxNum;
-    }
 
     public void update(GroupUpdateRequestDTO requestDto) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm");

@@ -34,23 +34,28 @@ public class GroupCustomRepositoryImpl implements GroupCustomRepository {
     }
 
     @Override
-    public List<Group> findAllByNameContainingOrCategoryContaining(String keyword) {
+    public List<Group> findAllByNameContainingOrCategoryContaining(String keyword, Long companyId) {
         return query.selectFrom(group)
-                .where(searchAll(keyword))
+                .where(searchAll(keyword)
+                        , inCompany(companyId))
                 .fetch();
     }
 
-
     @Override
-    public List<Group> findAllByFilter(GroupListRequestDTO dto, Long memberId) {
+    public List<Group> findAllByFilter(GroupListRequestDTO dto,Long memberId, Long companyId) {
 
         return query.selectFrom(group)
-                .where(statusNotDone(dto.getStatusNotDone())
+                .where(inCompany(companyId)
+                        , statusNotDone(dto.getStatusNotDone())
                         , dateBetween(dto.getStYear(), dto.getStMonth(), dto.getEndYear(), dto.getEndMonth(), dto.getFindDate())
                         , makeOnly(dto.getMakeOnly(), memberId)
                         , joinOnly(dto.getJoinOnly(), memberId)
                 )
                 .fetch();
+    }
+
+    private BooleanExpression inCompany(Long companyId) {
+        return group.company.id.eq(companyId);
     }
 
     private BooleanExpression yearEq(Integer year) {

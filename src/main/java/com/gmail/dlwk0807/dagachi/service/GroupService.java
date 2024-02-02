@@ -12,7 +12,7 @@ import com.gmail.dlwk0807.dagachi.repository.GroupAttendRepository;
 import com.gmail.dlwk0807.dagachi.repository.GroupFileRepository;
 import com.gmail.dlwk0807.dagachi.repository.GroupRepository;
 import com.gmail.dlwk0807.dagachi.repository.impl.GroupCustomRepositoryImpl;
-import com.gmail.dlwk0807.dagachi.util.AuthUtil;
+import com.gmail.dlwk0807.dagachi.util.AuthUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -24,10 +24,15 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.gmail.dlwk0807.dagachi.util.SecurityUtil.getCurrentMemberId;
+import static com.gmail.dlwk0807.dagachi.util.FileUtils.validateImageFile;
+import static com.gmail.dlwk0807.dagachi.util.FileUtils.validateImageFiles;
+import static com.gmail.dlwk0807.dagachi.util.SecurityUtils.getCurrentMemberId;
 
 @Service
 @RequiredArgsConstructor
@@ -37,7 +42,7 @@ public class GroupService {
 
     private final GroupRepository groupRepository;
     private final GroupAttendRepository groupAttendRepository;
-    private final AuthUtil authUtil;
+    private final AuthUtils authUtils;
     private final GroupCustomRepositoryImpl groupCustomRepositoryImpl;
     private final GroupImageService groupImageService;
     private final CategoryRepository categoryRepository;
@@ -47,7 +52,7 @@ public class GroupService {
 
     public GroupResponseDTO saveGroup(GroupSaveRequestDTO requestDto, MultipartFile groupImageFile) throws Exception {
 
-        Member member = authUtil.getCurrentMember();
+        Member member = authUtils.getCurrentMember();
         Group group = requestDto.toGroup(member);
 
         List<Category> categories = requestDto.getCategoryIds().stream()
@@ -61,6 +66,9 @@ public class GroupService {
         if (groupList.size() > 0) {
             throw new DuplicationGroup();
         }
+
+        //파일 확장자 체크
+        validateImageFile(groupImageFile);
 
         //모임 이미지 저장
         if (groupImageFile != null && !groupImageFile.isEmpty()) {
@@ -93,6 +101,7 @@ public class GroupService {
     public GroupResponseDTO updateGroup(GroupUpdateRequestDTO requestDto, MultipartFile groupImageFile) {
 
         Group group = groupRepository.findById(requestDto.getGroupId()).orElseThrow(() -> new CustomRespBodyException("모임정보가 없습니다."));
+        authUtils.checkDiffCompany(group);
 
         List<Category> categories = requestDto.getCategoryIds().stream()
                 .map(o -> categoryRepository.findById(o).orElseThrow(() -> new CustomRespBodyException("카테고리 관리번호를 확인해주세요")))
@@ -116,6 +125,7 @@ public class GroupService {
     public GroupResponseDTO updateGroupStatus(GroupStatusRequestDTO groupStatusRequestDTO) {
 
         Group group = groupRepository.findById(groupStatusRequestDTO.getGroupId()).orElseThrow(() -> new CustomRespBodyException("모임정보가 없습니다."));
+        authUtils.checkDiffCompany(group);
         group.updateStatus(GroupStatus.valueOf(groupStatusRequestDTO.getStatus()));
 
         GroupResponseDTO of = GroupResponseDTO.of(group);
@@ -125,7 +135,7 @@ public class GroupService {
 
     public void deleteGroup(GroupDeleteRequestDTO groupDeleteRequestDTO) {
         Group group = groupRepository.findById(groupDeleteRequestDTO.getGroupId()).orElseThrow(() -> new CustomRespBodyException("모임정보가 없습니다."));
-
+        authUtils.checkDiffCompany(group);
         String deleteResult = groupImageService.deleteGroupImage(group.getGroupImage());
         log.info("기존 이미지 삭제 결과 : {}", deleteResult);
 
@@ -136,7 +146,7 @@ public class GroupService {
     }
 
     public List<GroupResponseDTO> listGroup(GroupListRequestDTO groupListRequestDTO) {
-        return groupCustomRepositoryImpl.findAllByFilter(groupListRequestDTO, getCurrentMemberId()).stream()
+        return groupCustomRepositoryImpl.findAllByFilter(groupListRequestDTO, getCurrentMemberId(), authUtils.getCurrentCompany().getId()).stream()
                 .map(GroupResponseDTO::of)
                 .collect(Collectors.toList());
     }
@@ -144,13 +154,16 @@ public class GroupService {
     public String updateGroupAttachFile(GroupAttachFileRequestDTO requestDto, List<MultipartFile> groupFiles) {
 
         Group group = groupRepository.findById(requestDto.getGroupId()).orElseThrow(() -> new CustomRespBodyException("모임정보가 없습니다."));
-
-        if (!authUtil.isAdmin()) {
+        authUtils.checkDiffCompany(group);
+        if (!authUtils.isAdmin()) {
             //모임장 체크
             if (!group.getMemberId().equals(requestDto.getMemberId())) {
                 throw new AuthenticationNotMatchException();
             }
         }
+
+        //파일 확장자 체크
+        validateImageFiles(groupFiles);
 
         //파일 업로드
         for(MultipartFile file : groupFiles) {
@@ -166,14 +179,14 @@ public class GroupService {
                     .originalName(originalName)
                     .build();
             groupFileRepository.save(groupFile);
-
         }
 
         return "ok";
     }
 
     public GroupResponseDTO info(Long groupId) {
-        Group group = groupRepository.findById(groupId).orElseThrow(() -> new CustomRespBodyException("모임정보가 없습니다."));
+        Group group = groupRepository.findByIdAndCompany(groupId, authUtils.getCurrentCompany()).orElseThrow(() -> new CustomRespBodyException("모임정보가 없습니다."));
+        authUtils.checkDiffCompany(group);
         GroupResponseDTO of = GroupResponseDTO.of(group);
 
         //최근 본 모임 저장 [redis]
@@ -201,8 +214,8 @@ public class GroupService {
         //최근 본 모임 조회 [redis]
         ZSetOperations<String, GroupResent> zSetOps = redisTemplate.opsForZSet();
         Set<GroupResent> groupResents = zSetOps.reverseRange(setKey(getCurrentMemberId()), 0, -1);
-        List<GroupResent> result = new ObjectMapper().convertValue(Objects.requireNonNull(zSetOps.reverseRange(setKey(getCurrentMemberId()), 0, -1)),
-                new TypeReference<List<GroupResent>>() {});
+        List<GroupResent> result = new ObjectMapper().convertValue(Objects.requireNonNull(groupResents),
+                new TypeReference<>(){});
         return result.stream().collect(Collectors.toList());
     }
 

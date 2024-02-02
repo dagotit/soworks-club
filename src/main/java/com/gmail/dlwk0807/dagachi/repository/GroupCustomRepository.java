@@ -10,7 +10,7 @@ import java.util.List;
 public interface GroupCustomRepository {
     List<Group> findAllByMonthAndYear(int month, int year);
 
-    List<Group> findAllByFilter(GroupListRequestDTO groupListRequestDTO, Long memberId);
+    List<Group> findAllByFilter(GroupListRequestDTO groupListRequestDTO, Long memberId, Long companyId);
 
-    List<Group> findAllByNameContainingOrCategoryContaining(String keyword);
+    List<Group> findAllByNameContainingOrCategoryContaining(String keyword, Long companyId);
 }

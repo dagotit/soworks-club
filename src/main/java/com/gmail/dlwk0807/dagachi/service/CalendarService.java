@@ -7,6 +7,7 @@ import com.gmail.dlwk0807.dagachi.entity.Attendance;
 import com.gmail.dlwk0807.dagachi.entity.Group;
 import com.gmail.dlwk0807.dagachi.repository.AttendanceCustomRepository;
 import com.gmail.dlwk0807.dagachi.repository.GroupCustomRepository;
+import com.gmail.dlwk0807.dagachi.util.AuthUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,9 +16,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.gmail.dlwk0807.dagachi.util.SecurityUtil.getCurrentMemberId;
+import static com.gmail.dlwk0807.dagachi.util.SecurityUtils.getCurrentMemberId;
 
 @Service
 @RequiredArgsConstructor
@@ -25,10 +25,11 @@ import static com.gmail.dlwk0807.dagachi.util.SecurityUtil.getCurrentMemberId;
 public class CalendarService {
     private final GroupCustomRepository groupCustomRepository;
     private final AttendanceCustomRepository attendanceCustomRepository;
+    private final AuthUtils authUtils;
 
     public List<CalendarResponseDTO> list(CalendarRequestDTO request) {
         GroupListRequestDTO groupListRequestDTO = new GroupListRequestDTO(request.getStYear(), request.getEndYear(), request.getStMonth(), request.getEndMonth(), request.getJoinOnly(), request.getMakeOnly(), request.getStatusNotDone(), null);
-        List<Group> allGroups = groupCustomRepository.findAllByFilter(groupListRequestDTO, getCurrentMemberId());
+        List<Group> allGroups = groupCustomRepository.findAllByFilter(groupListRequestDTO, getCurrentMemberId(), authUtils.getCurrentCompany().getId());
         List<Attendance> allAttendances = attendanceCustomRepository.findAllByMonthAndYear(request.getStMonth(), request.getStYear());
         HashMap<LocalDate, CalendarResponseDTO> calendarMap = new HashMap<>();
         int count = 0;

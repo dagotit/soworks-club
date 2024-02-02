@@ -29,7 +29,7 @@ import static com.gmail.dlwk0807.dagachi.global.CommonConstant.OK_RESP_MSG;
 public class AuthController {
     private final AuthService authService;
 
-    @Operation(summary = "회원가입")
+    @Operation(summary = "회원가입(회사운영진) -> 입력하는 회사정보로 회사테이블 생성(bizNo unique key)")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200",description = "OK, 성공"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "Error Code",description = "Error message",
