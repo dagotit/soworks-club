@@ -10,46 +10,41 @@ import { isEmptyObj } from '@/utils/common';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useGetSearchList } from '@/hooks/useGroup';
+import { useGetAdminCheck } from '@/hooks/useAdmin';
 
-interface HeaderProps {
-  propAttendanceCk?: () => void;
-}
 const Header = (props: any) => {
   const getLogout = useGetLogout();
   const router = useRouter();
   const pathname = usePathname();
-  const { accessToken, setAccessToken, setTokenExpires } = useTokenStore();
+  const { setAccessToken, setTokenExpires } = useTokenStore();
   const [isNavOpen, setNavOpen] = useState(false);
-  const getAccessToken = useGetAccessToken();
   const { open, allClose } = useDialogStore();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchVal, setSearchVal] = useState('');
   const [isShowBackBtn, setIsShowBackBtn] = useState(
     pathname.includes('/group/detail'),
   );
+  // 검색
   const apiSearch = useGetSearchList();
   const [searchList, setSearchList] = useState<any[]>([]);
+  // 어드민 여부 체크 [ 메뉴 노출 여부 ]
+  const apiAdminCheck = useGetAdminCheck();
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
-    /*if (!accessToken) {
-      getAccessToken.mutate(null, {
-        onError: (err) => {
-          console.log('err:::', err);
-          open('alert', '로그아웃', '로그아웃 되었습니다.', () => {
-            router.push('/login');
-          });
-        },
-      });
-    }*/
     return () => {
       allClose();
     };
   }, []);
-  useDidMountEffect(() => {
-    if (accessToken !== '' && !isEmptyObj(props)) {
-      props.propAttendanceCk(true);
+
+  useEffect(() => {
+    if (!!apiAdminCheck.data && !isEmptyObj(apiAdminCheck.data)) {
+      // @ts-ignore
+      const respBody = apiAdminCheck.data.respBody;
+      setIsAdmin(respBody.adminYn === 'Y');
     }
-  }, [accessToken]);
+  }, [apiAdminCheck.data]);
+
   /**
    * @function
    * 로그아웃 api 호출
@@ -182,7 +177,18 @@ const Header = (props: any) => {
               모임보러가기
             </Link>
           </li>
-          <li className={styles.calendar}>Calendar</li>
+          {isAdmin && (
+            <li className={styles.calendar}>
+              <Link
+                href={{
+                  pathname: '/admin',
+                }}
+              >
+                admin
+              </Link>
+            </li>
+          )}
+
           <li className={`${styles.sep} ${styles.settings}`}>Settings</li>
           <li className={styles.logout}>
             <button type="button" onClick={handleLogout}>
@@ -216,9 +222,8 @@ const Header = (props: any) => {
                       pathname: `/group/detail/${value.groupId}`,
                     }}
                   >
-                    {value.category} | {value.name} |{' '}
-                    {/* TODO 수정 있을 수 있음 */}
-                    {value.status === 'WAITING' ? '모집중' : '모집종료?'}
+                    {value.category} | {value.name}
+                    {value.status === 'WAITING' ? '모집중' : '모집종료'}
                   </Link>
                 </li>
               ))}

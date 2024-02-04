@@ -58,7 +58,7 @@ app.interceptors.response.use(
             });
             if (resp) {
               if (resp.data.respCode === 'BIZ_018') {
-                location.href = '/login';
+                location.href = `/login?code=error`;
               }
               // access token 다시 담기
               await setAccessToken(resp);
@@ -71,7 +71,7 @@ app.interceptors.response.use(
               error.response.data.respCode === 'BIZ_018'
             ) {
               // 로그아웃된 사용자 입니다. & BIZ_018 로그아웃 사용자
-              location.href = '/login';
+              location.href = `/login?code=error`;
             }
             return Promise.reject(error);
           }
