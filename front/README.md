@@ -34,3 +34,7 @@ npm run build
 
 
 - [ENV 참고문서](https://velog.io/@milkboy2564/Next.js-env%ED%99%98%EA%B2%BD-%EB%B3%80%EC%88%98-%EC%A0%95%EB%A6%AC#1-envlocal-%EB%A1%9C%EC%BB%AC-%EA%B0%9C%EB%B0%9C-%EC%8B%9C)
+
+## 서버컴포넌트 제대로 사용하기 위해서 
+
+- [서버 컴포넌트에서 서드파티라이브러리 사용불가 이슈와 어떤 방식으로 서버 컴포넌트를 사용했는지 로직 있음](https://irondeveloper.tistory.com/29)

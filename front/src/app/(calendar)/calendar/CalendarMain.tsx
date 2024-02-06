@@ -268,16 +268,6 @@ const CalendarMain = () => {
     <Fragment>
       <main>
         <Header />
-        <div className={styles.loadingText}>
-          <div className={styles.loader}></div>
-
-          <div
-            className={`${styles.loaderSection} ${styles.sectionLeft}`}
-          ></div>
-          <div
-            className={`${styles.loaderSection} ${styles.sectionRight}`}
-          ></div>
-        </div>
         {apiCalendarQuerys[0].isLoading && (
           <div className={styles.loadingText}>
             <div className={styles.loader}></div>
