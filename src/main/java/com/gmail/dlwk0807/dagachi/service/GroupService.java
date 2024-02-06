@@ -67,11 +67,11 @@ public class GroupService {
             throw new DuplicationGroup();
         }
 
-        //파일 확장자 체크
-        validateImageFile(groupImageFile);
 
         //모임 이미지 저장
         if (groupImageFile != null && !groupImageFile.isEmpty()) {
+            //파일 확장자 체크
+            validateImageFile(groupImageFile);
             String imageName = groupImageService.uploadGroupImage(groupImageFile);
             group.updateImageName(imageName);
         }

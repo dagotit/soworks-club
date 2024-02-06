@@ -2,6 +2,7 @@ package com.gmail.dlwk0807.dagachi.repository.impl;
 
 import com.gmail.dlwk0807.dagachi.entity.Member;
 import com.gmail.dlwk0807.dagachi.repository.MemberCustomRepository;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -23,5 +24,16 @@ public class MemberCustomRepositoryImpl implements MemberCustomRepository {
                 .join(groupAttend).on(groupAttend.member.id.eq(member.id))
                 .where(groupAttend.group.id.eq(groupId))
                 .fetch();
+    }
+
+    @Override
+    public List<Member> findAllByNameContaining(String name) {
+        return query.selectFrom(member)
+                .where(containingName(name))
+                .fetch();
+    }
+
+    BooleanExpression containingName(String name) {
+        return name != null ? member.name.eq(name) : null;
     }
 }

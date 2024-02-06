@@ -21,14 +21,20 @@ public class QAlarm extends EntityPathBase<Alarm> {
 
     public final QBaseEntity _super = new QBaseEntity(this);
 
+    public final StringPath content = createString("content");
+
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final StringPath receiveId = createString("receiveId");
+    public final StringPath readYn = createString("readYn");
 
-    public final StringPath sendId = createString("sendId");
+    public final NumberPath<Long> receiveId = createNumber("receiveId", Long.class);
+
+    public final DateTimePath<java.time.LocalDateTime> regDateTime = createDateTime("regDateTime", java.time.LocalDateTime.class);
+
+    public final NumberPath<Long> sendId = createNumber("sendId", Long.class);
 
     //inherited
     public final StringPath sysRegDbId = _super.sysRegDbId;
@@ -38,6 +44,8 @@ public class QAlarm extends EntityPathBase<Alarm> {
 
     //inherited
     public final StringPath sysUpdReason = _super.sysUpdReason;
+
+    public final StringPath title = createString("title");
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;

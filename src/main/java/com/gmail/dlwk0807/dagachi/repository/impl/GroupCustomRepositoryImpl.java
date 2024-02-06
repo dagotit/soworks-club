@@ -59,7 +59,7 @@ public class GroupCustomRepositoryImpl implements GroupCustomRepository {
     }
 
     private BooleanExpression yearEq(Integer year) {
-        return year != null? group.startDateTime.year().eq(year) : null;
+        return year != null ? group.startDateTime.year().eq(year) : null;
     }
 
     private BooleanExpression monthEq(Integer month) {

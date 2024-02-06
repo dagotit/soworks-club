@@ -41,5 +41,4 @@ file.groupImagePath: local/groupImages/
 file.groupFilePath: local/groupFiles/
 
 logging:
-  level:
-    root: debug
+  config: classpath:bk_logback-spring.xml

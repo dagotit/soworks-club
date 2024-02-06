@@ -68,11 +68,10 @@ public class MemberService {
 
         Member member = authUtils.getCurrentMember();
 
-        //파일 확장자 체크
-        validateImageFile(file);
-
         //모임 이미지 저장
         if (!file.isEmpty()) {
+            //파일 확장자 체크
+            validateImageFile(file);
             try {
                 imageName = profileImageCloudService.uploadProfileImage(file);
                 String deleteResult = profileImageCloudService.deleteProfileImage(member.getProfileImage());
