@@ -25,8 +25,6 @@ public class QBaseEntity extends EntityPathBase<BaseEntity> {
 
     public final StringPath sysUpdDbId = createString("sysUpdDbId");
 
-    public final StringPath sysUpdReason = createString("sysUpdReason");
-
     public final DateTimePath<java.time.LocalDateTime> updatedAt = createDateTime("updatedAt", java.time.LocalDateTime.class);
 
     public QBaseEntity(String variable) {

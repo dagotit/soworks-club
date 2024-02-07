@@ -42,9 +42,6 @@ public class QAlarm extends EntityPathBase<Alarm> {
     //inherited
     public final StringPath sysUpdDbId = _super.sysUpdDbId;
 
-    //inherited
-    public final StringPath sysUpdReason = _super.sysUpdReason;
-
     public final StringPath title = createString("title");
 
     //inherited

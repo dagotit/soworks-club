@@ -30,7 +30,9 @@ public class AlarmService {
         if (!getCurrentMemberId().equals(alarm.getReceiveId())) {
             throw new CustomRespBodyException("알림 id를 확인해주세요.");
         }
-        alarm.updateReadYn();
+        if (alarm.getReadYn().equals("N")) {
+            alarm.updateReadYn();
+        }
 
         return AlarmResponseDTO.of(alarm);
     }

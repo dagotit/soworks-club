@@ -11,7 +11,6 @@ import org.springframework.context.annotation.Configuration;
 import java.util.Arrays;
 
 
-
 @Configuration
 public class SwaggerConfig  {
 
@@ -27,7 +26,6 @@ public class SwaggerConfig  {
                 .security(Arrays.asList(securityRequirement))
                 .info(apiInfo());
     }
-
 
     private Info apiInfo() {
         return new Info()

@@ -103,6 +103,13 @@ public class GroupService {
         Group group = groupRepository.findById(requestDto.getGroupId()).orElseThrow(() -> new CustomRespBodyException("모임정보가 없습니다."));
         authUtils.checkDiffCompany(group);
 
+        if (!authUtils.isAdmin()) {
+            //모임장 체크
+            if (!group.getMemberId().equals(getCurrentMemberId())) {
+                throw new AuthenticationNotMatchException();
+            }
+        }
+
         List<Category> categories = requestDto.getCategoryIds().stream()
                 .map(o -> categoryRepository.findById(o).orElseThrow(() -> new CustomRespBodyException("카테고리 관리번호를 확인해주세요")))
                 .collect(Collectors.toList());
@@ -126,6 +133,14 @@ public class GroupService {
 
         Group group = groupRepository.findById(groupStatusRequestDTO.getGroupId()).orElseThrow(() -> new CustomRespBodyException("모임정보가 없습니다."));
         authUtils.checkDiffCompany(group);
+
+        if (!authUtils.isAdmin()) {
+            //모임장 체크
+            if (!group.getMemberId().equals(getCurrentMemberId())) {
+                throw new AuthenticationNotMatchException();
+            }
+        }
+
         group.updateStatus(GroupStatus.valueOf(groupStatusRequestDTO.getStatus()));
 
         GroupResponseDTO of = GroupResponseDTO.of(group);
@@ -136,6 +151,14 @@ public class GroupService {
     public void deleteGroup(GroupDeleteRequestDTO groupDeleteRequestDTO) {
         Group group = groupRepository.findById(groupDeleteRequestDTO.getGroupId()).orElseThrow(() -> new CustomRespBodyException("모임정보가 없습니다."));
         authUtils.checkDiffCompany(group);
+
+        if (!authUtils.isAdmin()) {
+            //모임장 체크
+            if (!group.getMemberId().equals(getCurrentMemberId())) {
+                throw new AuthenticationNotMatchException();
+            }
+        }
+
         String deleteResult = groupImageService.deleteGroupImage(group.getGroupImage());
         log.info("기존 이미지 삭제 결과 : {}", deleteResult);
 
@@ -155,9 +178,10 @@ public class GroupService {
 
         Group group = groupRepository.findById(requestDto.getGroupId()).orElseThrow(() -> new CustomRespBodyException("모임정보가 없습니다."));
         authUtils.checkDiffCompany(group);
+
         if (!authUtils.isAdmin()) {
             //모임장 체크
-            if (!group.getMemberId().equals(requestDto.getMemberId())) {
+            if (!group.getMemberId().equals(getCurrentMemberId())) {
                 throw new AuthenticationNotMatchException();
             }
         }
@@ -217,6 +241,54 @@ public class GroupService {
         List<GroupResent> result = new ObjectMapper().convertValue(Objects.requireNonNull(groupResents),
                 new TypeReference<>(){});
         return result.stream().collect(Collectors.toList());
+    }
+
+    public String joinDone(GroupAttendYnRequestDTO groupAttendYnRequestDTO) {
+
+        Long groupId = groupAttendYnRequestDTO.getGroupId();
+        Group group = groupRepository.findById(groupId).orElseThrow(() -> new CustomRespBodyException("존재하지 않는 모임입니다."));
+
+        Long currentMemberId = getCurrentMemberId(); // 현재 로그인 id. 모임장 memberId와 같아야함
+        Long joinMemberId = groupAttendYnRequestDTO.getMemberId(); // 완료처리될 참여인원 id
+        Long groupMasterId = group.getMemberId(); // 모임장 id
+
+        if (!authUtils.isAdmin()) {
+            //모임장 체크
+            if (!groupMasterId.equals(currentMemberId)) {
+                throw new AuthenticationNotMatchException();
+            }
+        }
+
+        authUtils.checkDiffCompany(group);
+
+        GroupAttend groupAttend = groupAttendRepository.findByGroupIdAndMemberId(groupId, joinMemberId).orElseThrow(() -> new CustomRespBodyException("참여하지 않은 모임입니다."));
+        groupAttend.updateAttendYn("Y");
+
+        return "모임참석완료";
+    }
+
+    public String joinFail(GroupAttendYnRequestDTO groupAttendYnRequestDTO) {
+
+        Long groupId = groupAttendYnRequestDTO.getGroupId();
+        Group group = groupRepository.findById(groupId).orElseThrow(() -> new CustomRespBodyException("존재하지 않는 모임입니다."));
+
+        Long currentMemberId = getCurrentMemberId(); // 현재 로그인 id. 모임장 memberId와 같아야함
+        Long joinMemberId = groupAttendYnRequestDTO.getMemberId(); // 완료처리될 참여인원 id
+        Long groupMasterId = group.getMemberId(); // 모임장 id
+
+        if (!authUtils.isAdmin()) {
+            //모임장 체크
+            if (!groupMasterId.equals(currentMemberId)) {
+                throw new AuthenticationNotMatchException();
+            }
+        }
+
+        authUtils.checkDiffCompany(group);
+
+        GroupAttend groupAttend = groupAttendRepository.findByGroupIdAndMemberId(groupId, joinMemberId).orElseThrow(() -> new CustomRespBodyException("참여하지 않은 모임입니다."));
+        groupAttend.updateAttendYn("N");
+
+        return "모임참석실패";
     }
 
 }

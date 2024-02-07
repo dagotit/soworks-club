@@ -1,7 +1,6 @@
 package com.gmail.dlwk0807.dagachi.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
@@ -33,6 +32,4 @@ public class BaseEntity {
     @Convert(converter = Jsr310JpaConverters.LocalDateTimeConverter.class)
     @JsonIgnore
     private LocalDateTime updatedAt;
-    @JsonIgnore
-    private String sysUpdReason;
 }

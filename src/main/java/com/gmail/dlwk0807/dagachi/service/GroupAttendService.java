@@ -3,6 +3,7 @@ package com.gmail.dlwk0807.dagachi.service;
 import com.gmail.dlwk0807.dagachi.core.exception.CustomRespBodyException;
 import com.gmail.dlwk0807.dagachi.core.exception.DuplicationGroupAttend;
 import com.gmail.dlwk0807.dagachi.dto.group.GroupAttendRequestDTO;
+import com.gmail.dlwk0807.dagachi.dto.group.GroupAttendYnRequestDTO;
 import com.gmail.dlwk0807.dagachi.dto.group.GroupResponseDTO;
 import com.gmail.dlwk0807.dagachi.dto.member.MemberAttendResponseDTO;
 import com.gmail.dlwk0807.dagachi.entity.Group;
@@ -59,6 +60,7 @@ public class GroupAttendService {
         GroupAttend groupAttend = GroupAttend.builder()
                 .group(group)
                 .member(member)
+                .attendYn("N")
                 .build();
         groupAttendRepository.save(groupAttend);
 

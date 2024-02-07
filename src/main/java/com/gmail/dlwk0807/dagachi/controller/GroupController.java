@@ -95,7 +95,7 @@ public class GroupController {
                 .build();
     }
 
-    @Operation(summary = "모임 상태변경")
+    @Operation(summary = "모임 상태변경[WAITING, FULL, DONE]")
     @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200",description = "OK, 성공"),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "Error Code",description = "Error message",
@@ -157,6 +157,38 @@ public class GroupController {
         return ApiMessageVO.builder()
                 .respMsg(OK_RESP_MSG)
                 .respBody(groupService.recentList())
+                .respCode(OK_RESP_CODE)
+                .build();
+    }
+
+    @Operation(summary = "모임참가자 출석완료")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200",description = "OK, 성공"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "Error Code",description = "Error message",
+                    content = @Content(schema = @Schema(implementation = ApiMessageVO.class))),
+    })
+    @PostMapping("/join-done")
+    public ApiMessageVO joinDone(@Valid @RequestBody GroupAttendYnRequestDTO groupAttendYnRequestDTO) {
+
+        return ApiMessageVO.builder()
+                .respMsg(OK_RESP_MSG)
+                .respBody(groupService.joinDone(groupAttendYnRequestDTO))
+                .respCode(OK_RESP_CODE)
+                .build();
+    }
+
+    @Operation(summary = "모임참가자 출석실패")
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200",description = "OK, 성공"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "Error Code",description = "Error message",
+                    content = @Content(schema = @Schema(implementation = ApiMessageVO.class))),
+    })
+    @PostMapping("/join-fail")
+    public ApiMessageVO joinFail(@Valid @RequestBody GroupAttendYnRequestDTO groupAttendYnRequestDTO) {
+
+        return ApiMessageVO.builder()
+                .respMsg(OK_RESP_MSG)
+                .respBody(groupService.joinFail(groupAttendYnRequestDTO))
                 .respCode(OK_RESP_CODE)
                 .build();
     }

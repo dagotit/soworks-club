@@ -15,8 +15,7 @@ spring:
   sql:
     init:
       mode: always
-logging:
-  config: classpath:bk_logback-spring.xml
+
 
 
 springdoc:

@@ -1,6 +1,7 @@
 package com.gmail.dlwk0807.dagachi.controller;
 
 import com.gmail.dlwk0807.dagachi.dto.group.GroupAttendRequestDTO;
+import com.gmail.dlwk0807.dagachi.dto.group.GroupAttendYnRequestDTO;
 import com.gmail.dlwk0807.dagachi.service.GroupAttendService;
 import com.gmail.dlwk0807.dagachi.vo.ApiMessageVO;
 import io.swagger.v3.oas.annotations.Operation;

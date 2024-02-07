@@ -62,9 +62,6 @@ public class QGroup extends EntityPathBase<Group> {
     public final StringPath sysUpdDbId = _super.sysUpdDbId;
 
     //inherited
-    public final StringPath sysUpdReason = _super.sysUpdReason;
-
-    //inherited
     public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;
 
     public QGroup(String variable) {
