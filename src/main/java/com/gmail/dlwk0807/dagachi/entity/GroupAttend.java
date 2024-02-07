@@ -1,6 +1,7 @@
 package com.gmail.dlwk0807.dagachi.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,6 +11,8 @@ import org.hibernate.annotations.ColumnDefault;
 @NoArgsConstructor
 @Table(name = "GROUP_ATTEND")
 @Entity
+@Builder
+@AllArgsConstructor
 public class GroupAttend extends BaseEntity {
 
     @Id
@@ -17,20 +20,17 @@ public class GroupAttend extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ColumnDefault("'N'")
-    @Column(length = 5)
-    private String attendYn;
+    @Column(length = 2)
+    private String attendYn = "N";
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "GROUP_ID")
     private Group group;
 
-    @Builder
-    public GroupAttend(String attendYn, Member member, Group group) {
+    public void updateAttendYn(String attendYn) {
         this.attendYn = attendYn;
-        this.member = member;
-        this.group = group;
     }
 }

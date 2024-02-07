@@ -4,10 +4,13 @@ import com.gmail.dlwk0807.dagachi.core.config.jwt.TokenProvider;
 import com.gmail.dlwk0807.dagachi.core.exception.CustomRespBodyException;
 import com.gmail.dlwk0807.dagachi.core.exception.DuplicationMember;
 import com.gmail.dlwk0807.dagachi.dto.member.MemberAuthRequestDTO;
+import com.gmail.dlwk0807.dagachi.dto.member.MemberLoginRequestDTO;
 import com.gmail.dlwk0807.dagachi.dto.member.MemberResponseDTO;
 import com.gmail.dlwk0807.dagachi.dto.token.TokenDTO;
+import com.gmail.dlwk0807.dagachi.entity.Company;
 import com.gmail.dlwk0807.dagachi.entity.Member;
 import com.gmail.dlwk0807.dagachi.entity.RefreshToken;
+import com.gmail.dlwk0807.dagachi.repository.CompanyRepository;
 import com.gmail.dlwk0807.dagachi.repository.MemberRepository;
 import com.gmail.dlwk0807.dagachi.repository.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,12 +22,16 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class AuthService {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final MemberRepository memberRepository;
+    private final CompanyRepository companyRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
@@ -32,18 +39,30 @@ public class AuthService {
     @Transactional
     public MemberResponseDTO signup(MemberAuthRequestDTO memberAuthRequestDto) {
         if (memberRepository.existsByEmail(memberAuthRequestDto.getEmail())) {
-            throw new DuplicationMember("이미 가입되어 있는 유저입니다");
+            throw new DuplicationMember("이미 가입되어 있는 유저입니다.");
         }
 
-        Member member = memberAuthRequestDto.toMember(passwordEncoder);
+        Company company = companyRepository.findByBizNo(memberAuthRequestDto.getBizNo())
+                .orElse(Company.builder()
+                        .bizNo(memberAuthRequestDto.getBizNo())
+                        .address(memberAuthRequestDto.getAddress())
+                        .addressDtl(memberAuthRequestDto.getAddressDtl())
+                        .companyName(memberAuthRequestDto.getCompanyName())
+                        .companyDate(memberAuthRequestDto.getCompanyDate())
+                        .build());
 
-        return MemberResponseDTO.of(memberRepository.save(member));
+        companyRepository.save(company);
+
+        Member member = memberAuthRequestDto.toMember(passwordEncoder, company);
+
+        memberRepository.save(member);
+        return MemberResponseDTO.of(member);
     }
 
     @Transactional
-    public TokenDTO login(MemberAuthRequestDTO memberAuthRequestDto) {
+    public TokenDTO login(MemberLoginRequestDTO memberLoginRequestDTO) {
         // 1. Login ID/PW 를 기반으로 AuthenticationToken 생성
-        UsernamePasswordAuthenticationToken authenticationToken = memberAuthRequestDto.toAuthentication();
+        UsernamePasswordAuthenticationToken authenticationToken = memberLoginRequestDTO.toAuthentication();
 
         // 2. 실제로 검증 (사용자 비밀번호 체크) 이 이루어지는 부분
         //    authenticate 메서드가 실행이 될 때 CustomUserDetailsService 에서 만들었던 loadUserByUsername 메서드가 실행됨
@@ -60,6 +79,9 @@ public class AuthService {
 
         refreshTokenRepository.save(refreshToken);
 
+        // 4-1. 회원 최근 로그인 일시 업데이트
+        Member member = memberRepository.findByEmail(memberLoginRequestDTO.getEmail()).orElseThrow(() -> new CustomRespBodyException("이메일정보를 확인해주세요"));
+        member.updateLastLoginDate(LocalDateTime.now(ZoneId.of("Asia/Seoul")));
         // 5. 토큰 발급
         return tokenDto;
     }

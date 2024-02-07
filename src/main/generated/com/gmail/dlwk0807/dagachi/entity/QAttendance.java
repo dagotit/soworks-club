@@ -40,9 +40,6 @@ public class QAttendance extends EntityPathBase<Attendance> {
     public final StringPath sysUpdDbId = _super.sysUpdDbId;
 
     //inherited
-    public final StringPath sysUpdReason = _super.sysUpdReason;
-
-    //inherited
     public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;
 
     public QAttendance(String variable) {
@@ -63,7 +60,7 @@ public class QAttendance extends EntityPathBase<Attendance> {
 
     public QAttendance(Class<? extends Attendance> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.member = inits.isInitialized("member") ? new QMember(forProperty("member")) : null;
+        this.member = inits.isInitialized("member") ? new QMember(forProperty("member"), inits.get("member")) : null;
     }
 
 }

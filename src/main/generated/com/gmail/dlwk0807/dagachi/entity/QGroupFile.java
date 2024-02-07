@@ -27,8 +27,6 @@ public class QGroupFile extends EntityPathBase<GroupFile> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
 
-    public final StringPath delete_yn = createString("delete_yn");
-
     public final QGroup group;
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
@@ -37,16 +35,13 @@ public class QGroupFile extends EntityPathBase<GroupFile> {
 
     public final StringPath saveName = createString("saveName");
 
-    public final StringPath size = createString("size");
+    public final NumberPath<Long> size = createNumber("size", Long.class);
 
     //inherited
     public final StringPath sysRegDbId = _super.sysRegDbId;
 
     //inherited
     public final StringPath sysUpdDbId = _super.sysUpdDbId;
-
-    //inherited
-    public final StringPath sysUpdReason = _super.sysUpdReason;
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;
@@ -69,7 +64,7 @@ public class QGroupFile extends EntityPathBase<GroupFile> {
 
     public QGroupFile(Class<? extends GroupFile> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.group = inits.isInitialized("group") ? new QGroup(forProperty("group")) : null;
+        this.group = inits.isInitialized("group") ? new QGroup(forProperty("group"), inits.get("group")) : null;
     }
 
 }
