@@ -21,6 +21,7 @@ public class GroupAttend extends BaseEntity {
     private Long id;
     @ColumnDefault("'N'")
     @Column(length = 2)
+    @Builder.Default
     private String attendYn = "N";
 
     @ManyToOne(fetch = FetchType.LAZY)

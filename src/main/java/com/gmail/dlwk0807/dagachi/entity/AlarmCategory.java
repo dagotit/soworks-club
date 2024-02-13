@@ -21,7 +21,7 @@ public class AlarmCategory {
 
     @MapsId("companyId")
     @ManyToOne
-    @JoinColumn(name = "Company_ID")
+    @JoinColumn(name = "COMPANY_ID")
     private Company company;
 
 }
