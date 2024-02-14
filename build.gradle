@@ -39,6 +39,7 @@ dependencies {
 	implementation group: 'org.apache.tika', name: 'tika-core', version: '2.5.0'
 	implementation 'com.google.firebase:firebase-admin:9.1.1'
 
+	//axon 일단 주석처리 -> update, select 쿼리 너무 많이 발생
 	implementation('org.axonframework:axon-spring-boot-starter:4.9.1') {
 		exclude group: 'org.axonframework', module: 'axon-server-connector'
 	}

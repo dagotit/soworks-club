@@ -143,6 +143,11 @@ public class GroupService {
 
         group.updateStatus(GroupStatus.valueOf(groupStatusRequestDTO.getStatus()));
 
+        /**
+         * 1. 모임 종료(DONE)시점에 참가 "Y"인 인원 가산
+         * 2.
+         */
+
         GroupResponseDTO of = GroupResponseDTO.of(group);
 
         return of;
