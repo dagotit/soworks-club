@@ -40,13 +40,13 @@ public class SecurityConfig {
             )
             .authorizeHttpRequests(a -> {
                 a.requestMatchers(new AntPathRequestMatcher("/h2-console/**")
-                                , new AntPathRequestMatcher("/favicon.ico")
-                                , new AntPathRequestMatcher("/swagger-ui/**")
-                                , new AntPathRequestMatcher("context-path/**")
-                                , new AntPathRequestMatcher("/api/v1/auth/**")
-                                , new AntPathRequestMatcher("/api/v1/mails/**")
-                                , new AntPathRequestMatcher("/v3/api-docs/**")
-                                ).permitAll();
+                        , new AntPathRequestMatcher("/favicon.ico")
+                        , new AntPathRequestMatcher("/swagger-ui/**")
+                        , new AntPathRequestMatcher("context-path/**")
+                        , new AntPathRequestMatcher("/api/v1/auth/**")
+                        , new AntPathRequestMatcher("/api/v1/mails/**")
+                        , new AntPathRequestMatcher("/v3/api-docs/**")
+                ).permitAll();
                 a.requestMatchers(new AntPathRequestMatcher("/api/v1/admin/**"))
                         .hasRole("ADMIN");
                 a.anyRequest().authenticated();

@@ -38,6 +38,11 @@ dependencies {
 	implementation group: 'org.apache.poi', name: 'poi-ooxml', version: '5.0.0'
 	implementation group: 'org.apache.tika', name: 'tika-core', version: '2.5.0'
 	implementation 'com.google.firebase:firebase-admin:9.1.1'
+
+	implementation('org.axonframework:axon-spring-boot-starter:4.9.1') {
+		exclude group: 'org.axonframework', module: 'axon-server-connector'
+	}
+
 	runtimeOnly 'com.h2database:h2'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	compileOnly 'org.projectlombok:lombok'
