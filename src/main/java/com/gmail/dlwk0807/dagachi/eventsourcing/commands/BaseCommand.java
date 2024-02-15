@@ -1,13 +1,13 @@
-package com.gmail.dlwk0807.dagachi.eventsourcing.commands;
-
-import org.axonframework.modelling.command.TargetAggregateIdentifier;
-
-public class BaseCommand<T> {
-
-    @TargetAggregateIdentifier
-    public final T id;
-
-    public BaseCommand(T id) {
-        this.id = id;
-    }
-}
+//package com.gmail.dlwk0807.dagachi.eventsourcing.commands;
+//
+//import org.axonframework.modelling.command.TargetAggregateIdentifier;
+//
+//public class BaseCommand<T> {
+//
+//    @TargetAggregateIdentifier
+//    public final T id;
+//
+//    public BaseCommand(T id) {
+//        this.id = id;
+//    }
+//}

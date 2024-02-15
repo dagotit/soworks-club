@@ -6,6 +6,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Table(name = "TITLE")
 @Entity
@@ -13,14 +16,22 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @NoArgsConstructor
-public class Title extends BaseEntity {
+public class Title {
 
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String titleNo;
     private String titleName;
 
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
+
+    @Builder.Default
+    @OneToMany(mappedBy = "title")
+    private List<MemberTitle> titles = new ArrayList<>();
+
+    private Long requiredCount;
 
 }

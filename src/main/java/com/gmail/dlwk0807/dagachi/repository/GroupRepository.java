@@ -2,6 +2,7 @@ package com.gmail.dlwk0807.dagachi.repository;
 
 import com.gmail.dlwk0807.dagachi.entity.Company;
 import com.gmail.dlwk0807.dagachi.entity.Group;
+import com.gmail.dlwk0807.dagachi.entity.GroupStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -20,4 +21,6 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
     List<Group> findAllByNameContainingOrCategoryContaining(String keyword);
 
     Optional<Group> findByIdAndCompany(Long groupId, Company currentCompany);
+
+    List<Group> findAllByStatusNotInAndEndDateTimeBefore(List<GroupStatus> statuses, LocalDateTime oneWeekAgo);
 }

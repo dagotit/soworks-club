@@ -44,15 +44,13 @@ public class Member extends BaseEntity {
     private LocalDateTime lastLoginDate;
     private LocalDateTime emailAuth;
     private String status;
+    @Builder.Default
+    private int score = 0;
     private String profileImage;
     private String repNameTitle;
 
-    @Builder.Default
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "member_title",
-            joinColumns = @JoinColumn(name = "member_id"),
-            inverseJoinColumns = @JoinColumn(name = "title_id"))
-    private List<Title> titles = new ArrayList<>();
+    @OneToMany(mappedBy = "member")
+    private List<MemberTitle> titles = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     @JsonIgnore
@@ -99,6 +97,10 @@ public class Member extends BaseEntity {
 
     public void updateLastLoginDate(LocalDateTime lastLoginDate) {
         this.lastLoginDate = lastLoginDate;
+    }
+
+    public void addScore(int num) {
+        this.score += num;
     }
 
 }

@@ -53,6 +53,8 @@ public class QMember extends EntityPathBase<Member> {
 
     public final StringPath repNameTitle = createString("repNameTitle");
 
+    public final NumberPath<Integer> score = createNumber("score", Integer.class);
+
     public final StringPath status = createString("status");
 
     //inherited
@@ -61,7 +63,7 @@ public class QMember extends EntityPathBase<Member> {
     //inherited
     public final StringPath sysUpdDbId = _super.sysUpdDbId;
 
-    public final ListPath<Title, QTitle> titles = this.<Title, QTitle>createList("titles", Title.class, QTitle.class, PathInits.DIRECT2);
+    public final ListPath<MemberTitle, QMemberTitle> titles = this.<MemberTitle, QMemberTitle>createList("titles", MemberTitle.class, QMemberTitle.class, PathInits.DIRECT2);
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;
