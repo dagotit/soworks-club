@@ -18,3 +18,16 @@ values
     (16, '요리/제조'),
     (17, '반려동물'),
     (18, '야구관람');
+
+insert into title (id, CATEGORY_ID, TITLE_NAME)
+values
+    (1, NULL, '신입'),
+    (2, NULL, '여행자'),
+    (3, NULL, '애주가'),
+    (4, NULL, '자연인'),
+    (5, NULL, '셰르파'),
+    (6, NULL, '골퍼'),
+    (7, NULL, '스트라이크'),
+    (8, NULL, '뚜벅이'),
+    (9, NULL, '라켓전문')
+;

@@ -7,10 +7,7 @@ import com.gmail.dlwk0807.dagachi.core.exception.CustomRespBodyException;
 import com.gmail.dlwk0807.dagachi.core.exception.DuplicationGroup;
 import com.gmail.dlwk0807.dagachi.dto.group.*;
 import com.gmail.dlwk0807.dagachi.entity.*;
-import com.gmail.dlwk0807.dagachi.repository.CategoryRepository;
-import com.gmail.dlwk0807.dagachi.repository.GroupAttendRepository;
-import com.gmail.dlwk0807.dagachi.repository.GroupFileRepository;
-import com.gmail.dlwk0807.dagachi.repository.GroupRepository;
+import com.gmail.dlwk0807.dagachi.repository.*;
 import com.gmail.dlwk0807.dagachi.repository.impl.GroupCustomRepositoryImpl;
 import com.gmail.dlwk0807.dagachi.util.AuthUtils;
 import lombok.RequiredArgsConstructor;
@@ -24,12 +21,10 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.gmail.dlwk0807.dagachi.entity.CmnScore.*;
 import static com.gmail.dlwk0807.dagachi.util.FileUtils.validateImageFile;
 import static com.gmail.dlwk0807.dagachi.util.FileUtils.validateImageFiles;
 import static com.gmail.dlwk0807.dagachi.util.SecurityUtils.getCurrentMemberId;
@@ -47,8 +42,10 @@ public class GroupService {
     private final GroupImageService groupImageService;
     private final CategoryRepository categoryRepository;
     private final GroupFileRepository groupFileRepository;
+    private final MemberRepository memberRepository;
     private final GroupFileCloudService groupFileCloudService;
     private final RedisTemplate<String, GroupResent> redisTemplate;
+    private final TitleRepository titleRepository;
 
     public GroupResponseDTO saveGroup(GroupSaveRequestDTO requestDto, MultipartFile groupImageFile) throws Exception {
 
@@ -88,6 +85,8 @@ public class GroupService {
         group.getGroupAttendList().add(attend);
 
         GroupResponseDTO of = GroupResponseDTO.of(group);
+
+        member.addScore(MAKE_GROUP.getScore());
 
         return of;
     }
@@ -141,11 +140,41 @@ public class GroupService {
             }
         }
 
-        group.updateStatus(GroupStatus.valueOf(groupStatusRequestDTO.getStatus()));
+        GroupStatus newStatus = GroupStatus.valueOf(groupStatusRequestDTO.getStatus());
 
+        /**
+         * 1. 모임 종료(DONE)시점에 참가 "Y"인 인원 가산
+         * 2. 해당 카테고리 횟수 체크해서 타이틀(칭호) 발급
+         */
+        if (newStatus == GroupStatus.DONE && group.getStatus() != GroupStatus.DONE) {
+            updateCompleteGroupScore(group);
+            checkTitles(group);
+        }
+
+        group.updateStatus(newStatus);
         GroupResponseDTO of = GroupResponseDTO.of(group);
 
         return of;
+    }
+
+    private void updateCompleteGroupScore(Group group) {
+        for (GroupAttend attendee : group.getGroupAttendList()) {
+            if ("Y".equals(attendee.getAttendYn())) {
+                Member member = attendee.getMember();
+                member.addScore(CmnScore.COMPLETE_GROUP.getScore());
+            }
+        }
+    }
+
+    private void checkTitles(Group group) {
+        for (GroupAttend attendee : group.getGroupAttendList()) {
+            if ("Y".equals(attendee.getAttendYn())) {
+                Member member = attendee.getMember();
+                //group category로 해당 타이틀 조회
+//                titleRepository.findByCategory(group.)
+
+            }
+        }
     }
 
     public void deleteGroup(GroupDeleteRequestDTO groupDeleteRequestDTO) {
@@ -158,12 +187,16 @@ public class GroupService {
                 throw new AuthenticationNotMatchException();
             }
         }
+        //모임관련 클라우드파일 삭제
+        String imageDeleteResult = groupImageService.deleteGroupImage(group.getGroupImage());
+        log.info("기존 이미지 삭제 결과 : {}", imageDeleteResult);
 
-        String deleteResult = groupImageService.deleteGroupImage(group.getGroupImage());
-        log.info("기존 이미지 삭제 결과 : {}", deleteResult);
+        String attachDeleteResult = groupFileCloudService.deleteGroupImageFolder(group.getId());
+        log.info("기존 첨부파일 삭제 결과 : {}", attachDeleteResult);
 
-        //delete group 첨부파일 작업필요
-        groupFileCloudService.deleteGroupImageFolder(group.getId());
+        //모임장 가산점 회수
+        Member member = memberRepository.findById(group.getMemberId()).orElseThrow(() -> new CustomRespBodyException("회원이 존재하지 않습니다."));
+        member.addScore(FAIL_GROUP.getScore());
 
         groupRepository.delete(group);
     }
@@ -290,5 +323,20 @@ public class GroupService {
 
         return "모임참석실패";
     }
+
+    public void setFailAndMinusScore() {
+        //종료일이랑 지금이랑 일주일 이상 차이나는 모임 조회
+        //현재 일시각에서 7일 전
+        LocalDateTime oneWeekAgo = LocalDateTime.now().minusDays(7);
+        List<GroupStatus> statuses = List.of(GroupStatus.valueOf("DONE"), GroupStatus.valueOf("FAIL"));
+        List<Group> expiredGroups = groupRepository.findAllByStatusNotInAndEndDateTimeBefore(statuses, oneWeekAgo);
+
+        for (Group expiredGroup : expiredGroups) {
+            expiredGroup.updateStatus(GroupStatus.FAIL);
+            Member member = memberRepository.findById(expiredGroup.getMemberId()).orElseThrow(() -> new CustomRespBodyException("회원이 존재하지 않습니다."));
+            member.addScore(FAIL_GROUP.getScore());
+        }
+    }
+
 
 }

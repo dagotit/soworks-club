@@ -1,6 +1,7 @@
 package com.gmail.dlwk0807.dagachi.service;
 
 import com.gmail.dlwk0807.dagachi.entity.Attendance;
+import com.gmail.dlwk0807.dagachi.entity.CmnScore;
 import com.gmail.dlwk0807.dagachi.entity.Member;
 import com.gmail.dlwk0807.dagachi.repository.AttendanceRepository;
 import com.gmail.dlwk0807.dagachi.util.AuthUtils;
@@ -31,6 +32,9 @@ public class AttendanceService {
 
         member.addAttendance(attendance);
         attendanceRepository.save(attendance);
+
+        member.addScore(CmnScore.DAILY_ATTENDANCE.getScore());
+
         return "출석완료";
     }
 }

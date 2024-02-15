@@ -12,6 +12,6 @@ import lombok.Setter;
 public class GroupStatusRequestDTO extends AOPMemberIdDTO {
     @Schema(description = "모임관리번호", nullable = true, example = "1")
     private Long groupId;
-    @Schema(description = "모임상태 [WAITING, FULL, DONE]", nullable = true, example = "DONE")
+    @Schema(description = "모임상태 [WAITING, FULL, DONE, FAIL]", nullable = true, example = "DONE")
     private String status;
 }
