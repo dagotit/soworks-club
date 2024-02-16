@@ -20,13 +20,16 @@ public class GCSService {
     @SuppressWarnings("deprecation")
     public BlobInfo uploadFileToGCS(UploadReqDto uploadReqDto) throws IOException {
 
-        FileInputStream fileInputStream = new FileInputStream(getClass().getResource("/tmpImage/test1.png").getFile());
-        BlobInfo blobInfo =storage.create(
-                BlobInfo.newBuilder(uploadReqDto.getBucketName(), uploadReqDto.getUploadFileName())
-                        .build(),
-                        fileInputStream);
-
-        return blobInfo;
+        try(FileInputStream fileInputStream = new FileInputStream(getClass().getResource("/tmpImage/test1.png").getFile())) {
+            BlobInfo blobInfo = storage.create(
+                    BlobInfo.newBuilder(uploadReqDto.getBucketName(), uploadReqDto.getUploadFileName())
+                            .build(),
+                    fileInputStream);
+            return blobInfo;
+        } catch (Exception e) {
+            log.error("GCS 파일 업로드 실패");
+        }
+        return null;
     }
 
 }

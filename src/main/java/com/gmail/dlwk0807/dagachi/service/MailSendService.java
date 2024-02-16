@@ -11,6 +11,7 @@ import io.micrometer.common.util.StringUtils;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,6 +23,7 @@ import static com.gmail.dlwk0807.dagachi.util.CommonUtils.createCode;
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class MailSendService {
 
     private final JavaMailSender mailSender;
@@ -63,34 +65,92 @@ public class MailSendService {
         }
     }
 
-    private String makeHTMLAndSendMail(String email, String content) throws MessagingException {
+//    private String makeHTMLAndSendMail(String email, String content) throws MessagingException {
+//        MimeMessage mimeMessage = mailSender.createMimeMessage();
+//        if (mimeMessage == null) {
+//            log.info("local환경 바로 리턴");
+//            return "env => local";
+//        }
+//        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage);
+//        helper.setTo(email);
+//        helper.setSubject("다가치 이메일 인증 번호입니다.");
+//
+//        String msgg="";
+//        msgg+= "<div style='margin:20px;'>";
+//        msgg+= "<h1> 안녕하세요 다가치입니다. </h1>";
+//        msgg+= "<br>";
+//        msgg+= "<p>아래 코드를 복사해 입력해주세요<p>";
+//        msgg+= "<br>";
+//        msgg+= "<p>감사합니다.<p>";
+//        msgg+= "<br>";
+//        msgg+= "<div align='center' style='border:1px solid black; font-family:verdana';>";
+//        msgg+= "<h3 style='color:blue;'>인증 코드입니다.</h3>";
+//        msgg+= "<div style='font-size:130%'>";
+//        msgg+= "CODE : <strong>";
+//        msgg+= content+"</strong><div><br/> ";
+//        msgg+= "</div>";
+//        helper.setText(msgg, true);//내용
+//
+//        mailSender.send(mimeMessage);
+//        return "ok";
+//    }
+//
+//    private String makePasswordAndSendMail(String email, String content) throws MessagingException {
+//        MimeMessage mimeMessage = mailSender.createMimeMessage();
+//        if (mimeMessage == null) {
+//            log.info("local환경 바로 리턴");
+//            return "env => local";
+//        }
+//        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage);
+//        helper.setTo(email);
+//        helper.setSubject("다가치 변경 패스워드 발송 메일입니다.");
+//
+//        String msgg="";
+//        msgg+= "<div style='margin:20px;'>";
+//        msgg+= "<h1> 안녕하세요 다가치입니다. </h1>";
+//        msgg+= "<br>";
+//        msgg+= "<p>변경된 패스워드는 다음과 같습니다.<p>";
+//        msgg+= "<br>";
+//        msgg+= "<p>감사합니다.<p>";
+//        msgg+= "<br>";
+//        msgg+= "<div align='center' style='border:1px solid black; font-family:verdana';>";
+//        msgg+= "<h3 style='color:blue;'>패스워드 입니다.</h3>";
+//        msgg+= "<div style='font-size:130%'>";
+//        msgg+= "PASSWORD : <strong>";
+//        msgg+= content+"</strong><div><br/> ";
+//        msgg+= "</div>";
+//        helper.setText(msgg, true);//내용
+//
+//        mailSender.send(mimeMessage);
+//        return "ok";
+//    }
+
+    private String sendMail(String email, String subject, String greeting, String content, String additionalMessage) throws MessagingException {
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         if (mimeMessage == null) {
-            System.out.println("local환경 바로 리턴");
+            log.info("local 환경 바로 리턴");
             return "env => local";
         }
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage);
         helper.setTo(email);
-        helper.setSubject("다가치 이메일 인증 번호입니다.");
+        helper.setSubject(subject);
 
-        String msgg="";
-        msgg+= "<div style='margin:20px;'>";
-        msgg+= "<h1> 안녕하세요 다가치입니다. </h1>";
-        msgg+= "<br>";
-        msgg+= "<p>아래 코드를 복사해 입력해주세요<p>";
-        msgg+= "<br>";
-        msgg+= "<p>감사합니다.<p>";
-        msgg+= "<br>";
-        msgg+= "<div align='center' style='border:1px solid black; font-family:verdana';>";
-        msgg+= "<h3 style='color:blue;'>인증 코드입니다.</h3>";
-        msgg+= "<div style='font-size:130%'>";
-        msgg+= "CODE : <strong>";
-        msgg+= content+"</strong><div><br/> ";
-        msgg+= "</div>";
-        helper.setText(msgg, true);//내용
+        String message = String.format("<div style='margin:20px;'><h1>%s</h1><br><p>%s<p><br><p>%s<p><br>" +
+                        "<div align='center' style='border:1px solid black; font-family:verdana';><h3 style='color:blue;'>%s</h3>" +
+                        "<div style='font-size:130%%'>%s: <strong>%s</strong><div><br/></div>",
+                greeting, additionalMessage, "감사합니다.", content, additionalMessage, content);
 
+        helper.setText(message, true); // 내용
         mailSender.send(mimeMessage);
         return "ok";
+    }
+
+    public String makeHTMLAndSendMail(String email, String code) throws MessagingException {
+        return sendMail(email, "다가치 이메일 인증 번호입니다.", "안녕하세요 다가치입니다.", code, "인증 코드입니다.");
+    }
+
+    public String makePasswordAndSendMail(String email, String password) throws MessagingException {
+        return sendMail(email, "다가치 변경 패스워드 발송 메일입니다.", "안녕하세요 다가치입니다.", password, "패스워드 입니다.");
     }
 
     public String sendEmailForUpdatePassword(String email) throws MessagingException {
@@ -103,35 +163,5 @@ public class MailSendService {
         member.setPassword(passwordEncoder.encode(password));
         return "ok";
 
-    }
-
-    private String makePasswordAndSendMail(String email, String content) throws MessagingException {
-        MimeMessage mimeMessage = mailSender.createMimeMessage();
-        if (mimeMessage == null) {
-            System.out.println("local환경 바로 리턴");
-            return "env => local";
-        }
-        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage);
-        helper.setTo(email);
-        helper.setSubject("다가치 변경 패스워드 발송 메일입니다.");
-
-        String msgg="";
-        msgg+= "<div style='margin:20px;'>";
-        msgg+= "<h1> 안녕하세요 다가치입니다. </h1>";
-        msgg+= "<br>";
-        msgg+= "<p>변경된 패스워드는 다음과 같습니다.<p>";
-        msgg+= "<br>";
-        msgg+= "<p>감사합니다.<p>";
-        msgg+= "<br>";
-        msgg+= "<div align='center' style='border:1px solid black; font-family:verdana';>";
-        msgg+= "<h3 style='color:blue;'>패스워드 입니다.</h3>";
-        msgg+= "<div style='font-size:130%'>";
-        msgg+= "PASSWORD : <strong>";
-        msgg+= content+"</strong><div><br/> ";
-        msgg+= "</div>";
-        helper.setText(msgg, true);//내용
-
-        mailSender.send(mimeMessage);
-        return "ok";
     }
 }

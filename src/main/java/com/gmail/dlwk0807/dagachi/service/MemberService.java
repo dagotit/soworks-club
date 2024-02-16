@@ -78,7 +78,7 @@ public class MemberService {
                 log.info("기존 이미지 삭제 결과 : {}", deleteResult);
                 member.updateProfileImage(imageName);
             } catch (Exception e) {
-                throw new CustomRespBodyException("이미지 업로드에 실패하였습니다.");
+                throw new CustomRespBodyException("이미지 업로드에 실패하였습니다.", e);
             }
         }
 
