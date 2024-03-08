@@ -2,12 +2,15 @@ package com.gmail.dlwk0807.dagachi.core.exception;
 
 import com.gmail.dlwk0807.dagachi.vo.ApiMessageVO;
 import io.micrometer.common.util.StringUtils;
+import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.ConfigurableEnvironment;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailAuthenticationException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -38,10 +41,7 @@ public class CommonExceptionHandler {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<?> unknownError(RuntimeException e) {
-        String respBody = "";
-//        if (getProfile()) {
-            respBody = e.getMessage();
-//        }
+        String respBody = e.getMessage();
         log.error(this.getClass().getName(), e);
 
         if (e.getLocalizedMessage().contains("timed-out and fallback")) {
@@ -60,10 +60,8 @@ public class CommonExceptionHandler {
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public ResponseEntity<?> requiredParamError(MissingServletRequestParameterException e) {
-        String respBody = "";
-//        if (getProfile()) {
-            respBody = e.getMessage();
-//        }
+        String respBody = e.getMessage();
+
         return new ResponseEntity<ApiMessageVO>(ApiMessageVO.builder()
                 .respCode("BIZ_003")
                 .respBody(respBody)
@@ -88,12 +86,8 @@ public class CommonExceptionHandler {
 
     @ExceptionHandler(BindException.class)
     public ResponseEntity<?> bindException(BindException e) {
-        String respBody = "";
-//        if (getProfile()) {
-            respBody = e.getMessage();
-//        }
+        String respBody = e.getMessage();
         String firstMsg = e.getBindingResult().getAllErrors().get(0).getCodes()[0];
-//        String firstMsg = e.getBindingResult().getAllErrors().get(0).getDefaultMessage();
         return new ResponseEntity<ApiMessageVO>(ApiMessageVO.builder()
                 .respCode("BIZ_005")
                 .respBody(respBody)
@@ -102,24 +96,20 @@ public class CommonExceptionHandler {
 
     @ExceptionHandler(ResourceAccessException.class)
     public ResponseEntity<?> resourceAccessError(ResourceAccessException e) {
-        String respBody = "";
-//        if (getProfile()) {
-            respBody = e.getMessage();
-//        }
+        String respBody = e.getMessage();
         log.error(this.getClass().getName(), e);
+
         return new ResponseEntity<ApiMessageVO>(ApiMessageVO.builder()
                 .respCode("BIZ_006")
                 .respBody(respBody)
                 .respMsg("외부 리소스 조회 오류 입니다.[자세한 내용은 서버에 문의 주세요]").build(), HttpStatus.GATEWAY_TIMEOUT);
     }
 
-    @ExceptionHandler(BadCredentialsCustomException.class)
-    public ResponseEntity<?> badCredentialsCustomException(BadCredentialsCustomException e) {
-        String respBody = "";
-//        if (getProfile()) {
-            respBody = e.getMessage();
-//        }
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<?> BadCredentialsException(BadCredentialsException e) {
+        String respBody = e.getMessage();
         log.error(this.getClass().getName(), e);
+
         return new ResponseEntity<ApiMessageVO>(ApiMessageVO.builder()
                 .respCode("BIZ_007")
                 .respBody(respBody)
@@ -128,11 +118,9 @@ public class CommonExceptionHandler {
 
     @ExceptionHandler(DuplicationMember.class)
     public ResponseEntity<?> duplicationMember(DuplicationMember e) {
-        String respBody = "";
-//        if (getProfile()) {
-            respBody = e.getMessage();
-//        }
+        String respBody = e.getMessage();
         log.error(this.getClass().getName(), e);
+
         return new ResponseEntity<ApiMessageVO>(ApiMessageVO.builder()
                 .respCode("BIZ_008")
                 .respBody(respBody)
@@ -141,11 +129,9 @@ public class CommonExceptionHandler {
 
     @ExceptionHandler(InvalidCertificationNumberException.class)
     public ResponseEntity<?> invalidCertificationNumberException(InvalidCertificationNumberException e) {
-        String respBody = "";
-//        if (getProfile()) {
-            respBody = e.getMessage();
-//        }
+        String respBody = e.getMessage();
         log.error(this.getClass().getName(), e);
+
         return new ResponseEntity<ApiMessageVO>(ApiMessageVO.builder()
                 .respCode("BIZ_009")
                 .respBody(respBody)
@@ -154,11 +140,9 @@ public class CommonExceptionHandler {
 
     @ExceptionHandler(EmailNotFoundException.class)
     public ResponseEntity<?> emailNotFoundException(EmailNotFoundException e) {
-        String respBody = "";
-//        if (getProfile()) {
-            respBody = e.getMessage();
-//        }
+        String respBody = e.getMessage();
         log.error(this.getClass().getName(), e);
+
         return new ResponseEntity<ApiMessageVO>(ApiMessageVO.builder()
                 .respCode("BIZ_010")
                 .respBody(respBody)
@@ -167,11 +151,9 @@ public class CommonExceptionHandler {
 
     @ExceptionHandler(DuplicationEmailSenderException.class)
     public ResponseEntity<?> duplicationEmailSenderException(DuplicationEmailSenderException e) {
-        String respBody = "";
-//        if (getProfile()) {
-            respBody = e.getMessage();
-//        }
+        String respBody = e.getMessage();
         log.error(this.getClass().getName(), e);
+
         return new ResponseEntity<ApiMessageVO>(ApiMessageVO.builder()
                 .respCode("BIZ_011")
                 .respBody(respBody)
@@ -181,11 +163,9 @@ public class CommonExceptionHandler {
 
     @ExceptionHandler(MailAuthenticationException.class)
     public ResponseEntity<?> mailAuthenticationException(MailAuthenticationException e) {
-        String respBody = "";
-//        if (getProfile()) {
-            respBody = e.getMessage();
-//        }
+        String respBody = e.getMessage();
         log.error(this.getClass().getName(), e);
+
         return new ResponseEntity<ApiMessageVO>(ApiMessageVO.builder()
                 .respCode("BIZ_012")
                 .respBody(respBody)
@@ -194,9 +174,9 @@ public class CommonExceptionHandler {
 
     @ExceptionHandler(MemberCheckException.class)
     public ResponseEntity<?> mailAuthenticationException(MemberCheckException e) {
-        String respBody = "";
-        respBody = e.getMessage();
+        String respBody = e.getMessage();
         log.error(this.getClass().getName(), e);
+
         return new ResponseEntity<ApiMessageVO>(ApiMessageVO.builder()
                 .respCode("BIZ_013")
                 .respBody(respBody)
@@ -205,9 +185,9 @@ public class CommonExceptionHandler {
 
     @ExceptionHandler(AuthenticationNotMatchException.class)
     public ResponseEntity<?> authenticationNotMatchException(AuthenticationNotMatchException e) {
-        String respBody = "";
-        respBody = e.getMessage();
+        String respBody = e.getMessage();
         log.error(this.getClass().getName(), e);
+
         return new ResponseEntity<ApiMessageVO>(ApiMessageVO.builder()
                 .respCode("BIZ_014")
                 .respBody(respBody)
@@ -216,9 +196,9 @@ public class CommonExceptionHandler {
 
     @ExceptionHandler(AttendDuplicationException.class)
     public ResponseEntity<?> attendDuplicationException(AttendDuplicationException e) {
-        String respBody = "";
-        respBody = e.getMessage();
+        String respBody = e.getMessage();
         log.error(this.getClass().getName(), e);
+
         return new ResponseEntity<ApiMessageVO>(ApiMessageVO.builder()
                 .respCode("BIZ_015")
                 .respBody(respBody)
@@ -227,9 +207,9 @@ public class CommonExceptionHandler {
 
     @ExceptionHandler(DuplicationGroup.class)
     public ResponseEntity<?> duplicationGroup(DuplicationGroup e) {
-        String respBody = "";
-        respBody = e.getMessage();
+        String respBody = e.getMessage();
         log.error(this.getClass().getName(), e);
+
         return new ResponseEntity<ApiMessageVO>(ApiMessageVO.builder()
                 .respCode("BIZ_016")
                 .respBody(respBody)
@@ -238,9 +218,9 @@ public class CommonExceptionHandler {
 
     @ExceptionHandler(DuplicationGroupAttend.class)
     public ResponseEntity<?> duplicationGroupAttend(DuplicationGroupAttend e) {
-        String respBody = "";
-        respBody = e.getMessage();
+        String respBody = e.getMessage();
         log.error(this.getClass().getName(), e);
+
         return new ResponseEntity<ApiMessageVO>(ApiMessageVO.builder()
                 .respCode("BIZ_017")
                 .respBody(respBody)
@@ -249,47 +229,46 @@ public class CommonExceptionHandler {
 
     @ExceptionHandler(CustomRespBodyException.class)
     public ResponseEntity<?> customRespBodyException(CustomRespBodyException e) {
-        String respBody = "";
-        respBody = e.getMessage();
+        String respBody = e.getMessage();
         log.error(this.getClass().getName(), e);
+
         return new ResponseEntity<ApiMessageVO>(ApiMessageVO.builder()
                 .respCode("BIZ_018")
                 .respBody(respBody)
-                .respMsg("오류가 발생했습니다.").build(), HttpStatus.OK);
+                .respMsg("오류가 발생했습니다. 메세지를 확인해주세요.").build(), HttpStatus.OK);
     }
 
     @ExceptionHandler(AccessDeniedCustomException.class)
     public ResponseEntity<?> accessDeniedCustomException(AccessDeniedCustomException e) {
-        String respBody = "";
-        respBody = e.getMessage();
+        String respBody = e.getMessage();
         log.error(this.getClass().getName(), e);
+
         return new ResponseEntity<ApiMessageVO>(ApiMessageVO.builder()
                 .respCode("BIZ_019")
                 .respBody(respBody)
                 .respMsg("접근권한이 없습니다.").build(), HttpStatus.OK);
     }
 
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<?> constraintViolationException(ConstraintViolationException e) {
+        String respBody = e.getMessage();
+        log.error(this.getClass().getName(), e);
 
-
-    private boolean getProfile() {
-        try {
-            String profile = env.getActiveProfiles()[0];
-            if (StringUtils.isNotEmpty(profile)) {
-                if ("local".equals(profile)) {
-                    return true;
-                } else if ("default".equals(profile)) {
-                    return true;
-                } else if ("dev".equals(profile)) {
-                    return true;
-                } else {
-                    return false;
-                }
-            } else {
-                return false;
-            }
-        } catch (Exception exc) {
-            log.error(this.getClass().getName(), exc);
-        }
-        return false;
+        return new ResponseEntity<ApiMessageVO>(ApiMessageVO.builder()
+                .respCode("BIZ_020")
+                .respBody(respBody)
+                .respMsg("요청값이 정확하지 않습니다").build(), HttpStatus.OK);
     }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<?> dataIntegrityViolationException(DataIntegrityViolationException e) {
+        String respBody = "이메일 중복을 확인해주세요.";
+        log.error(this.getClass().getName(), e);
+
+        return new ResponseEntity<ApiMessageVO>(ApiMessageVO.builder()
+                .respCode("BIZ_021")
+                .respBody(respBody)
+                .respMsg("무결성 조건에 위배됩니다.").build(), HttpStatus.OK);
+    }
+
 }

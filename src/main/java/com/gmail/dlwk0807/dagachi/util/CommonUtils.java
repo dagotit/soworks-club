@@ -2,7 +2,7 @@ package com.gmail.dlwk0807.dagachi.util;
 
 import java.util.Random;
 
-public class CommonUtil {
+public class CommonUtils {
 
     // 인증번호 8자리 무작위 생성
     public static String createCode() {

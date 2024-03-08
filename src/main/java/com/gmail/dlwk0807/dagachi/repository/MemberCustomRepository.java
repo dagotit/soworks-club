@@ -8,4 +8,5 @@ import java.util.List;
 @Repository
 public interface MemberCustomRepository {
     List<Member> findAllByGroupId(Long groupId);
+    List<Member> findAllByNameContaining(String name);
 }

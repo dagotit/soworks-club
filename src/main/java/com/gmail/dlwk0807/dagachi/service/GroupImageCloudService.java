@@ -14,11 +14,13 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.UUID;
 
+import static com.gmail.dlwk0807.dagachi.util.GCSCloudUtils.uploadFile;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
 @Slf4j
-public class GroupImageCloudServiceImpl implements GroupImageService{
+public class GroupImageCloudService implements GroupImageService{
 
     private final Storage storage;
 
@@ -32,14 +34,7 @@ public class GroupImageCloudServiceImpl implements GroupImageService{
     public String uploadGroupImage(MultipartFile file) {
 
         String fileName = bucketPath + UUID.randomUUID() + file.getOriginalFilename();
-        BlobId blobId = BlobId.of(bucketName, fileName);
-        BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType(file.getContentType()).build();
-        try {
-            Blob from = storage.createFrom(blobInfo, file.getInputStream());
-            log.info("Blob from : {}", from);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        uploadFile(storage, bucketName, fileName, file);
 
         return "https://storage.googleapis.com/" + bucketName + "/"+ fileName;
     }
@@ -50,12 +45,12 @@ public class GroupImageCloudServiceImpl implements GroupImageService{
     }
 
     public String deleteGroupImage(String objectName) {
-        //objectName = "https://storage.googleapis.com/dagachi-image-bucket/local/profileImages/fd439c25-ff55-42b6-aa30-542e5efd051fnoname3.png"
+        //objectName = "https://storage.googleapis.com/dagachi-image-bucket/local/groupImages/fd439c25-ff55-42b6-aa30-542e5efd051fnoname3.png"
         String prefix = bucketName + "/";
         int start = objectName.indexOf(prefix);
         int prefixLength = prefix.length();
 
-        //objectName = "local/profileImages/fd439c25-ff55-42b6-aa30-542e5efd051fnoname3.png"
+        //objectName = "local/groupImages/fd439c25-ff55-42b6-aa30-542e5efd051fnoname3.png"
         String filename = objectName.substring(start + prefixLength);
         if (filename.startsWith("default/")) {
             return "default 이미지 삭제 제외";

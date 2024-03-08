@@ -10,16 +10,26 @@ import com.querydsl.core.types.Path;
 
 
 /**
- * QGroupWish is a Querydsl query type for GroupWish
+ * QCompany is a Querydsl query type for Company
  */
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
-public class QGroupWish extends EntityPathBase<GroupWish> {
+public class QCompany extends EntityPathBase<Company> {
 
-    private static final long serialVersionUID = 2105777250L;
+    private static final long serialVersionUID = 207850521L;
 
-    public static final QGroupWish groupWish = new QGroupWish("groupWish");
+    public static final QCompany company = new QCompany("company");
 
     public final QBaseEntity _super = new QBaseEntity(this);
+
+    public final StringPath address = createString("address");
+
+    public final StringPath addressDtl = createString("addressDtl");
+
+    public final StringPath bizNo = createString("bizNo");
+
+    public final StringPath companyDate = createString("companyDate");
+
+    public final StringPath companyName = createString("companyName");
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
@@ -33,21 +43,18 @@ public class QGroupWish extends EntityPathBase<GroupWish> {
     public final StringPath sysUpdDbId = _super.sysUpdDbId;
 
     //inherited
-    public final StringPath sysUpdReason = _super.sysUpdReason;
-
-    //inherited
     public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;
 
-    public QGroupWish(String variable) {
-        super(GroupWish.class, forVariable(variable));
+    public QCompany(String variable) {
+        super(Company.class, forVariable(variable));
     }
 
-    public QGroupWish(Path<? extends GroupWish> path) {
+    public QCompany(Path<? extends Company> path) {
         super(path.getType(), path.getMetadata());
     }
 
-    public QGroupWish(PathMetadata metadata) {
-        super(GroupWish.class, metadata);
+    public QCompany(PathMetadata metadata) {
+        super(Company.class, metadata);
     }
 
 }

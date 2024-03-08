@@ -13,6 +13,7 @@ spring:
       hibernate:
         format_sql: true
         show_sql: true
+    defer-datasource-initialization: true
 
   mail:
     host: smtp.gmail.com
@@ -37,3 +38,4 @@ logging:
 # file path
 file.profileImagePath: prod/profileImages/
 file.groupImagePath: prod/groupImages/
+file.groupFilePath: prod/groupFiles/

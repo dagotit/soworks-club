@@ -4,6 +4,7 @@ import com.gmail.dlwk0807.dagachi.dto.email.EmailCertificationRequestDTO;
 import com.gmail.dlwk0807.dagachi.service.MailSendService;
 import com.gmail.dlwk0807.dagachi.service.MailVerifyService;
 import com.gmail.dlwk0807.dagachi.vo.ApiMessageVO;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -15,6 +16,7 @@ import static com.gmail.dlwk0807.dagachi.global.CommonConstant.OK_RESP_MSG;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/mails")
+@Tag(name = "MAIL API", description = "메일 관련")
 public class MailController {
 
     private final MailSendService mailSendService;

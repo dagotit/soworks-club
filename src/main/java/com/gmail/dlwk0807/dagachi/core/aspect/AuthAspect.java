@@ -1,7 +1,7 @@
 package com.gmail.dlwk0807.dagachi.core.aspect;
 
 import com.gmail.dlwk0807.dagachi.core.exception.AuthenticationNotMatchException;
-import com.gmail.dlwk0807.dagachi.util.AuthUtil;
+import com.gmail.dlwk0807.dagachi.util.AuthUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -13,15 +13,15 @@ import org.springframework.stereotype.Component;
 @Component
 public class AuthAspect {
 
-    private final AuthUtil authUtil;
+    private final AuthUtils authUtils;
 
-    public AuthAspect(AuthUtil authUtil) {
-        this.authUtil = authUtil;
+    public AuthAspect(AuthUtils authUtils) {
+        this.authUtils = authUtils;
     }
 
     @Around("execution(* com.gmail.dlwk0807.dagachi.controller..*.*(..)) && !execution(* com.gmail.dlwk0807.dagachi.controller.AuthController.*(..))")
     public Object checkAuthentication(ProceedingJoinPoint joinPoint) throws Throwable {
-        if (!authUtil.isAdmin()) {
+        if (!authUtils.isAdmin()) {
             // 인증 확인 로직
             Long currentMemberId = Long.valueOf(SecurityContextHolder.getContext().getAuthentication().getName());
             Object[] args = joinPoint.getArgs();

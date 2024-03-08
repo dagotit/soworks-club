@@ -33,9 +33,6 @@ public class QGroupDtl extends EntityPathBase<GroupDtl> {
     public final StringPath sysUpdDbId = _super.sysUpdDbId;
 
     //inherited
-    public final StringPath sysUpdReason = _super.sysUpdReason;
-
-    //inherited
     public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;
 
     public QGroupDtl(String variable) {

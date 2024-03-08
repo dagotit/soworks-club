@@ -42,9 +42,6 @@ public class QGroupAttend extends EntityPathBase<GroupAttend> {
     public final StringPath sysUpdDbId = _super.sysUpdDbId;
 
     //inherited
-    public final StringPath sysUpdReason = _super.sysUpdReason;
-
-    //inherited
     public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;
 
     public QGroupAttend(String variable) {
@@ -65,8 +62,8 @@ public class QGroupAttend extends EntityPathBase<GroupAttend> {
 
     public QGroupAttend(Class<? extends GroupAttend> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.group = inits.isInitialized("group") ? new QGroup(forProperty("group")) : null;
-        this.member = inits.isInitialized("member") ? new QMember(forProperty("member")) : null;
+        this.group = inits.isInitialized("group") ? new QGroup(forProperty("group"), inits.get("group")) : null;
+        this.member = inits.isInitialized("member") ? new QMember(forProperty("member"), inits.get("member")) : null;
     }
 
 }
