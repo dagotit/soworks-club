@@ -69,6 +69,20 @@ export const apiPostMemberUpload = async (data: {
 
 /**
  * @function
+ * 일괄 업로드 파일 다운로드
+ */
+export const apiPostTemplateDownLoad = async (data: null) => {
+  try {
+    return await http.post('/api/v1/admin/template', null, {"responseType" : "blob"})
+  } catch (e) {
+    if (axios.isAxiosError(e) && e.response) {
+      throw e.response.data;
+    }
+  }
+}
+
+/**
+ * @function
  *  알람보내기
  */
 export const apiGetNoticeAlarm = async (id: number) => {

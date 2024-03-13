@@ -68,8 +68,6 @@ const Main = () => {
 
   return (
     <Fragment>
-      <Bg />
-      <Header />
       <main className={styles.main}>
         {/*<button type="button" onClick={handlerBtn}>*/}
         {/*  refetch*/}

@@ -17,8 +17,13 @@ const Admin = () => {
             직원(사용자) 등록
           </Link>
         </li>
-        <li>회원 찾기</li>
-        <li>회원 삭제</li>
+        <li><Link
+          href={{
+            pathname: '/admin/userDelete',
+          }}
+        >
+          직원(사용자) 삭제
+        </Link></li>
         <li>알림 등록</li>
       </ul>
     </div>
