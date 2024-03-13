@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { apiGetAdminCheck, apiPostMemberUpload } from '@/services/adminService';
+import { apiGetAdminCheck, apiPostMemberUpload, apiPostTemplateDownLoad } from '@/services/adminService';
 
 /**
  * @function
@@ -23,3 +23,10 @@ export const usePostMemberUpload = () => {
     mutationFn: apiPostMemberUpload,
   });
 };
+
+export const usePostTemplateDownLoad = () => {
+  return useMutation({
+    mutationKey: ['post-template-download'],
+    mutationFn: apiPostTemplateDownLoad,
+  })
+}

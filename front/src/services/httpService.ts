@@ -10,12 +10,16 @@ const app = axios.create({
   // baseURL: `/`,
   withCredentials: true,
   timeout: 30000,
+  headers: {
+    'Content-Type': 'application/json'
+  }
 });
 
 let count = 0;
 
 app.interceptors.request.use(
   (res) => {
+    console.log('res:', res)
     const accessToken = useTokenStore.getState().accessToken;
     if (accessToken) {
       res.headers['Authorization'] = `Bearer ${accessToken}`;
@@ -29,10 +33,15 @@ app.interceptors.response.use(
   async (res) => {
     /** access token **/
     await setAccessToken(res);
+    // @ts-ignore
+    if (res?.config?.url.includes('admin/template')) {
+      return res
+    }
     return res.data;
   },
   async (err) => {
-    if (!isEmptyObj(err.response.data)) {
+    console.log('err.response?.data:', err.response?.data)
+    if (!isEmptyObj(err.response?.data)) {
       const data = err.response.data;
       if (
         data.respCode === 'BIZ_007' &&
@@ -56,6 +65,8 @@ app.interceptors.response.use(
             const resp = await axios.get(`/api/v1/auth/reissue`, {
               withCredentials: true,
             });
+            // TODO 왜 일치하지 않은지 확인 필요..
+            console.log('리프레시 토큰 resp ==================>>', resp.data)
             if (resp) {
               if (resp.data.respCode === 'BIZ_018') {
                 location.href = `/login?code=error`;
@@ -79,7 +90,7 @@ app.interceptors.response.use(
       }
     }
 
-    const code = String(err.response.status);
+    const code = String(err.response?.status);
     if (code.startsWith('5')) {
       // 서버 오류나면 에러 페이지로 이동
       location.href = `${process.env.NEXT_PUBLIC_DOMAIN}error?msg=${err.response.data.respMsg}`;
