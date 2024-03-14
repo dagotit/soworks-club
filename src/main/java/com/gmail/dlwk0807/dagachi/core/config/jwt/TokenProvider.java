@@ -1,5 +1,6 @@
 package com.gmail.dlwk0807.dagachi.core.config.jwt;
 
+import com.gmail.dlwk0807.dagachi.core.exception.CustomRespBodyException;
 import com.gmail.dlwk0807.dagachi.dto.token.TokenDTO;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -68,6 +69,32 @@ public class TokenProvider {
                 .build();
     }
 
+    public TokenDTO reissueTokenDto(Authentication authentication, String refreshToken) {
+        // 권한들 가져오기
+        String authorities = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(","));
+
+        long now = (new Date()).getTime();
+
+        // Access Token 생성
+        Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
+        String accessToken = Jwts.builder()
+                .setSubject(authentication.getName())       // payload "sub": "name"
+                .claim(AUTHORITIES_KEY, authorities)        // payload "auth": "ROLE_USER"
+                .setExpiration(accessTokenExpiresIn)        // payload "exp": 1516239022 (예시)
+                .signWith(key, SignatureAlgorithm.HS512)    // header "alg": "HS512"
+                .compact();
+
+        return TokenDTO.builder()
+                .grantType(BEARER_TYPE)
+                .accessToken(accessToken)
+                .accessTokenExpiresIn(accessTokenExpiresIn.getTime())
+                .refreshToken(refreshToken)
+                .memberId(authentication.getName())
+                .build();
+    }
+
     public Authentication getAuthentication(String token) {
         // 토큰 복호화
         Claims claims = parseClaims(token);
@@ -93,15 +120,14 @@ public class TokenProvider {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
-            log.info("잘못된 JWT 서명입니다.");
+            throw new CustomRespBodyException("잘못된 JWT 서명입니다.");
         } catch (ExpiredJwtException e) {
-            log.info("만료된 JWT 토큰입니다.");
+            throw new CustomRespBodyException("만료된 JWT 토큰입니다.");
         } catch (UnsupportedJwtException e) {
-            log.info("지원되지 않는 JWT 토큰입니다.");
+            throw new CustomRespBodyException("지원되지 않는 JWT 토큰입니다.");
         } catch (IllegalArgumentException e) {
-            log.info("JWT 토큰이 잘못되었습니다.");
+            throw new CustomRespBodyException("JWT 토큰이 잘못되었습니다.");
         }
-        return false;
     }
 
     private Claims parseClaims(String accessToken) {

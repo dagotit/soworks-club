@@ -13,6 +13,7 @@ import com.gmail.dlwk0807.dagachi.entity.RefreshToken;
 import com.gmail.dlwk0807.dagachi.repository.CompanyRepository;
 import com.gmail.dlwk0807.dagachi.repository.MemberRepository;
 import com.gmail.dlwk0807.dagachi.repository.RefreshTokenRepository;
+import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -89,7 +90,7 @@ public class AuthService {
     @Transactional
     public TokenDTO reissue(String strRefreshToken) {
         // 1. Refresh Token 검증
-        this.verifiedRefreshToken(strRefreshToken);
+        tokenProvider.validateToken(strRefreshToken);
 
         // 2. Refresh Token 에서 Member ID 가져오기
         Authentication authentication = tokenProvider.getAuthentication(strRefreshToken);
@@ -104,7 +105,7 @@ public class AuthService {
         }
 
         // 5. 새로운 토큰 생성
-        TokenDTO tokenDto = tokenProvider.generateTokenDto(authentication);
+        TokenDTO tokenDto = tokenProvider.reissueTokenDto(authentication, strRefreshToken);
 
         // 6. 저장소 정보 업데이트
         RefreshToken newRefreshToken = refreshToken.updateValue(tokenDto.getRefreshToken());
@@ -114,14 +115,8 @@ public class AuthService {
         return tokenDto;
     }
 
-    private void verifiedRefreshToken(String encryptedRefreshToken) {
-        if (encryptedRefreshToken == null) {
-            throw new CustomRespBodyException("RefreshToken이 유효하지 않습니다.");
-        }
-    }
-
     public void logout(String strRefreshToken) {
-        this.verifiedRefreshToken(strRefreshToken);
+        tokenProvider.validateToken(strRefreshToken);
         Authentication authentication = tokenProvider.getAuthentication(strRefreshToken);
         RefreshToken refreshToken = refreshTokenRepository.findById(authentication.getName())
                 .orElseThrow(() -> new CustomRespBodyException("로그아웃 된 사용자입니다."));
