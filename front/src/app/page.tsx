@@ -7,7 +7,6 @@ export default function Home() {
   return (
     <Fragment>
       <Bg />
-      <Header />
       <Main />
     </Fragment>
   )

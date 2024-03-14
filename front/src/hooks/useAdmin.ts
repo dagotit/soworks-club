@@ -7,9 +7,9 @@ import { apiGetAdminCheck, apiPostMemberUpload, apiPostTemplateDownLoad } from '
  * // TODO 나중에 메뉴 생기는 현상 수정
  */
 export const useGetAdminCheck = () => {
-  return useQuery({
-    queryKey: ['get-admin-check'],
-    queryFn: apiGetAdminCheck,
+  return useMutation({
+    mutationKey: ['get-admin-check'],
+    mutationFn: apiGetAdminCheck,
   });
 };
 
