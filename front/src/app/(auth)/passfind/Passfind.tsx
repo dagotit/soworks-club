@@ -2,19 +2,19 @@
 
 import styles from './PassFind.module.css';
 import Link from 'next/link';
-import { DateTime, Interval } from 'luxon';
+import { DateTime } from 'luxon';
 import React, { useEffect, useState } from 'react';
-import useDidMountEffect from '@/utils/useDidMountEffect';
-import { useRouter } from 'next/navigation';
 import { useDialogStore } from '@/store/useDialog';
 import { usePostCreditsEmail, usePostChangePassword } from '@/hooks/useAuth';
 import BgMoon from '@/components/bgBox/Bg';
+import { EMAIL_REX } from '@/utils/constants';
 
 let intervalId: undefined | NodeJS.Timeout = undefined;
-const CODEEXPIRED = 3;
-const EXPIREDTIME = '02:59';
+// 타이머..
+const CODE_EXPIRED = 3;
+const EXPIRED_TIME = '02:59';
+
 const PassFind = () => {
-  const router = useRouter();
   const creditsEmail = usePostCreditsEmail();
   const emailCodeVerify = usePostChangePassword();
   const { open, allClose } = useDialogStore();
@@ -23,13 +23,8 @@ const PassFind = () => {
   const [email, setEmail] = useState('');
   const [ckEmail, setCkEmail] = useState('');
   const [code, setCode] = useState('');
-  const [time, setTime] = useState(EXPIREDTIME);
+  const [time, setTime] = useState(EXPIRED_TIME);
   const [codeExpired, setCodeExpired] = useState(false);
-
-  // prettier-ignore
-  const EMAILREX = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
-  // prettier-ignore !,@,#,$,%,^,&,*
-  const PASSWORDREX = /[\{\}\[\]\/?.,;:|\)~`\-_+<>\\\=\(\'\"]/g;
 
   useEffect(() => {
     return () => {
@@ -71,26 +66,32 @@ const PassFind = () => {
     if (intervalId !== undefined) {
       return;
     }
-    setTime(EXPIREDTIME);
-    const end = DateTime.now().plus({ minute: CODEEXPIRED });
-    intervalId = setInterval(() => {
-      const now = DateTime.now();
-      const remaining = end.diff(now);
-      const time = remaining.toFormat(`mm:ss`);
-      setTime(time);
-      if (time === '00:00') {
-        clearTime();
-        const timeOut = setTimeout(() => {
-          if (step === 1) {
-            // 인증코드 확인버튼을 누르지 못 했을 경우만 해당된다.
-            setCodeExpired(false);
-            setCkEmail('');
-            setCode('');
-          }
-          clearTimeout(timeOut);
-        }, 2000);
+    setTime(EXPIRED_TIME);
+    const end = DateTime.now().plus({ minute: CODE_EXPIRED });
+    intervalId = setInterval(countInterval, 1000, end);
+  }
+  /**
+   * @function
+   * 이메일 인증번호 입력시간 interval
+   */
+  function countInterval(end: any) {
+    const remaining = end.diff(DateTime.now());
+    const time = remaining.toFormat(`mm:ss`);
+    setTime(time);
+    if (time !== '00:00') {
+      return;
+    }
+    // 00:00 초가 되었을 경우
+    clearTime();
+    const timeOut = setTimeout(() => {
+      if (step === 1) {
+        // 인증코드 확인버튼을 누르지 못 했을 경우만 해당된다.
+        setCodeExpired(false);
+        setCkEmail('');
+        setCode('');
       }
-    }, 1000);
+      clearTimeout(timeOut);
+    }, 2000);
   }
   /**
    * @function
@@ -101,12 +102,16 @@ const PassFind = () => {
     intervalId = undefined;
   }
 
-  function emailValidationCheck() {
+  /**
+   * @function
+   * input 정보를 입력했는지 체크
+   */
+  function inputValidationCheck() {
     if (email.trim() === '') {
       open('alert', '패스워드 찾기', '이메일을 입력해주세요.');
       return false;
     }
-    if (!EMAILREX.test(email)) {
+    if (!EMAIL_REX.test(email)) {
       open('alert', '패스워드 찾기', '이메일 형식이 올바르지 않습니다.');
       return false;
     }
@@ -119,7 +124,7 @@ const PassFind = () => {
    * 1단계 이메일 인증하기 -> 인증코드 받기
    */
   function handleIsEmailValidation() {
-    if (!emailValidationCheck()) {
+    if (!inputValidationCheck()) {
       return;
     }
     if (name.trim() === '') {
@@ -129,35 +134,44 @@ const PassFind = () => {
     const reqData = { email, name };
     setCodeExpired(true);
     creditsEmail.mutate(reqData, {
-      onSuccess: (resp: any) => {
-        if (resp.respCode === '00' || resp.respCode === 'BIZ_011') {
-          setCkEmail(email);
-          handleTimeInterval();
-          // setCodeExpired(true);
-          if (resp.respCode === 'BIZ_011') {
-            open('alert', '비밀번호 찾기', resp.respMsg);
-          }
-          return;
-        }
-        setCodeExpired(false);
-        if (resp.respMsg !== '') {
-          open('alert', '비밀번호 찾기', resp.respMsg);
-          return;
-        }
-        open('alert', '비밀번호 찾기', '이메일 인증코드 전송 실패');
-      },
-      onError: (error: any) => {
-        setCodeExpired(false);
-        if (error.respCode !== '' && error.respMsg !== '') {
-          open('alert', '비밀번호 찾기', error.respMsg);
-          return;
-        }
-        open('alert', '비밀번호 찾기', '이메일 인증코드 전송 실패');
-      },
+      onSuccess: apiEmailValiSuccess,
+      onError: apiEmailValiError,
     });
   }
   /**
-   *
+   * @function
+   * 인증메일 발송 성공 [ api ]
+   */
+  function apiEmailValiSuccess(resp: any) {
+    if (resp.respCode === '00' || resp.respCode === 'BIZ_011') {
+      setCkEmail(email);
+      handleTimeInterval();
+      if (resp.respCode === 'BIZ_011') {
+        open('alert', '비밀번호 찾기', resp.respMsg);
+      }
+      return;
+    }
+    setCodeExpired(false);
+    if (resp.respMsg !== '') {
+      open('alert', '비밀번호 찾기', resp.respMsg);
+      return;
+    }
+    open('alert', '비밀번호 찾기', '이메일 인증코드 전송 실패');
+  }
+  /**
+   * @function
+   * 인증메일 발송 실패 [ api ]
+   */
+  function apiEmailValiError(error: any) {
+    setCodeExpired(false);
+    if (error.respCode !== '' && error.respMsg !== '') {
+      open('alert', '비밀번호 찾기', error.respMsg);
+      return;
+    }
+    open('alert', '비밀번호 찾기', '이메일 인증코드 전송 실패');
+  }
+  /**
+   * @function
    * 1단계 이메일 인증코드 맞는지 확인하기
    */
   function handleCodeCheck() {
@@ -165,7 +179,7 @@ const PassFind = () => {
       open('alert', '패스워드 찾기', '인증코드를 입력해주세요.');
       return;
     }
-    if (!emailValidationCheck()) {
+    if (!inputValidationCheck()) {
       return;
     }
     if (email !== ckEmail) {
@@ -179,22 +193,7 @@ const PassFind = () => {
     emailCodeVerify.mutate(
       { email, code },
       {
-        onSuccess: (data) => {
-          if (data?.respCode === '00') {
-            clearTime();
-            setCodeExpired(false);
-            setCkEmail('');
-            setCode('');
-            // 이메일 인증 성공
-            setStep(2);
-            return;
-          }
-          if (data?.respMsg) {
-            open('alert', '패스워드 찾기', data?.respMsg);
-            return;
-          }
-          open('alert', '패스워드 찾기', '인증코드가 일치하지 않습니다.');
-        },
+        onSuccess: apiMailCodeSuccess,
         onError: (error: any) => {
           console.log(error);
           // clearTime();
@@ -202,6 +201,26 @@ const PassFind = () => {
         },
       },
     );
+  }
+  /**
+   * @function
+   * 이메일 코드 확인 api 요청 후 코드 확인 완료 성공 [ api ]
+   */
+  function apiMailCodeSuccess(resp: any) {
+    if (resp?.respCode === '00') {
+      clearTime();
+      setCodeExpired(false);
+      setCkEmail('');
+      setCode('');
+      // 이메일 인증 성공
+      setStep(2);
+      return;
+    }
+    if (resp?.respMsg) {
+      open('alert', '패스워드 찾기', resp?.respMsg);
+      return;
+    }
+    open('alert', '패스워드 찾기', '인증코드가 일치하지 않습니다.');
   }
 
   return (
