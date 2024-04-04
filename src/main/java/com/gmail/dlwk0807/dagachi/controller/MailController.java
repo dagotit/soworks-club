@@ -54,11 +54,9 @@ public class MailController {
             @RequestParam(name = "certificationNumber") String certificationNumber
     ) throws MessagingException {
 
-        mailVerifyService.verifyEmailAndUpdatePassword(email, certificationNumber);
-
         return ApiMessageVO.builder()
                 .respMsg(OK_RESP_MSG)
-                .respBody("")
+                .respBody(mailVerifyService.verifyEmailAndUpdatePassword(email, certificationNumber))
                 .respCode(OK_RESP_CODE)
                 .build();
     }

@@ -1,6 +1,7 @@
 package com.gmail.dlwk0807.dagachi.service;
 
 import jakarta.mail.internet.MimeMessage;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
@@ -12,6 +13,7 @@ import java.io.InputStream;
 
 @Profile("local")
 @Component
+@Slf4j
 public class LocalJavaMailSender implements JavaMailSender {
     @Override
     public MimeMessage createMimeMessage() {
@@ -25,7 +27,7 @@ public class LocalJavaMailSender implements JavaMailSender {
 
     @Override
     public void send(MimeMessage mimeMessage) throws MailException {
-        System.out.println("local환경 send message");
+        log.debug("local환경 send message");
     }
 
     @Override
