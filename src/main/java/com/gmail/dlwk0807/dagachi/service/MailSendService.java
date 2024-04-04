@@ -12,6 +12,7 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.env.Environment;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,24 +31,25 @@ public class MailSendService {
     private final CertificationNumberRepository certificationNumberRepository;
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
+    private final Environment environment;
 
     public EmailCertificationResponseDTO sendEmailForCertification(String email, String name) throws MessagingException {
 
-        /**
-         * 이메일 인증 사용 2군데
-         * 1. 회원가입 이메일 인증
-         *      email만 넘김
-         * 2. 비밀번호 변경 이메일 인증
-         *      비밀번호 변경 시에는 회원여부 판단하기 위해 email, name 넘김
-         * 두가지 경우를 checkNameBeforeUpdatePassword 에서  name null 체크로 구분.
+        /*
+          이메일 인증 사용 2군데
+          1. 회원가입 이메일 인증
+               email만 넘김
+          2. 비밀번호 변경 이메일 인증
+               비밀번호 변경 시에는 회원여부 판단하기 위해 email, name 넘김
+          두가지 경우를 checkNameBeforeUpdatePassword 에서  name null 체크로 구분.
          */
         checkNameBeforeUpdatePassword(email, name);
 
         if (certificationNumberRepository.hasKey(email)) {
             throw new DuplicationEmailSenderException();
         }
-
-        String certificationNumber = createCode();
+        String activeProfile = environment.getActiveProfiles()[0];
+        String certificationNumber = createCode(activeProfile);
         String sendResult = makeHTMLAndSendMail(email, certificationNumber);
         //메일 발송결과가 "ok"가 아닐 경우 redis저장 스킵
         if (!"ok".equals(sendResult)) {
@@ -129,7 +131,7 @@ public class MailSendService {
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         if (mimeMessage == null) {
             log.info("local 환경 바로 리턴");
-            return "env => local";
+            return "ok";
         }
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage);
         helper.setTo(email);
@@ -154,7 +156,8 @@ public class MailSendService {
     }
 
     public String sendEmailForUpdatePassword(String email) throws MessagingException {
-        String password = createCode();
+        String activeProfile = environment.getActiveProfiles()[0];
+        String password = createCode(activeProfile);
         String result = makePasswordAndSendMail(email, password);
         if (!"ok".equals(result)) {
             return "fail";
