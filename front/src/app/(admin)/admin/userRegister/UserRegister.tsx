@@ -98,6 +98,8 @@ const UserRegister = () => {
     templateDownload.mutate(null,
       {
         onSuccess: (res) => {
+          console.log('templete res:::::::::::', res)
+
           // @ts-ignore
           const blob = new Blob([res.data], {type: res.data.type});
           // 특정 타입을 정의해야 경우에는 옵션을 사용해 MIME 유형을 정의 할 수 있습니다.

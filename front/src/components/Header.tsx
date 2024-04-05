@@ -1,6 +1,6 @@
 'use client';
 import styles from '@/components/css/Header.module.css';
-import { useGetAccessToken, useGetLogout } from '@/hooks/useAuth';
+import { useGetLogout } from '@/hooks/useAuth';
 import { usePathname, useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { useTokenStore } from '@/store/useLogin';
@@ -24,11 +24,10 @@ const Header = (props: any) => {
   const [isShowBackBtn, setIsShowBackBtn] = useState(
     pathname.includes('/group/detail'),
   );
+  const apiAdminCheck = useGetAdminCheck();
   // 검색
   const apiSearch = useGetSearchList();
   const [searchList, setSearchList] = useState<any[]>([]);
-  // 어드민 여부 체크 [ 메뉴 노출 여부 ]
-  const apiAdminCheck = useGetAdminCheck();
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
@@ -37,13 +36,23 @@ const Header = (props: any) => {
     };
   }, []);
 
+  // @ts-ignore
   useEffect(() => {
-    if (!!apiAdminCheck.data && !isEmptyObj(apiAdminCheck.data)) {
+    console.log('props?.accessToken:', props?.accessToken)
+    if (!pathname.includes('admin') && props.accessToken !== '') {
       // @ts-ignore
-      const respBody = apiAdminCheck.data.respBody;
-      setIsAdmin(respBody.adminYn === 'Y');
+      apiAdminCheck.mutate(null, {
+        onSuccess: (data) => {
+          console.log('admin data ==================>>', data)
+          if (data && !isEmptyObj(data)) {
+            // @ts-ignore
+            const respBody = data?.respBody;
+            setIsAdmin(respBody.adminYn === 'Y');
+          }
+        }
+      })
     }
-  }, [apiAdminCheck.data]);
+  }, [props?.accessToken]);
 
   /**
    * @function
