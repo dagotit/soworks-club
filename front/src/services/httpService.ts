@@ -31,13 +31,21 @@ app.interceptors.response.use(
   async (res) => {
     const url = res.config.url;
     const respData = res.data.respBody;
+    const { respCode } = res.data;
+
+    if (!!respCode && respCode === 'BIZ_018') {
+      // 회원이 존재하지 않는 경우
+      location.href = `/login?code=error`;
+      return Promise.reject(res);
+    }
     /** access token **/
     await setAccessToken(url, respData);
     if (url && url.includes('admin/template')) {
-      console.log('response res:::::::', res)
       return res
     }
-    console.log('response res2:::::::', res)
+
+    console.log('확인용!!!!!!!!!!!!!!!', res.data)
+
     return res.data;
   },
   async (err) => {

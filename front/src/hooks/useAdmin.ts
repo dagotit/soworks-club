@@ -6,10 +6,13 @@ import { apiGetAdminCheck, apiPostMemberUpload, apiPostTemplateDownLoad } from '
  * 관리자가 아닐 경우 admin 메뉴 숨기기
  * // TODO 나중에 메뉴 생기는 현상 수정
  */
-export const useGetAdminCheck = () => {
-  return useMutation({
-    mutationKey: ['get-admin-check'],
-    mutationFn: apiGetAdminCheck,
+export const useGetAdminCheck = (isfetch: boolean) => {
+  console.log('isfetch:::::', isfetch)
+  return useQuery({
+    queryKey: ['get-admin-check'],
+    queryFn: apiGetAdminCheck,
+    staleTime: 60000,
+    enabled: isfetch,
   });
 };
 

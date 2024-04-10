@@ -31,35 +31,37 @@ const ClubListFilter = memo((props: clubFilterProps) => {
    * 팝업을 열었을 때 이미 필터 적용이 있다면 값을 셋팅
    */
   useEffect(() => {
-    if (!isEmptyObj(props.listFilterQueryData)) {
-      const {
-        isAll,
-        isAttendClub,
-        isCreateClub,
-        startDate,
-        endDate,
-        statusClub,
-      } = {
-        ...props.listFilterQueryData,
-      };
-      if (isAll !== undefined) {
-        setAllCheckBox(isAll);
-      }
-      if (isAttendClub !== undefined) {
-        setAttendClubCheckBox(isAttendClub);
-      }
-      if (isCreateClub !== undefined) {
-        setCreateClubCheckBox(isCreateClub);
-      }
-      if (startDate !== undefined) {
-        setStartDay(startDate);
-      }
-      if (endDate !== undefined) {
-        setEndDay(endDate);
-      }
-      if (statusClub !== undefined) {
-        setStatusClubCheckBox(statusClub);
-      }
+    if (isEmptyObj(props.listFilterQueryData)) {
+     return;
+    }
+
+    const {
+      isAll,
+      isAttendClub,
+      isCreateClub,
+      startDate,
+      endDate,
+      statusClub,
+    } = {
+      ...props.listFilterQueryData,
+    };
+    if (isAll !== undefined) {
+      setAllCheckBox(isAll);
+    }
+    if (isAttendClub !== undefined) {
+      setAttendClubCheckBox(isAttendClub);
+    }
+    if (isCreateClub !== undefined) {
+      setCreateClubCheckBox(isCreateClub);
+    }
+    if (startDate !== undefined) {
+      setStartDay(startDate);
+    }
+    if (endDate !== undefined) {
+      setEndDay(endDate);
+    }
+    if (statusClub !== undefined) {
+      setStatusClubCheckBox(statusClub);
     }
   }, []);
   /**
@@ -109,25 +111,29 @@ const ClubListFilter = memo((props: clubFilterProps) => {
    * 팝업 닫기 버튼
    */
   function handleClose() {
-    if (!isEmptyObj(props)) {
-      props.popupState(false);
+    if (isEmptyObj(props)) {
+      return;
     }
+
+    props.popupState(false);
   }
   /**
    * @function
    * 필터내용 적용하기
    */
   function handleApply() {
-    if (!isEmptyObj(props)) {
-      props.popupApplyData({
-        isAll: allCheckBox,
-        startDate: startDay,
-        endDate: endDay,
-        isAttendClub: attendClubCheckBox,
-        isCreateClub: createClubCheckBox,
-        statusClub: statusClubCheckBox,
-      });
+    if (isEmptyObj(props)) {
+      return;
     }
+
+    props.popupApplyData({
+      isAll: allCheckBox,
+      startDate: startDay,
+      endDate: endDay,
+      isAttendClub: attendClubCheckBox,
+      isCreateClub: createClubCheckBox,
+      statusClub: statusClubCheckBox,
+    });
   }
   return (
     <div className={styles.filterWrap}>

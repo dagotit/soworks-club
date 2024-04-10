@@ -14,9 +14,11 @@ export const apiGetMonthCalendar = async (query: CalendarParamType) => {
   const statusNotDone = query.statusNotDone ? 'Y' : 'N';
 
   try {
-    return await http.get(
+    const data = await http.get(
       `/api/v1/calendar/list?stMonth=${query.stMonth}&stYear=${query.stYear}&endYear=${query.endYear}&endMonth=${query.endMonth}&joinOnly=${joinOnly}&makeOnly=${makeOnly}&statusNotDone=${statusNotDone}`,
     );
+    console.log('data:', JSON.stringify(data))
+    return !data ? {respCode: '00', respMsg: 'ok', respBody: []} : data;
   } catch (e) {
     if (axios.isAxiosError(e) && e.response) {
       throw e.response.data;
@@ -58,7 +60,9 @@ export const apiGetClubList = async (query: FilterQueryParamType) => {
     url += `&findDate=${DateTime.fromFormat(query.findDate, 'yyyy-MM-dd').day}`;
   }
   try {
-    return await http.get(url);
+    const data = await http.get(url);
+    console.log('222222222 data ======>', JSON.stringify(data))
+    return !data ? {respCode: '00', respMsg: 'ok', respBody: []} : data;
   } catch (e) {
     if (axios.isAxiosError(e) && e.response) {
       throw e.response.data;

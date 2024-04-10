@@ -46,21 +46,27 @@ export const useGetCalendarQuerys = (
   calendarQuery: CalendarParamType,
   clubListQuery: FilterQueryParamType,
 ) => {
-  console.log();
   return useQueries({
     queries: [
       {
         queryKey: ['get-month-calendar', calendarQuery],
-        queryFn: () => apiGetMonthCalendar(calendarQuery),
+        queryFn: async () =>  await apiGetMonthCalendar(calendarQuery),
         staleTime: 0,
         // retry: false, // 실패시 재시도 횟수
       },
       {
         queryKey: ['get-club-list', clubListQuery, calendarQuery],
-        queryFn: () => apiGetClubList(clubListQuery),
+        queryFn: async () => await apiGetClubList(clubListQuery),
         staleTime: 0,
         // retry: false,
       },
     ],
+    combine: (results) => {
+      return {
+        calendar: results[0].data,
+        isLoading: results[0].isLoading,
+        clubList: results[1].data
+      }
+    },
   });
 };
