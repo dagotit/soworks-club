@@ -2,7 +2,7 @@
  * @function
  * 어드민 계정인지 체크
  */
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import http from '@/services/httpService';
 
 export const apiGetAdminCheck = async () => {
@@ -28,6 +28,29 @@ export const apiGetMemberEmailFind = async (email: string) => {
     }
   }
 };
+
+/**
+ * @function
+ * 회원일괄조회
+ */
+export const apiGetMemberList = async (name ?: string | null) => {
+  try {
+    let url = '/api/v1/admin/member-list';
+    if (name) {
+      url += `?name=${name}`
+    }
+    const data:AxiosResponse<object | object> = await http.get(url);
+    console.log('datadatadatadatadatadata', data)
+    if (!data) {
+      // return throw new Error(data);
+    }
+    return data
+  } catch (e) {
+    if (axios.isAxiosError(e) && e.response) {
+      throw e.response.data;
+    }
+  }
+}
 
 /**
  * @function

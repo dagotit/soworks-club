@@ -1,9 +1,7 @@
 import { NextResponse, NextFetchEvent } from 'next/server';
 import type { NextRequest } from 'next/server';
-// @ts-ignore
 import { isEmptyObj } from '@/utils/common'
 import { apiLogout } from '@/services/authService';
-// import { useTokenStore } from '@/store/useLogin';
 
 type RESPONSE_ERROR = {
   respCode: string;
@@ -120,6 +118,7 @@ export async function middleware(request: NextRequest, event: NextFetchEvent) {
 
 
   if (pathname === '/admin/') {
+    // 어드민 페이지 진입시
     const refererUrl = request.headers.get('referer');
 
     console.log('middleware refererUrl =======>', refererUrl)

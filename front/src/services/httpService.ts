@@ -46,7 +46,7 @@ app.interceptors.response.use(
 
     console.log('확인용!!!!!!!!!!!!!!!', res.data)
 
-    return res.data;
+    return await res.data;
   },
   async (err) => {
     console.log('temp::::', err)
@@ -67,7 +67,10 @@ app.interceptors.response.use(
         if (code === 'BIZ_007' || data instanceof Blob) {
           // count === 0 여러면 reissue 호출하는걸 방지 useQueries 사용하면 해당 현상이 발생할 일이 없음. 아마도?
           originalConfig._retry = true;
-          await apiGetRefreshToken(originalConfig)
+          const tokenResp = await apiGetRefreshToken()
+          if (tokenResp) {
+            return await app(originalConfig);
+          }
           return
         }
       }
@@ -82,7 +85,7 @@ app.interceptors.response.use(
   },
 );
 
-async function apiGetRefreshToken(originalConfig: any) {
+async function apiGetRefreshToken() {
   try {
     count = 1;
     const resp = await axios.get(`/api/v1/auth/reissue`, {
@@ -103,7 +106,8 @@ async function apiGetRefreshToken(originalConfig: any) {
 
     // access token 다시 담기
     await setAccessToken(url, respBody);
-    return app(originalConfig);
+    // return app(originalConfig);
+    return true
   } catch (error: any) {
     const code = error.response.data.respCode;
     // BIZ_002 런타임 오류?
