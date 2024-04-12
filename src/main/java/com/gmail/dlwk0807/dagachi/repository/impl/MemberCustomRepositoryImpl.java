@@ -27,13 +27,17 @@ public class MemberCustomRepositoryImpl implements MemberCustomRepository {
     }
 
     @Override
-    public List<Member> findAllByNameContaining(String name) {
+    public List<Member> findAllByNameAndEmailContaining(String name, String email) {
         return query.selectFrom(member)
-                .where(containingName(name))
+                .where(containingName(name), containingEmail(email))
                 .fetch();
     }
 
     BooleanExpression containingName(String name) {
-        return name != null ? member.name.eq(name) : null;
+        return name != null ? member.name.contains(name) : null;
+    }
+
+    BooleanExpression containingEmail(String email) {
+        return email != null ? member.email.contains(email) : null;
     }
 }

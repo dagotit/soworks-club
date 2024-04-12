@@ -84,8 +84,8 @@ public class AdminService {
         return "일괄업로드 성공";
     }
 
-    public List<MemberResponseDTO> memberList(String name) {
-        return memberCustomRepository.findAllByNameContaining(name).stream()
+    public List<MemberResponseDTO> memberList(String name, String email) {
+        return memberCustomRepository.findAllByNameAndEmailContaining(name, email).stream()
                 .map(MemberResponseDTO::of).collect(Collectors.toList());
     }
 

@@ -100,11 +100,13 @@ public class AdminController {
                     content = @Content(schema = @Schema(implementation = ApiMessageVO.class))),
     })
     @GetMapping("/member-list")
-    public ApiMessageVO memberList(@RequestParam(required = false) String name) {
+    public ApiMessageVO memberList(@RequestParam(required = false) String name,
+                                   @RequestParam(required = false) String email
+    ) {
 
         return ApiMessageVO.builder()
                 .respMsg(OK_RESP_MSG)
-                .respBody(adminService.memberList(name))
+                .respBody(adminService.memberList(name, email))
                 .respCode(OK_RESP_CODE)
                 .build();
     }
