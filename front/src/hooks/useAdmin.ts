@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import {
-  apiGetAdminCheck,
-  apiGetMemberList,
+  apiGetAdminCheck, apiGetMemberEmailFind,
+  apiGetMemberList, apiPostMemberDelete,
   apiPostMemberUpload,
   apiPostTemplateDownLoad,
 } from '@/services/adminService';
@@ -46,9 +46,30 @@ export const usePostTemplateDownLoad = () => {
  * @function
  * 회원 전체 조회 + 이름으로 검색가능
  */
-export const useGetMemberList = () => {
+export const useGetMemberList = (name?: string | null) => {
+  return useQuery({
+    queryKey: ['get-member-list', name],
+    queryFn: async () => await apiGetMemberList(name),
+  })
+}
+/**
+ * @function
+ * 회원 이메일로 검색
+ */
+export const useGetEmailMemberList = () => {
   return useMutation({
-    mutationKey: ['get-member-list'],
-    mutationFn: apiGetMemberList,
+    mutationKey: ['get-email-member-list'],
+    mutationFn: apiGetMemberEmailFind,
+  })
+}
+
+/**
+ * @function
+ * 회원 삭제
+ */
+export const usePostMemberDelete = () => {
+  return useMutation({
+    mutationKey: ['post-member-delete'],
+    mutationFn: apiPostMemberDelete,
   })
 }

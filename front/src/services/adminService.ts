@@ -1,10 +1,10 @@
+import axios from 'axios';
+import http from '@/services/httpService';
+
 /**
  * @function
  * 어드민 계정인지 체크
  */
-import axios, { AxiosResponse } from 'axios';
-import http from '@/services/httpService';
-
 export const apiGetAdminCheck = async () => {
   try {
     return await http.get('/api/v1/member/check-admin');
@@ -17,9 +17,9 @@ export const apiGetAdminCheck = async () => {
 
 /**
  * @function
- * 이메일로 회원찾기
+ * 이메일로 회원 리스트 조회?
  */
-export const apiGetMemberEmailFind = async (email: string) => {
+export const apiGetMemberEmailFind = async (email: string | null) => {
   try {
     return await http.get(`/api/v1/admin/${email}`);
   } catch (e) {
@@ -39,12 +39,7 @@ export const apiGetMemberList = async (name ?: string | null) => {
     if (name) {
       url += `?name=${name}`
     }
-    const data:AxiosResponse<object | object> = await http.get(url);
-    console.log('datadatadatadatadatadata', data)
-    if (!data) {
-      // return throw new Error(data);
-    }
-    return data
+    return await http.get(url);
   } catch (e) {
     if (axios.isAxiosError(e) && e.response) {
       throw e.response.data;
@@ -56,10 +51,13 @@ export const apiGetMemberList = async (name ?: string | null) => {
  * @function
  * 회원 삭제
  */
-export const apiPostMemberDelete = async () => {
+export const apiPostMemberDelete = async (id?: number| null) => {
   try {
+    if (!id) {
+      throw new Error('id undefined');
+    }
     return await http.post('/api/v1/admin/member-delete', {
-      memberId: 1,
+      memberId: id,
     });
   } catch (e) {
     if (axios.isAxiosError(e) && e.response) {

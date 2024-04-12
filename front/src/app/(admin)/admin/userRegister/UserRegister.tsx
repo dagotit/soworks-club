@@ -46,6 +46,7 @@ const UserRegister = () => {
    * input 파일 업로드
    */
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    // id 이메일 pw 생년월일
     event.preventDefault();
     if (!file) {
       // 파일 없으면

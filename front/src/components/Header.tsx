@@ -25,7 +25,7 @@ const Header = (props: any) => {
     pathname.includes('/group/detail'),
   );
 
-  // const apiAdminCheck = useGetAdminCheck(!pathname.includes('admin') && !!accessToken);
+  const apiAdminCheck = useGetAdminCheck(!pathname.includes('admin') && !!accessToken);
 
   // 검색
   const apiSearch = useGetSearchList();
@@ -43,21 +43,21 @@ const Header = (props: any) => {
     };
   }, []);
 
-  // useEffect(() => {
-  //   // @ts-ignore
-  //   if (isEmptyObj(apiAdminCheck.data)) {
-  //     return;
-  //   }
-  //
-  //   // @ts-ignore
-  //   const { respBody } = apiAdminCheck.data;
-  //   if(isEmptyObj(respBody)) {
-  //     return;
-  //   }
-  //
-  //   setIsAdmin(respBody.adminYn === 'Y');
-  //
-  // }, [apiAdminCheck.data]);
+  useEffect(() => {
+    // @ts-ignore
+    if (isEmptyObj(apiAdminCheck.data)) {
+      return;
+    }
+
+    // @ts-ignore
+    const { respBody } = apiAdminCheck.data;
+    if(isEmptyObj(respBody)) {
+      return;
+    }
+
+    setIsAdmin(respBody.adminYn === 'Y');
+
+  }, [apiAdminCheck.data]);
 
 
   /**

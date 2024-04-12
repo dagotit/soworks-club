@@ -1,4 +1,4 @@
-export function isEmptyObj(obj: object): boolean {
+export function isEmptyObj(obj: any): boolean {
   // @ts-ignore
   if (obj === undefined || obj === 'undefined' || obj === null || obj === '') {
     return true

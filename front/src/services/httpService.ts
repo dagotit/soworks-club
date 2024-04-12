@@ -44,12 +44,9 @@ app.interceptors.response.use(
       return res
     }
 
-    console.log('확인용!!!!!!!!!!!!!!!', res.data)
-
     return await res.data;
   },
   async (err) => {
-    console.log('temp::::', err)
     const { data, status } = err.response;
     const { url } = err.config;
     if (!isEmptyObj(data)) {
@@ -67,7 +64,7 @@ app.interceptors.response.use(
         if (code === 'BIZ_007' || data instanceof Blob) {
           // count === 0 여러면 reissue 호출하는걸 방지 useQueries 사용하면 해당 현상이 발생할 일이 없음. 아마도?
           originalConfig._retry = true;
-          const tokenResp = await apiGetRefreshToken()
+          const tokenResp: boolean | undefined = await apiGetRefreshToken()
           if (tokenResp) {
             return await app(originalConfig);
           }
@@ -91,8 +88,7 @@ async function apiGetRefreshToken() {
     const resp = await axios.get(`/api/v1/auth/reissue`, {
       withCredentials: true,
     });
-    // TODO 왜 일치하지 않은지 확인 필요..
-    console.log('리프레시 토큰 resp ==================>>', resp.data)
+
     if (isEmptyObj(resp)) {
       return
     }
