@@ -1,16 +1,21 @@
 package com.gmail.dlwk0807.dagachi.dto.group;
 
+import com.gmail.dlwk0807.dagachi.entity.Category;
 import com.gmail.dlwk0807.dagachi.entity.Group;
+import com.gmail.dlwk0807.dagachi.entity.GroupFile;
 import lombok.Builder;
 import lombok.Getter;
 
 import java.time.format.DateTimeFormatter;
+import java.util.List;
+
+import static com.gmail.dlwk0807.dagachi.util.SecurityUtils.getCurrentMemberId;
 
 @Getter
 @Builder
 public class GroupResponseDTO {
     private Long groupId;
-    private String category;
+    private List<Category> categories;
     private String name;
     private Long memberId;
     private String description;
@@ -21,12 +26,17 @@ public class GroupResponseDTO {
     private String strEndDate;
     private String strEndTime;
     private Long groupMaxNum;
-    private Integer numberPersons;
+    private Integer groupJoinNum;
+    private String masterYn;
+    private String joinYn;
+    private List<GroupFile> groupFiles;
 
     public static GroupResponseDTO of(Group group) {
+
+
         return GroupResponseDTO.builder()
                 .groupId(group.getId())
-                .category(group.getCategory())
+                .categories(group.getCategories())
                 .name(group.getName())
                 .memberId(group.getMemberId())
                 .description(group.getDescription())
@@ -37,11 +47,20 @@ public class GroupResponseDTO {
                 .strEndTime(group.getEndDateTime().toLocalTime().format(DateTimeFormatter.ofPattern("HHmm")))
                 .groupImage(group.getGroupImage())
                 .groupMaxNum(group.getGroupMaxNum())
-                .numberPersons(group.getGroupAttendList().size())
+                .groupJoinNum(group.getGroupAttendList().size())
+                .masterYn(updateMasterYn(group))
+                .joinYn(updateJoinYn(group, getCurrentMemberId()))
+                .groupFiles(group.getGroupFileList())
                 .build();
     }
 
-    public void updateGroupImg(String groupImage) {
-        this.groupImage = groupImage;
+    public static String updateMasterYn(Group group) {
+        return getCurrentMemberId().equals(group.getMemberId()) ? "Y" : "N";
     }
+
+    public static String updateJoinYn(Group group, Long currentMemberId) {
+        return group.getGroupAttendList().stream()
+                .anyMatch(ga -> ga.getMember().getId().equals(currentMemberId)) ? "Y" : "N";
+    }
+
 }

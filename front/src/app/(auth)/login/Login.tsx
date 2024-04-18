@@ -6,10 +6,9 @@ import Link from 'next/link';
 import { useDialogStore } from '@/store/useDialog';
 import React, { useEffect, useState } from 'react';
 import { usePostLogin } from '@/hooks/useAuth';
-import { APIResponse } from '@/services/api';
-import { useTokenStore } from '@/store/useLogin';
 import BgMoon from '@/components/bgBox/Bg';
 import { Inter, Mochiy_Pop_One } from 'next/font/google';
+import {EMAIL_LENGTH, EMAIL_REX, PASSWORD_REX} from '@/utils/constants'
 
 const MochiyPopOne = Mochiy_Pop_One({ weight: ['400'], subsets: ['latin'] });
 const inter = Inter({ subsets: ['latin'] });
@@ -21,17 +20,12 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [passwordValidation, setPasswordValidation] = useState(false);
   const { open, allClose } = useDialogStore();
-  const { accessToken } = useTokenStore();
   const postLogin = usePostLogin();
-  const EMAILLENGTH = 50;
-  // prettier-ignore
-  const EMAILREX = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
-  // prettier-ignore !,@,#,$,%,^,&,*
-  const PASSWORDREX = /[\{\}\[\]\/?.,;:|\)~`\-_+<>\\\=\(\'\"]/g;
+
 
   /**
    * @function
-   * mount / distory
+   * mount / destroyed
    */
   useEffect(() => {
     return () => {
@@ -50,7 +44,7 @@ const Login = () => {
     event: React.ChangeEvent<HTMLInputElement>,
   ): void => {
     const { value } = event.currentTarget;
-    if (value.length > EMAILLENGTH) {
+    if (value.length > EMAIL_LENGTH) {
       return;
     }
 
@@ -61,7 +55,7 @@ const Login = () => {
    * 이메일 정규식 체크
    */
   useEffect((): void => {
-    if (email.trim() !== '' && !EMAILREX.test(email)) {
+    if (email.trim() !== '' && !EMAIL_REX.test(email)) {
       // 이메일 데이터가 있고 정규식에 맞지 않을 경우
       setEmailValidation(true);
       return;
@@ -85,7 +79,7 @@ const Login = () => {
    * 비밀번호 정규식 체크
    */
   useEffect(() => {
-    if (password.trim() !== '' && PASSWORDREX.test(password)) {
+    if (password.trim() !== '' && PASSWORD_REX.test(password)) {
       setPasswordValidation(true);
       return;
     }

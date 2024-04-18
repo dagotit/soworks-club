@@ -1,5 +1,6 @@
 package com.gmail.dlwk0807.dagachi.service;
 
+import com.gmail.dlwk0807.dagachi.core.exception.CustomRespBodyException;
 import com.gmail.dlwk0807.dagachi.core.exception.DuplicationEmailSenderException;
 import com.gmail.dlwk0807.dagachi.core.exception.MemberCheckException;
 import com.gmail.dlwk0807.dagachi.dto.email.EmailCertificationResponseDTO;
@@ -16,7 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.gmail.dlwk0807.dagachi.util.CommonUtil.createCode;
+import static com.gmail.dlwk0807.dagachi.util.CommonUtils.createCode;
 
 @Service
 @RequiredArgsConstructor
@@ -98,7 +99,7 @@ public class MailSendService {
         if (!"ok".equals(result)) {
             return "fail";
         }
-        Member member = memberRepository.findByEmail(email).orElseThrow();
+        Member member = memberRepository.findByEmail(email).orElseThrow(() -> new CustomRespBodyException("이메일정보를 확인해주세요"));
         member.setPassword(passwordEncoder.encode(password));
         return "ok";
 

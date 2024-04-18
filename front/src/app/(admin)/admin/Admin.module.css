@@ -1,0 +1,31 @@
+.adminNav {
+    color: #d9d9d9;
+    height: 100vh;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+
+}
+.adminNav > ul {
+    list-style: none;
+}
+
+/** 직원 일괄 업로드 **/
+.adminUserUpload {
+    color: #d9d9d9;
+    height: 100vh;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.adminUserContents {
+    margin-top: 7vh;
+    width: 100%;
+    padding: 15px;
+}
+.adminUserContents > div {
+    color: #d9d9d9;
+}
