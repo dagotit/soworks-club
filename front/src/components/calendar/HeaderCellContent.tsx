@@ -1,5 +1,6 @@
 import { memo, useCallback, useState } from 'react';
 
+// eslint-disable-next-line react/display-name
 const HeaderCellContent = memo((props: any) => {
   const { label } = props;
 

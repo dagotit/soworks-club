@@ -5,16 +5,19 @@ import { usePathname, useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { useTokenStore } from '@/store/useLogin';
 import { useDialogStore } from '@/store/useDialog';
-import useDidMountEffect from '@/utils/useDidMountEffect';
-import { isEmptyObj } from '@/utils/common';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useGetSearchList } from '@/hooks/useGroup';
 import { useGetAdminCheck } from '@/hooks/useAdmin';
+import { isEmptyObj } from '@/utils/common';
 
-const Header = (props: any) => {
+type HeaderProps = {
+  isBackBtn?: Boolean
+}
+const Header = (props: HeaderProps) => {
   const getLogout = useGetLogout();
   const router = useRouter();
+  const { accessToken } = useTokenStore();
   const pathname = usePathname();
   const { setAccessToken, setTokenExpires } = useTokenStore();
   const [isNavOpen, setNavOpen] = useState(false);
@@ -22,37 +25,43 @@ const Header = (props: any) => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchVal, setSearchVal] = useState('');
   const [isShowBackBtn, setIsShowBackBtn] = useState(
-    pathname.includes('/group/detail'),
+    pathname.includes('/group/detail') || props?.isBackBtn,
   );
-  const apiAdminCheck = useGetAdminCheck();
+
+  const apiAdminCheck = useGetAdminCheck(!pathname.includes('admin') && !!accessToken);
+
   // 검색
   const apiSearch = useGetSearchList();
   const [searchList, setSearchList] = useState<any[]>([]);
   const [isAdmin, setIsAdmin] = useState(false);
 
+
+
   useEffect(() => {
+    if (pathname.includes('admin')) { // middleware 에서 체크해서 그냥 패스
+      setIsAdmin(true);
+    }
     return () => {
       allClose();
     };
   }, []);
 
-  // @ts-ignore
   useEffect(() => {
-    console.log('props?.accessToken:', props?.accessToken)
-    if (!pathname.includes('admin') && props.accessToken !== '') {
-      // @ts-ignore
-      apiAdminCheck.mutate(null, {
-        onSuccess: (data) => {
-          console.log('admin data ==================>>', data)
-          if (data && !isEmptyObj(data)) {
-            // @ts-ignore
-            const respBody = data?.respBody;
-            setIsAdmin(respBody.adminYn === 'Y');
-          }
-        }
-      })
+    // @ts-ignore
+    if (isEmptyObj(apiAdminCheck.data)) {
+      return;
     }
-  }, [props?.accessToken]);
+
+    // @ts-ignore
+    const { respBody } = apiAdminCheck.data;
+    if(isEmptyObj(respBody)) {
+      return;
+    }
+
+    setIsAdmin(respBody.adminYn === 'Y');
+
+  }, [apiAdminCheck.data]);
+
 
   /**
    * @function

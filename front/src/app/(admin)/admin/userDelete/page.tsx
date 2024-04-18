@@ -3,7 +3,7 @@
 import { Metadata } from 'next/types';
 import { Fragment } from 'react';
 import Header from '@/components/Header';
-import UserDelete from '@/app/(admin)/admin/userDelete/UserDelete';
+import UserList from '@/components/UserList';
 import { useTokenStore } from '@/store/useLogin';
 
 export const metadata: Metadata = {
@@ -18,8 +18,8 @@ const AdminDeleteWrap = async () => {
   // console.log('resp:', resp)
   return (
     <Fragment>
-      <Header />
-      <UserDelete />
+      <Header isBackBtn={true} />
+      <UserList />
     </Fragment>
   );
 };

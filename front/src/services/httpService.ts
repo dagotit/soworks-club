@@ -31,17 +31,22 @@ app.interceptors.response.use(
   async (res) => {
     const url = res.config.url;
     const respData = res.data.respBody;
+    const { respCode } = res.data;
+
+    if (!!respCode && respCode === 'BIZ_018') {
+      // 회원이 존재하지 않는 경우
+      location.href = `/login?code=error`;
+      return Promise.reject(res);
+    }
     /** access token **/
     await setAccessToken(url, respData);
     if (url && url.includes('admin/template')) {
-      console.log('response res:::::::', res)
       return res
     }
-    console.log('response res2:::::::', res)
-    return res.data;
+
+    return await res.data;
   },
   async (err) => {
-    console.log('temp::::', err)
     const { data, status } = err.response;
     const { url } = err.config;
     if (!isEmptyObj(data)) {
@@ -59,7 +64,10 @@ app.interceptors.response.use(
         if (code === 'BIZ_007' || data instanceof Blob) {
           // count === 0 여러면 reissue 호출하는걸 방지 useQueries 사용하면 해당 현상이 발생할 일이 없음. 아마도?
           originalConfig._retry = true;
-          await apiGetRefreshToken(originalConfig)
+          const tokenResp: boolean | undefined = await apiGetRefreshToken()
+          if (tokenResp) {
+            return await app(originalConfig);
+          }
           return
         }
       }
@@ -74,14 +82,13 @@ app.interceptors.response.use(
   },
 );
 
-async function apiGetRefreshToken(originalConfig: any) {
+async function apiGetRefreshToken() {
   try {
     count = 1;
     const resp = await axios.get(`/api/v1/auth/reissue`, {
       withCredentials: true,
     });
-    // TODO 왜 일치하지 않은지 확인 필요..
-    console.log('리프레시 토큰 resp ==================>>', resp.data)
+
     if (isEmptyObj(resp)) {
       return
     }
@@ -95,7 +102,8 @@ async function apiGetRefreshToken(originalConfig: any) {
 
     // access token 다시 담기
     await setAccessToken(url, respBody);
-    return app(originalConfig);
+    // return app(originalConfig);
+    return true
   } catch (error: any) {
     const code = error.response.data.respCode;
     // BIZ_002 런타임 오류?
