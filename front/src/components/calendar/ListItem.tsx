@@ -12,6 +12,7 @@ export interface clubListItemProps {
 }
 
 // 불필요한 리렌더링 막기
+// eslint-disable-next-line react/display-name
 const ListItem = memo((props: clubListItemProps) => {
   console.log('children', props);
   const router = useRouter();

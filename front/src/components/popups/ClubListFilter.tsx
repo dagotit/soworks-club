@@ -12,18 +12,20 @@ interface clubFilterProps {
   listFilterQueryData: FilterQueryParamType | {};
 }
 
+// eslint-disable-next-line react/display-name
 const ClubListFilter = memo((props: clubFilterProps) => {
-  const DEFAULTENDDAY = `${DateTime.now().year}-${
+  const DEFAULT_END_DAY = `${DateTime.now().year}-${
     String(DateTime.now().month).length === 1
       ? '0' + DateTime.now().month
       : DateTime.now().month
   }-${new Date(DateTime.now().year, DateTime.now().month, 0).getDate()}`; // 모임리스트 조회 종료일
-  const DEFAULTSTARTDAY = DateTime.now().toISODate(); // 모임리스트 조회 시작일
+  const DEFAULT_START_DAY = DateTime.now().toISODate(); // 모임리스트 조회 시작일
+
   const [allCheckBox, setAllCheckBox] = useState(true);
   const [attendClubCheckBox, setAttendClubCheckBox] = useState(false);
   const [createClubCheckBox, setCreateClubCheckBox] = useState(false);
-  const [startDay, setStartDay] = useState(DEFAULTSTARTDAY);
-  const [endDay, setEndDay] = useState(DEFAULTENDDAY);
+  const [startDay, setStartDay] = useState(DEFAULT_START_DAY);
+  const [endDay, setEndDay] = useState(DEFAULT_END_DAY);
   const [statusClubCheckBox, setStatusClubCheckBox] = useState(true);
 
   /**
@@ -86,8 +88,8 @@ const ClubListFilter = memo((props: clubFilterProps) => {
    */
   function handleAllChecked() {
     if (!allCheckBox) {
-      setStartDay(DEFAULTSTARTDAY);
-      setEndDay(DEFAULTENDDAY);
+      setStartDay(DEFAULT_START_DAY);
+      setEndDay(DEFAULT_END_DAY);
       setAttendClubCheckBox(false);
       setCreateClubCheckBox(false);
       // setStatusClubCheckBox(true);
@@ -98,7 +100,7 @@ const ClubListFilter = memo((props: clubFilterProps) => {
    * 필터 있을 경우 > 전체조회 false
    * */
   function handleDetailChecked() {
-    if (startDay !== DEFAULTENDDAY || endDay !== DEFAULTENDDAY) {
+    if (startDay !== DEFAULT_END_DAY || endDay !== DEFAULT_END_DAY) {
       setAllCheckBox(false);
     }
 

@@ -7,7 +7,7 @@ import { useDialogStore } from '@/store/useDialog';
 import Link from 'next/link';
 
 const UserRegister = () => {
-  const [pValue, setpValue] = useState(0);
+  const [pValue, stePValue] = useState(0);
   const [file, setFile] = useState<any>(null);
   const [uploadedFile, setUploadedFile] = useState({});
   const memberUpload = usePostMemberUpload();
@@ -39,7 +39,7 @@ const UserRegister = () => {
   );
   const progress = (progressEvent: any) => {
     let pert = (progressEvent.loaded * 100) / progressEvent.total;
-    setpValue(pert / 100);
+    stePValue(pert / 100);
   };
   /**
    * @function

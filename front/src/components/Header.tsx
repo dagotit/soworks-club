@@ -11,7 +11,10 @@ import { useGetSearchList } from '@/hooks/useGroup';
 import { useGetAdminCheck } from '@/hooks/useAdmin';
 import { isEmptyObj } from '@/utils/common';
 
-const Header = (props: any) => {
+type HeaderProps = {
+  isBackBtn?: Boolean
+}
+const Header = (props: HeaderProps) => {
   const getLogout = useGetLogout();
   const router = useRouter();
   const { accessToken } = useTokenStore();
@@ -22,7 +25,7 @@ const Header = (props: any) => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchVal, setSearchVal] = useState('');
   const [isShowBackBtn, setIsShowBackBtn] = useState(
-    pathname.includes('/group/detail'),
+    pathname.includes('/group/detail') || props?.isBackBtn,
   );
 
   const apiAdminCheck = useGetAdminCheck(!pathname.includes('admin') && !!accessToken);

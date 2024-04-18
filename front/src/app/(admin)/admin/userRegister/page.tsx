@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 const AdminRegisterWrap = () => {
   return (
     <Fragment>
-      <Header />
+      <Header isBackBtn={true} />
       <UserRegister />
     </Fragment>
   );
