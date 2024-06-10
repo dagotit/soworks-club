@@ -2,21 +2,24 @@
 
 import styles from '@/app/(admin)/admin/Admin.module.css';
 import { useGetMemberList, usePostAlarmSend } from '@/hooks/useAdmin';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { isEmptyArr, isEmptyObj } from '@/utils/common';
 import DeleteBtn from '@/app/(admin)/admin/userDelete/DeleteBtn';
 import { useAdminStore } from '@/store/useAdmin';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import AlarmBtn from '@/app/(admin)/admin/alarm/AlarmBtn';
-import { useAlarmStore } from '@/store/useAlarmList';
-import { useGetMyInfo } from '@/hooks/useUser';
+import { alarmStartData, useAlarmStore } from '@/store/useAlarmList';
+import { useGetAlarmList, useGetMyInfo } from '@/hooks/useUser';
 import { useDialogStore } from '@/store/useDialog';
+import AlarmText from '@/app/(admin)/admin/alarm/AlarmText';
 
 const SEARCH_TYPE = [{val: 'email', name: '이메일'}, {val: 'name', name: '이름'}];
 export type ALARM_LIST_ITEM_TYPE = { memberId: number; content: string; title: string; receiveId: number };
+type ALARM_TYPE = 'all' | 'custom';
 
 const UserList = () => {
   const pathname = usePathname();
+  const router = useRouter();
   const [input, setInput] = useState('');
   const [searchInput, setSearchInput] = useState('');
   const [searchType, setSearchType] = useState(SEARCH_TYPE[1].val);
@@ -24,7 +27,11 @@ const UserList = () => {
   const [myMemberId, setMyMemberId] = useState<undefined | number>(undefined);
 
   // 알림보내기
+  const getAlarmList = useGetAlarmList(false);
   const [isShowAlarmBtn,setIsShowAlarmBtn] = useState(pathname.includes('alarm'));
+  const alarmAllEl = useRef(null);
+  const alarmCustomEl = useRef(null);
+  const [alarmType, setAlarmType] = useState<ALARM_TYPE>('all');
   const [checkedList, setCheckedList] = useState<number[]>([]);
   const { alarmList, resetAlarmList } = useAlarmStore()
 
@@ -46,6 +53,10 @@ const UserList = () => {
     }
   }, []);
 
+  /**
+   * @function
+   * 알림 초기화
+   */
   function resetAlarm() {
     setCheckedList([]);
     resetAlarmList();
@@ -154,6 +165,53 @@ const UserList = () => {
 
   /**
    * @function
+   * 전체 알림 전송 | 개별 알림 전송 선택
+   */
+  function onChangeAlarmType(e: React.ChangeEvent<HTMLInputElement>) {
+    const value = e.target.value;
+    if (value === 'all' || value === 'custom') {
+      setAlarmType(value);
+    }
+    if (value === 'all' && alarmList.size !== 0) {
+      // 개별 알림 작성 중 > 전체 알림으로 변경 시
+      setAlarmType('custom');
+      // @ts-ignore
+      alarmCustomEl.current.checked = true;
+      // @ts-ignore
+      alarmAllEl.current.checked = false;
+      open('confirm', '알림', '작성중인 알림을 삭제하시겠습니까?', () => {onClickConFirm('all')})
+    }
+    if (value === 'custom' && alarmList.has('all')) {
+      // 전체 알람 작성 중 > 개별 알림으로 변경
+      setAlarmType('all');
+      // @ts-ignore
+      alarmAllEl.current.checked = true;
+      // @ts-ignore
+      alarmCustomEl.current.checked = false;
+      open('confirm', '알림', '작성중인 알림을 삭제하시겠습니까?', ()=>{onClickConFirm('custom')})
+    }
+
+    if (alarmList.size === 0) {
+      resetAlarm();
+    }
+  }
+
+  /**
+   * @function
+   * 컨펌 > 확인 시 [알림화면 이동]
+   */
+  function onClickConFirm(type: ALARM_TYPE): void {
+    resetAlarm();
+    setAlarmType(type);
+    // @ts-ignore
+    alarmAllEl.current.checked = type !== 'custom';
+    // @ts-ignore
+    alarmCustomEl.current.checked = type === 'custom';
+  }
+
+
+  /**
+   * @function
    * 알림 리스트에 담기
    * 알림 전송할 인원 체크하는 체크박스
    */
@@ -173,20 +231,26 @@ const UserList = () => {
    */
   function onClickSendAlarm() {
     if (checkedList.length === 0 || myMemberId === undefined) {
+      open('alert', '알림 전송', '알림을 전송할 사용자를 선택해주세요.');
       return;
     }
+
     // data 리스트에 담아보기
     const requestData = checkedList.reduce((acc: ALARM_LIST_ITEM_TYPE[], cur, idx ) => {
-      if (alarmList.has(cur)) {
-        const getAlarmData = alarmList.get(cur);
-        if (!isEmptyObj(getAlarmData) && getAlarmData.title !== '') {
-          acc.push({
-            memberId: myMemberId,
-            content: getAlarmData.text,
-            title: getAlarmData.title,
-            receiveId: cur
-          })
-        }
+      let getAlarmData = alarmStartData;
+      if (alarmType === 'all' && alarmList.has('all')) {
+        getAlarmData = alarmList.get('all');
+      }
+      if (alarmType === 'custom' && alarmList.has(cur)) {
+        getAlarmData = alarmList.get(cur);
+      }
+      if (!isEmptyObj(getAlarmData) && getAlarmData.title !== '') {
+        acc.push({
+          memberId: myMemberId,
+          content: getAlarmData.text,
+          title: getAlarmData.title,
+          receiveId: cur
+        })
       }
       return acc;
     }, [])
@@ -200,9 +264,16 @@ const UserList = () => {
    * 알림 전송 [ api ]
    */
   function apiSendAlarm(list: ALARM_LIST_ITEM_TYPE[]) {
+    if (isEmptyArr(list)) {
+      open('alert', '알림', '선택된 회원의 전송할 알람이 없습니다.')
+      return;
+    }
     alarmSend.mutate(list, {
       onSuccess: () => {
-        open('alert', '알림', '전송완료')
+        open('alert', '알림', '전송완료', () => {
+          router.push('/admin')
+          getAlarmList.refetch()
+        })
       },
       onError: () => {
         open('alert', '알림', '전송실패<br />잠시후 다시 시도해주세요.')
@@ -212,7 +283,7 @@ const UserList = () => {
 
 
   // TODO 엔터..로 검색 가능하도록 수정?
-  return<div className={styles.adminUserContents}>
+  return <div className={styles.adminUserContents}>
     <div>
       <select value={searchType} onChange={onChangeSelectType}>
         {SEARCH_TYPE.map((item) => (
@@ -225,13 +296,23 @@ const UserList = () => {
     </div>
     {!memberList.isLoading &&
       <div>
+        {isShowAlarmBtn &&
+          <div>
+            <input type="radio" id="alarmAll" value="all" ref={alarmAllEl} checked={alarmType === 'all'} name="alarmType" onChange={onChangeAlarmType} />
+            <label htmlFor="alarmAll">전체 알림</label>
+            <input type="radio" id="alarmCustom" ref={alarmCustomEl} value="custom" checked={alarmType === 'custom'} name="alarmType" onChange={onChangeAlarmType} />
+            <label htmlFor="alarmCustom">개별 알림</label>
+          </div>
+          }
+        {isShowAlarmBtn && alarmType === 'all' && <AlarmText />}
         <ul>
           {userList.length === 0 && <li>불러올 리스트가 없습니다.</li>}
           {userList.length !== 0 && userList.map((value) => (
             <li key={value.memberId}>
               {isShowAlarmBtn && <input type="checkbox" value={value.memberId} checked={checkedList.includes(value.memberId)} onChange={checkListHandler} />}
               <p>{value.name}</p>
-              {isShowAlarmBtn && <AlarmBtn receiveId={value.memberId} />}
+              {/* 개별알람 */}
+              {isShowAlarmBtn && alarmType === 'custom' && <AlarmBtn receiveId={value.memberId} />}
               {pathname.includes('userDelete') && <DeleteBtn memberId={value.memberId} myMemberId={myMemberId} apiMemberDeleteSuccess={apiMemberDeleteSuccess} />}
             </li>
           ))}

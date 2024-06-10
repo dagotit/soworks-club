@@ -28,11 +28,12 @@ const AlarmPopup = memo((props:AlarmProps) => {
     if (!props.receiveId) {
       return;
     }
-    if (title === '') {
+    if (title.trim() === '') {
       // 알림 제목 없으면 내용 삭제
       updateAlarmData(props.receiveId, alarmStartData)
+      return;
     }
-    if (title === '' && text === '') {
+    if (title.trim() === '' && text.trim() === '') {
       return;
     }
     const value = { title, text };

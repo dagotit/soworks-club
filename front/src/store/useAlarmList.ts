@@ -2,8 +2,8 @@ import {create} from 'zustand';
 
 interface AlarmListState {
   alarmList: any; // new Map()
-  setAlarmList: (key: number, val?: any) => void;
-  updateAlarmData: (key: number, val: any) => void;
+  setAlarmList: (key: number | 'all', val?: any) => void;
+  updateAlarmData: (key: number | 'all', val: any) => void;
   deleteAlarmItem: (key: number) => void;
   resetAlarmList: () => void;
 }
@@ -49,6 +49,7 @@ const useAlarmStore = create<AlarmListState>(((set, get)=>({
     }
   },
   resetAlarmList: () => {
+    get().alarmList.clear();
     set({ alarmList: new Map() });
     // console.log('추가:',get().alarmList)
   }

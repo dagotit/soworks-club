@@ -1,5 +1,5 @@
-import { useQuery } from '@tanstack/react-query';
-import { apiGetMyInfo } from '@/services/userService';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { apiGetAlarmList, apiGetAlarmRead, apiGetMyInfo } from '@/services/userService';
 
 /**
  * @function
@@ -11,5 +11,31 @@ export const useGetMyInfo = (call: boolean) => {
     queryKey: ['get-my-info'],
     queryFn: apiGetMyInfo,
     enabled: call
+  })
+}
+
+/**
+ * @function
+ * 나의 알림 조회
+ */
+export const useGetAlarmList = (isFetch: boolean) => {
+  return useQuery({
+    queryKey: ['get-alarm-list'],
+    queryFn: apiGetAlarmList,
+    refetchOnMount: true,
+    enabled: isFetch,
+    refetchInterval: 60000,
+    // refetchIntervalInBackground: true
+  })
+}
+
+/**
+ * @function
+ * 알림 상세보기
+ */
+export const useGetAlarmRead = () => {
+  return useMutation({
+    mutationKey: ['get-alarm-read'],
+    mutationFn: apiGetAlarmRead,
   })
 }

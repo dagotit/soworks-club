@@ -9,7 +9,10 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useGetSearchList } from '@/hooks/useGroup';
 import { useGetAdminCheck } from '@/hooks/useAdmin';
-import { isEmptyObj } from '@/utils/common';
+import { isEmptyArr, isEmptyObj } from '@/utils/common';
+import { useGetAlarmList } from '@/hooks/useUser';
+import { useReceiveAlarmStore } from '@/store/useReceiveAlarm';
+import AlarmIcon from '@/components/AlarmIcon';
 
 type HeaderProps = {
   isBackBtn?: Boolean
@@ -17,9 +20,8 @@ type HeaderProps = {
 const Header = (props: HeaderProps) => {
   const getLogout = useGetLogout();
   const router = useRouter();
-  const { accessToken } = useTokenStore();
   const pathname = usePathname();
-  const { setAccessToken, setTokenExpires } = useTokenStore();
+  const { setAccessToken, setTokenExpires, accessToken } = useTokenStore();
   const [isNavOpen, setNavOpen] = useState(false);
   const { open, allClose } = useDialogStore();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -36,7 +38,6 @@ const Header = (props: HeaderProps) => {
   const [isAdmin, setIsAdmin] = useState(false);
 
 
-
   useEffect(() => {
     if (pathname.includes('admin')) { // middleware 에서 체크해서 그냥 패스
       setIsAdmin(true);
@@ -45,6 +46,8 @@ const Header = (props: HeaderProps) => {
       allClose();
     };
   }, []);
+
+
 
   useEffect(() => {
     // @ts-ignore
@@ -158,7 +161,7 @@ const Header = (props: HeaderProps) => {
             pathname: '/news',
           }}
         >
-          <Image src="/alert.svg" alt="알림" width={27} height={27} />
+          <AlarmIcon />
         </Link>
 
         <h1>

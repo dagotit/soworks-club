@@ -103,25 +103,25 @@ const UserRegister = () => {
 
           // @ts-ignore
           const blob = new Blob([res.data], {type: res.data.type});
-          // 특정 타입을 정의해야 경우에는 옵션을 사용해 MIME 유형을 정의 할 수 있습니다.
+          // 특정 타입을 정의해야 경우에는 옵션을 사용해 MIME 유형을 정의
           // const blob = new Blob([this.content], {type: 'text/plain'})
 
-          // blob을 사용해 객체 URL을 생성합니다.
+          // blob을 사용해 객체 URL을 생성
           const fileObjectUrl = window.URL.createObjectURL(blob);
 
           const link = document.createElement("a");
           link.href = fileObjectUrl;
           link.style.display = "none";
 
-          // 다운로드 파일 이름을 지정 할 수 있습니다.
-          // 일반적으로 서버에서 전달해준 파일 이름은 응답 Header의 Content-Disposition에 설정 된다.
+          // 다운로드 파일 이름을 지정
+          // 일반적으로 서버에서 전달해준 파일 이름은 응답 Header의 Content-Disposition에 설정
           link.download  = extractDownloadFilename(res)
 
           document.body.appendChild(link);
           link.click();
           link.remove();
 
-          // 다운로드가 끝난 리소스(객체 URL)를 해제합니다.
+          // 다운로드가 끝난 리소스(객체 URL)를 해제
           window.URL.revokeObjectURL(fileObjectUrl);
         },
       },)
@@ -130,7 +130,7 @@ const UserRegister = () => {
 
 
   return (
-    <div className={styles.amdinUserUpload}>
+    <div className={styles.adminUserUpload}>
       <form onSubmit={onSubmit}>
         <input type="file" accept=".xlsx, .xls, .csv" onChange={onChangeFile} />
         <input type="submit" value="upload" />

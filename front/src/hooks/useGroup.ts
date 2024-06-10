@@ -19,12 +19,10 @@ export const useGetDetailGroup = (id: number) => {
       {
         queryKey: ['get-group-info', id],
         queryFn: () => apiGetGroupInfo(id),
-        staleTime: 0,
       },
       {
         queryKey: ['get-attend-group', id],
         queryFn: () => apiGetGroupAttendList(id),
-        staleTime: 0,
       },
     ],
   });
