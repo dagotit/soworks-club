@@ -1,0 +1,84 @@
+/*:root {*/
+/*  --title01: #4ad134; !* 신입 *!*/
+/*  --title02: #2968E4; !* 여행자 *!*/
+/*  --title03: #2968E4; !* 애주가 *!*/
+/*  --title04: #2968E4; !* 자연인 *!*/
+/*  --title05: #26ffff; !* 셰르파 *!*/
+/*  --title06: #575757; !* 골퍼 *!*/
+/*  --title07: #866B25; !* 스트라이크 *!*/
+/*  --title08: #D03CD3; !* 뚜벅이 *!*/
+/*  --title09: #36C578; !* 라켓전문 *!*/
+/*}*/
+
+.mypageWrap {
+  padding: 100px 10px 0;
+}
+.mypageWrap .myInfoWrap {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+}
+.mypageWrap .myInfoWrap .myImgBox {
+  position: relative;
+  margin-right: 20px;
+}
+.mypageWrap .myInfoWrap .myImgBox .myImg {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+.mypageWrap .myInfoWrap .myImgBox .myImgEditBtn {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: none;
+  border-radius: 50%;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.51);
+}
+
+.mypageWrap .myInfoWrap .myInfo .myInfoNName {
+  font-size: 15px;
+  font-weight: 700;
+}
+/*  titleNum01: #4ad134; !* 신입 *!*/
+/*  titleNum02: #2968E4; !* 여행자 *!*/
+/*  titleNum03: #2968E4; !* 애주가 *!*/
+/*  titleNum04: #2968E4; !* 자연인 *!*/
+/*  titleNum05: #26ffff; !* 셰르파 *!*/
+/*  titleNum06: #575757; !* 골퍼 *!*/
+/*  titleNum07: #866B25; !* 스트라이크 *!*/
+/*  titleNum08: #D03CD3; !* 뚜벅이 *!*/
+/*  titleNum09: #36C578; !* 라켓전문 *!*/
+.mypageWrap .myInfoWrap .myInfo .myInfoNName .nNameTitle.titleNum01 {color: #4ad134;}
+.mypageWrap .myInfoWrap .myInfo .myInfoNName .nNameTitle.titleNum02 {color: #2968E4;}
+.mypageWrap .myInfoWrap .myInfo .myInfoNName .nNameTitle.titleNum03 {color: #2968E4;}
+.mypageWrap .myInfoWrap .myInfo .myInfoNName .nNameTitle.titleNum04 {color: #2968E4;}
+.mypageWrap .myInfoWrap .myInfo .myInfoNName .nNameTitle.titleNum05 {color: #26ffff;}
+.mypageWrap .myInfoWrap .myInfo .myInfoNName .nNameTitle.titleNum06 {color: #575757;}
+.mypageWrap .myInfoWrap .myInfo .myInfoNName .nNameTitle.titleNum07 {color: #866B25;}
+.mypageWrap .myInfoWrap .myInfo .myInfoNName .nNameTitle.titleNum08 {color: #D03CD3;}
+.mypageWrap .myInfoWrap .myInfo .myInfoNName .nNameTitle.titleNum08 {color: #36C578;}
+
+.mypageWrap .myInfoWrap .myInfo .myInfoNameEdit {
+  color: #727272;
+  border: none;
+  background: none;
+  font-weight: 700;
+  font-size: 13px;
+  margin-bottom: 20px;
+}
+
+.mypageWrap .myInfoWrap .myInfo .myPoint {
+  font-size: 15px;
+}
+.mypageWrap .myInfoWrap .myInfo .myPoint span {
+  display: inline-block;
+  margin: 0 5px;
+  color: #00A3FF;
+  font-weight: 700;
+  font-size: 20px;
+}

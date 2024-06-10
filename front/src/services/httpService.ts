@@ -7,9 +7,11 @@ const response = NextResponse.next();
 let timeOut: undefined | NodeJS.Timeout = undefined;
 const app = axios.create({
   // baseURL: `${process.env.NEXT_PUBLIC_API_URL}/auth`,
-  // baseURL: `/`,
   withCredentials: true,
   timeout: 30000,
+  headers: {
+    'Content-Type': 'application/json'
+  }
 });
 
 let count = 0;
@@ -27,88 +29,117 @@ app.interceptors.request.use(
 
 app.interceptors.response.use(
   async (res) => {
+    const url = res.config.url;
+    const respData = res.data.respBody;
+    const { respCode } = res.data;
+
+    if (!!respCode && respCode === 'BIZ_018') {
+      // 회원이 존재하지 않는 경우
+      location.href = `/login?code=error`;
+      return Promise.reject(res);
+    }
     /** access token **/
-    await setAccessToken(res);
-    return res.data;
+    await setAccessToken(url, respData);
+    if (url && url.includes('admin/template')) {
+      return res
+    }
+
+    return await res.data;
   },
   async (err) => {
-    if (!isEmptyObj(err.response.data)) {
-      const data = err.response.data;
-      if (
-        data.respCode === 'BIZ_007' &&
-        err.config.url === '/api/v1/auth/login'
-      ) {
+    const { data, status } = err.response;
+    const { url } = err.config;
+    if (!isEmptyObj(data)) {
+      const code = data?.respCode;
+      if (code === 'BIZ_007' && url === '/api/v1/auth/login') {
         // 로그인 계정 없을 경우 [ 로그인 api 호출 시에 ]
         return Promise.reject(err);
       }
-      if (data.respCode === 'BIZ_007') {
-        // login api 가 아닐 경우에만 401 에러를 처리한다
-        const originalConfig = err.config;
-        if (
-          err.response.status === 401 &&
-          !originalConfig._retry &&
-          count === 0
-        ) {
+
+
+      // login api 가 아닐 경우에만 401 에러를 처리한다
+      const originalConfig = err.config;
+
+      if (status === 401 && !originalConfig._retry && count === 0) {
+        if (code === 'BIZ_007' || data instanceof Blob) {
           // count === 0 여러면 reissue 호출하는걸 방지 useQueries 사용하면 해당 현상이 발생할 일이 없음. 아마도?
           originalConfig._retry = true;
-          try {
-            count = 1;
-            const resp = await axios.get(`/api/v1/auth/reissue`, {
-              withCredentials: true,
-            });
-            if (resp) {
-              if (resp.data.respCode === 'BIZ_018') {
-                location.href = `/login?code=error`;
-              }
-              // access token 다시 담기
-              await setAccessToken(resp);
-              return app(originalConfig);
-            }
-          } catch (error: any) {
-            // BIZ_002 런타임 오류?
-            if (
-              error.response.data.respCode === 'BIZ_002' ||
-              error.response.data.respCode === 'BIZ_018'
-            ) {
-              // 로그아웃된 사용자 입니다. & BIZ_018 로그아웃 사용자
-              location.href = `/login?code=error`;
-            }
-            return Promise.reject(error);
+          const tokenResp: boolean | undefined = await apiGetRefreshToken()
+          if (tokenResp) {
+            return await app(originalConfig);
           }
+          return
         }
       }
     }
 
-    const code = String(err.response.status);
-    if (code.startsWith('5')) {
+    if (String(status).startsWith('5')) {
       // 서버 오류나면 에러 페이지로 이동
       location.href = `${process.env.NEXT_PUBLIC_DOMAIN}error?msg=${err.response.data.respMsg}`;
     }
+
     return Promise.reject(err);
   },
 );
 
-async function setAccessToken(res: any) {
-  const requestUrl = res.config.url;
-  if (requestUrl.includes('login') || requestUrl.includes('reissue')) {
-    const storeAccessToken: string = useTokenStore.getState().accessToken;
-    if (storeAccessToken !== '') {
-      return;
-    }
-    const { accessToken, accessTokenExpiresIn } = res.data.respBody;
-    if (!!accessToken && !!accessTokenExpiresIn) {
-      useTokenStore.setState({
-        ...useTokenStore,
-        accessToken: accessToken,
-        expires: accessTokenExpiresIn,
-      });
+async function apiGetRefreshToken() {
+  try {
+    count = 1;
+    const resp = await axios.get(`/api/v1/auth/reissue`, {
+      withCredentials: true,
+    });
 
-      if (timeOut != undefined) {
-        clearTimeout(timeOut);
-        timeOut = undefined;
-      }
-      await handlerTokenExpires();
+    if (isEmptyObj(resp)) {
+      return
     }
+
+    const url = resp.config.url;
+    const { respBody, respCode } = resp.data;
+
+    if (respCode === 'BIZ_018') {
+      location.href = `/login?code=error`;
+    }
+
+    // access token 다시 담기
+    await setAccessToken(url, respBody);
+    // return app(originalConfig);
+    return true
+  } catch (error: any) {
+    const code = error.response.data.respCode;
+    // BIZ_002 런타임 오류?
+    if (code === 'BIZ_002' || code === 'BIZ_018') {
+      // 로그아웃된 사용자 입니다. & BIZ_018 로그아웃 사용자
+      location.href = `/login?code=error`;
+    }
+    return Promise.reject(error);
+  }
+}
+
+async function setAccessToken(requestUrl: string | undefined, respData: any) {
+  if (!requestUrl) {
+    return;
+  }
+  if (!requestUrl.includes('login') && !requestUrl.includes('reissue')) {
+    return
+  }
+
+  if (useTokenStore.getState().accessToken !== '') {
+    return;
+  }
+
+  const { accessToken, accessTokenExpiresIn } = respData;
+  if (!!accessToken && !!accessTokenExpiresIn) {
+    useTokenStore.setState({
+      ...useTokenStore,
+      accessToken: accessToken,
+      expires: accessTokenExpiresIn,
+    });
+
+    if (timeOut != undefined) {
+      clearTimeout(timeOut);
+      timeOut = undefined;
+    }
+    await handlerTokenExpires();
   }
 }
 /**

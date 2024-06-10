@@ -1,6 +1,7 @@
 import { NextResponse, NextFetchEvent } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { isEmptyObj } from '@/utils/common';
+import { isEmptyObj } from '@/utils/common'
+import { apiLogout } from '@/services/authService';
 
 type RESPONSE_ERROR = {
   respCode: string;
@@ -93,30 +94,44 @@ export async function middleware(request: NextRequest, event: NextFetchEvent) {
     return NextResponse.redirect(new URL('/login', request.url));
   }
 
+  if (!refreshToken) {
+    return
+  }
+
   // 이미 로그인이 되어있다면 로그인, 비밀번호 찾기, 회원가입 페이지 진입 불가
-  if (!!refreshToken) {
-    if (
-      pathname === '/login/cc' ||
-      pathname === '/join/' ||
-      pathname === '/passfind/'
-    ) {
-      if (search.indexOf('error')) {
-        // 에러 -> 리다이렉트
-        request.cookies.delete('refreshToken');
-      } else {
-        return NextResponse.redirect(new URL('/', request.url));
-      }
+  if (
+    pathname === '/login/' ||
+    pathname === '/join/' ||
+    pathname === '/passfind/'
+  ) {
+    if (search.includes('error')) {
+      // 에러 -> 리다이렉트
+      // @ts-ignore
+      await apiLogout() // TODO 이건 잘 모르겠음..
+      // request.cookies.delete('refreshToken');
+    } else {
+      return NextResponse.redirect(new URL('/', request.url));
     }
   }
 
+  console.log('pathname', pathname)
+
+
   if (pathname === '/admin/') {
+    // 어드민 페이지 진입시
     const refererUrl = request.headers.get('referer');
-    if (refererUrl === null) {
-      // 어드민 페이지 진입시 > 이전 페이지가 없을 경우
-      return NextResponse.redirect(new URL('/', request.url));
+
+    console.log('middleware refererUrl =======>', refererUrl)
+
+    if (refererUrl !== null) {
+      // 새로고침이 아닐경우 정상경로
+      return NextResponse.next();
+      // return NextResponse.redirect(new URL('/', request.url));
     }
 
     const token = await withoutAuth(refreshToken);
+
+    console.log('middleware =======>', token)
 
     if (!!token && typeof token === 'string') {
       if (token === 'AbortError' || token === 'error') {
@@ -128,11 +143,12 @@ export async function middleware(request: NextRequest, event: NextFetchEvent) {
       }
     }
     if (!!token && !isEmptyObj(token) && token.respCode === '00') {
+
       const isAdmin = await checkAdmin(token.respBody, refreshToken);
 
       if (!isAdmin) {
-        // 어드민 사용자가 아닐 경우 페이지 진입 막기
-        return NextResponse.redirect(new URL(refererUrl, request.url));
+        // 어드민 사용자가 아니고 이전 페이지가 없는 경우 [ 새로고침 ]
+        return NextResponse.redirect(new URL('/', request.url));
       }
     }
 

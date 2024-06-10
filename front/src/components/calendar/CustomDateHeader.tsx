@@ -1,5 +1,4 @@
 import { useCalendarStore } from '@/store/useCalendar';
-import useDidMountEffect from '@/utils/useDidMountEffect';
 import { DateTime, Interval } from 'luxon';
 import { useState } from 'react';
 

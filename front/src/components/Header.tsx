@@ -1,49 +1,70 @@
 'use client';
 import styles from '@/components/css/Header.module.css';
-import { useGetAccessToken, useGetLogout } from '@/hooks/useAuth';
+import { useGetLogout } from '@/hooks/useAuth';
 import { usePathname, useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { useTokenStore } from '@/store/useLogin';
 import { useDialogStore } from '@/store/useDialog';
-import useDidMountEffect from '@/utils/useDidMountEffect';
-import { isEmptyObj } from '@/utils/common';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useGetSearchList } from '@/hooks/useGroup';
 import { useGetAdminCheck } from '@/hooks/useAdmin';
+import { isEmptyArr, isEmptyObj } from '@/utils/common';
+import { useGetAlarmList } from '@/hooks/useUser';
+import { useReceiveAlarmStore } from '@/store/useReceiveAlarm';
+import AlarmIcon from '@/components/AlarmIcon';
 
-const Header = (props: any) => {
+type HeaderProps = {
+  isBackBtn?: Boolean
+}
+const Header = (props: HeaderProps) => {
   const getLogout = useGetLogout();
   const router = useRouter();
   const pathname = usePathname();
-  const { setAccessToken, setTokenExpires } = useTokenStore();
+  const { setAccessToken, setTokenExpires, accessToken } = useTokenStore();
   const [isNavOpen, setNavOpen] = useState(false);
   const { open, allClose } = useDialogStore();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchVal, setSearchVal] = useState('');
   const [isShowBackBtn, setIsShowBackBtn] = useState(
-    pathname.includes('/group/detail'),
+    pathname.includes('/group/detail') || props?.isBackBtn,
   );
+
+  const apiAdminCheck = useGetAdminCheck(!pathname.includes('admin') && !!accessToken);
+
   // 검색
   const apiSearch = useGetSearchList();
   const [searchList, setSearchList] = useState<any[]>([]);
-  // 어드민 여부 체크 [ 메뉴 노출 여부 ]
-  const apiAdminCheck = useGetAdminCheck();
   const [isAdmin, setIsAdmin] = useState(false);
 
+
   useEffect(() => {
+    if (pathname.includes('admin')) { // middleware 에서 체크해서 그냥 패스
+      setIsAdmin(true);
+    }
     return () => {
       allClose();
     };
   }, []);
 
+
+
   useEffect(() => {
-    if (!!apiAdminCheck.data && !isEmptyObj(apiAdminCheck.data)) {
-      // @ts-ignore
-      const respBody = apiAdminCheck.data.respBody;
-      setIsAdmin(respBody.adminYn === 'Y');
+    // @ts-ignore
+    if (isEmptyObj(apiAdminCheck.data)) {
+      return;
     }
+
+    // @ts-ignore
+    const { respBody } = apiAdminCheck.data;
+    if(isEmptyObj(respBody)) {
+      return;
+    }
+
+    setIsAdmin(respBody.adminYn === 'Y');
+
   }, [apiAdminCheck.data]);
+
 
   /**
    * @function
@@ -140,7 +161,7 @@ const Header = (props: any) => {
             pathname: '/news',
           }}
         >
-          <Image src="/alert.svg" alt="알림" width={27} height={27} />
+          <AlarmIcon />
         </Link>
 
         <h1>

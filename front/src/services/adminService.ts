@@ -1,10 +1,11 @@
+import axios from 'axios';
+import http from '@/services/httpService';
+import { ALARM_LIST_ITEM_TYPE } from '@/components/UserList';
+
 /**
  * @function
  * 어드민 계정인지 체크
  */
-import axios from 'axios';
-import http from '@/services/httpService';
-
 export const apiGetAdminCheck = async () => {
   try {
     return await http.get('/api/v1/member/check-admin');
@@ -17,9 +18,9 @@ export const apiGetAdminCheck = async () => {
 
 /**
  * @function
- * 이메일로 회원찾기
+ * 이메일로 회원 리스트 조회?
  */
-export const apiGetMemberEmailFind = async (email: string) => {
+/*export const apiGetMemberEmailFind = async (email: string | null) => {
   try {
     return await http.get(`/api/v1/admin/${email}`);
   } catch (e) {
@@ -27,16 +28,37 @@ export const apiGetMemberEmailFind = async (email: string) => {
       throw e.response.data;
     }
   }
-};
+};*/
+
+/**
+ * @function
+ * 회원일괄조회
+ */
+export const apiGetMemberList = async (name ?: string | null, type?: string) => {
+  try {
+    let url = '/api/v1/admin/member-list';
+    if (name) {
+      url += `?${type}=${name}`
+    }
+    return await http.get(url);
+  } catch (e) {
+    if (axios.isAxiosError(e) && e.response) {
+      throw e.response.data;
+    }
+  }
+}
 
 /**
  * @function
  * 회원 삭제
  */
-export const apiPostMemberDelete = async () => {
+export const apiPostMemberDelete = async (id?: number| null) => {
   try {
+    if (!id) {
+      throw new Error('id undefined');
+    }
     return await http.post('/api/v1/admin/member-delete', {
-      memberId: 1,
+      memberId: id,
     });
   } catch (e) {
     if (axios.isAxiosError(e) && e.response) {
@@ -69,12 +91,26 @@ export const apiPostMemberUpload = async (data: {
 
 /**
  * @function
+ * 일괄 업로드 파일 다운로드
+ */
+export const apiPostTemplateDownLoad = async (data: null) => {
+  try {
+    return await http.post('/api/v1/admin/template', null, {"responseType" : "blob"})
+  } catch (e) {
+    if (axios.isAxiosError(e) && e.response) {
+      throw e.response.data;
+    }
+  }
+}
+
+/**
+ * @function
  *  알람보내기
  */
-export const apiGetNoticeAlarm = async (id: number) => {
+export const apiGetNoticeAlarm = async (list: ALARM_LIST_ITEM_TYPE[]) => {
   try {
     // TODO 알람 내용도 등록가능?
-    return await http.get(`/api/v1/admin/send-alarm?memberId=${id}`);
+    return await http.post('/api/v1/admin/send-alarm', list);
   } catch (e) {
     if (axios.isAxiosError(e) && e.response) {
       throw e.response.data;

@@ -11,7 +11,6 @@ import {
   usePostAttendCancel,
   usePostGroupDelete,
 } from '@/hooks/useGroup';
-import useDidMountEffect from '@/utils/useDidMountEffect';
 import { isEmptyArr, isEmptyObj } from '@/utils/common';
 import Header from '@/components/Header';
 import Link from 'next/link';
