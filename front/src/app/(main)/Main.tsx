@@ -7,7 +7,6 @@ import Image from 'next/image';
 import Loading from '@/components/Loading';
 import { useRouter } from 'next/navigation';
 import Header from '@/components/Header';
-import Bg from '@/components/bgBox/Bg';
 import { useGetAttendance } from '@/hooks/useCalendar';
 import { useTokenStore } from '@/store/useLogin';
 import { useAttendStore } from '@/store/useAttend';

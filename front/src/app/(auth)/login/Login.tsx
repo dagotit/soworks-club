@@ -6,11 +6,9 @@ import Link from 'next/link';
 import { useDialogStore } from '@/store/useDialog';
 import React, { useEffect, useState } from 'react';
 import { usePostLogin } from '@/hooks/useAuth';
-import BgMoon from '@/components/bgBox/Bg';
-import { Inter, Mochiy_Pop_One } from 'next/font/google';
+import { Inter } from 'next/font/google';
 import {EMAIL_LENGTH, EMAIL_REX, PASSWORD_REX} from '@/utils/constants'
 
-const MochiyPopOne = Mochiy_Pop_One({ weight: ['400'], subsets: ['latin'] });
 const inter = Inter({ subsets: ['latin'] });
 
 const Login = () => {
@@ -141,67 +139,70 @@ const Login = () => {
   };
 
   return (
-    <main className={styles.main}>
-      <BgMoon />
-      <h1 className={styles.titleText}>
-        <span>DAGACHI</span>
-      </h1>
-      <input
-        className={`${styles.input} ${emailValidation ? styles.inputFail : ''}`}
-        type="email"
-        placeholder="회사 e-mail을 입력해주세요."
-        value={email}
-        onChange={handleEmailChange}
-      />
-      {emailValidation && (
-        <p className={styles.errText}>이메일 형식이 올바르지 않습니다.</p>
-      )}
-      <input
-        className={`${styles.input} ${
-          passwordValidation ? styles.inputFail : ''
-        }`}
-        type="password"
-        placeholder="password를 입력해주세요."
-        value={password}
-        onChange={handlePasswordChange}
-      />
-      {passwordValidation && (
-        <p className={styles.errText}>
-          비밀번호는 특수문자는 !,@,#,$,%,^,&,*만 사용 가능합니다.
-        </p>
-      )}
-      <Link
-        className={styles.passwordFind}
-        href={{
-          pathname: '/passfind',
-        }}
-      >
-        비밀번호 찾기
-      </Link>
-      <button
-        className={`${styles.loginBtn} ${MochiyPopOne.className}`}
-        onClick={handlerLoginBtn}
-      >
-        LOGIN
-        <span />
-        <span />
-        <span />
-        <span />
-      </button>
-      <p className={`${styles.pText} ${inter.className}`}>
-        대표님! 다가치 가 처음이신가요?
-      </p>
-      <Link
-        className={styles.signUp}
-        href={{
-          pathname: '/join',
-        }}
-      >
-        Oner Sign Up
-      </Link>
-      <p className={`${styles.pText} ${styles.color}`}>
-        직원들은 대표님이 초대해주셔야 합니다!
-      </p>
+    <main className={styles.logWrap}>
+      <div className={styles.logContainer}>
+        {/* 회원가입 영역 */}
+        <section className={styles.mainJoinWrap}>
+          <p className={`${styles.pText} ${inter.className}`}>
+            Welcome DAGACHI
+          </p>
+          <Link
+            className={styles.signUp}
+            href={{
+              pathname: '/join',
+            }}
+          >
+            Oner Sign Up
+          </Link>
+        </section>
+        {/* //회원가입 영역 */}
+
+        {/* 로그인 영역 */}
+        <section className={styles.mainlogWrap}>
+          <h1 className={styles.titleText}>LOGIN</h1>
+          <input
+            className={`${styles.input} ${emailValidation ? styles.inputFail : ''}`}
+            type="email"
+            placeholder="E-MAIL"
+            value={email}
+            onChange={handleEmailChange}
+          />
+          {emailValidation && (
+            <p className={styles.errText}>이메일 형식이 올바르지 않습니다.</p>
+          )}
+          <input
+            className={`${styles.input} ${
+              passwordValidation ? styles.inputFail : ''
+            }`}
+            type="password"
+            placeholder="PASSWORD"
+            value={password}
+            onChange={handlePasswordChange}
+          />
+          {passwordValidation && (
+            <p className={styles.errText}>
+              비밀번호는 특수문자는 !,@,#,$,%,^,&,*만 사용 가능합니다.
+            </p>
+          )}
+          <div className={styles.signInGrp}>
+            <Link
+              className={styles.passwordFind}
+              href={{
+                pathname: '/passfind',
+              }}
+            >
+              비밀번호 찾기
+            </Link>
+            <button
+              className={styles.loginBtn}
+              onClick={handlerLoginBtn}
+            >
+              Sign In
+            </button>
+          </div>
+        </section>
+        {/* //로그인 영역 */}
+      </div>
     </main>
   );
 };
