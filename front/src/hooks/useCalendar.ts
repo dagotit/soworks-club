@@ -51,14 +51,10 @@ export const useGetCalendarQuerys = (
       {
         queryKey: ['get-month-calendar', calendarQuery],
         queryFn: async () =>  await apiGetMonthCalendar(calendarQuery),
-        staleTime: 0,
-        retry: 3, // 실패시 재시도 횟수
       },
       {
         queryKey: ['get-club-list', clubListQuery, calendarQuery],
         queryFn: async () => await apiGetClubList(clubListQuery),
-        staleTime: 0,
-        retry: 3,
       },
     ],
     combine: (results) => {
