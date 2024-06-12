@@ -1,11 +1,9 @@
 import type { Metadata } from 'next';
-import { Mochiy_Pop_One } from 'next/font/google';
 import './globals.css';
 import ReactQueryProvider from '@/components/ReactQueryProvider';
 import DialogWrap from '@/components/DialogWrap';
 
 // const inter = Inter({ subsets: ['latin'] });
-const MochiyPopOne = Mochiy_Pop_One({weight: ["400"], subsets: ['latin']});
 
 export const metadata: Metadata = {
   title: '다가치 프로젝트',
@@ -19,7 +17,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ko">
-      <body className={MochiyPopOne.className}>
+      <body>
         <ReactQueryProvider>
           {children}
           <DialogWrap />
