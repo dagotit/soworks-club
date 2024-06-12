@@ -4,15 +4,12 @@ import styles from './Join.module.css';
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import AddressSearch from '../../../components/popups/AddressSearch';
-import { Jua } from 'next/font/google';
 import {useDialogStore} from "@/store/useDialog";
 import { usePostSignup, useGetEmailCodeVerfiy, usePostCreditsEmail } from '@/hooks/useAuth';
 import {APIResponse} from "@/services/api";
 import {useRouter} from "next/navigation";
 
-const jua = Jua({weight: ["400"], subsets: ['latin']});
 const Join = () => {
-  const router = useRouter();
   const postSignup = usePostSignup(); // 회원가입 시도
   const creditsEmail = usePostCreditsEmail(); // 인증번호 보내기
   const emailCodeVerify = useGetEmailCodeVerfiy(); // 인증번호 가져오기
@@ -144,6 +141,7 @@ const Join = () => {
    */
   const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(event.target.value);
+    setPasswordsMatch(event.target.value === confirmPassword);
   };
 
   const handleConfirmPasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -319,154 +317,159 @@ const Join = () => {
     // router.push('/login');
   };
   return (
-    <main className={styles.main}>
-      <h2>JOIN DAGACHI</h2>
-      <div className={`${styles.joinWrap} ${jua.className}`}>
-        {/* 이름 영역 */}
-        <div className={styles.name_field}>
-          <div className={styles.tag_name}>이름</div>
-          <div className={styles.tag_input}>
-            <input type="text" placeholder="대표자분의 성함을 입력해주세요." value={onerName ? onerName : ''} onChange={handleOnerName} />
-          </div>
-        </div>
-        {/* //이름 영역 */}
-        {/* 회사명 영역 */}
-        <div className={styles.company_name_field}>
-          <div className={styles.tag_name}>회사명</div>
-          <div className={styles.tag_input}>
-            <input type="text" value={companyName ? companyName : ''} onChange={handleCompanyName} />
-          </div>
-        </div>
-        {/* //회사명 영역 */}
-        {/* 회사명 영역 */}
-        <div className={styles.company_date_field}>
-          <div className={styles.tag_name}>설립날짜</div>
-          <div className={styles.tag_input}>
-            <input type="number" placeholder="ex) 20230101 " value={companyDate ? companyDate : ''} onChange={handleCompanyDate} />
-          </div>
-        </div>
-        {/* //회사명 영역 */}
-        {/* 사업자 등록번호 영역 */}
-        <div className={styles.company_num_field}>
-          <div className={styles.tag_name}>사업자 번호</div>
-          <div className={styles.tag_input}>
-            <input
-              type="number"
-              value={corporateRegiNumber ? corporateRegiNumber : ''}
-              placeholder=" - 기호는 생략해주세요."
-              onChange={handleInputChange}
-            />
-            <button className={jua.className} type="button" onClick={() => checkCorporateRegiNumber(corporateRegiNumber, companyDate, onerName, companyName)}>인증하기</button>
-            {isConfirmRegiNumBlurred && (
-              <>
-                {isValid ? (
-                  <p className={styles.valid}>유효한 사업자 번호입니다.</p>
-                ) : (
-                  <p className={styles.invalid}>올바른 사업자 번호가 아닙니다.</p>
-                )}
-              </>
-            )}
-          </div>
-
-        </div>
-        {/* //사업자 등록번호 영역 */}
-        {/* 회사 이메일 영역 */}
-        <div className={styles.company_email_field}>
-          <div className={styles.cef_top}>
-            <div className={styles.tag_name}>회사 이메일</div>
-            <div className={styles.tag_input}>
-              <input
-                type="text"
-                name='email'
-                ref={emailInput as React.RefObject<HTMLInputElement>}
-                value={email ? email : ''}
-                onChange={(e) => setEmail(e.target.value)}
-                disabled={isClickedCefTopBtn}
-                className={isClickedCefTopBtn ? styles.input_blur : ''}
-              />
-              <button className={jua.className} type="button" onClick={handleClickedCefTopBtn}>인증하기</button>
-            </div>
-          </div>
-          {isClickedCefTopBtn && (
-            <div className={styles.cef_bottom}>
-              <div className={styles.tag_name}>인증번호 입력</div>
-              <div className={styles.tag_input}>
-                <input type="text" value={code} onChange={handleChangeCode} />
-                <button className={jua.className} type="button" onClick={verifyEmail}>인증</button>
+    <main className={styles.joinMain}>
+      <section className={styles.joinSection}>
+        <article className={styles.joinTxtCont}>
+          <h1 className={styles.joinTitle}>SIGN UP DAGACHI</h1>
+          <div className={styles.joinWrap}>
+            <div className={styles.jwLeft}>
+              {/* 이름 영역 */}
+              <div className={styles.name_field}>
+                <div className={styles.tag_input}>
+                  <input type="text" placeholder="성함" value={onerName ? onerName : ''} onChange={handleOnerName} />
+                </div>
               </div>
-            </div>
-          )}
-        </div>
-        {/* //회사 이메일 영역 */}
-        {/* 비밀번호 영역 */}
-        <div className={styles.company_password_field}>
-          <div className={styles.cpf_top}>
-            <div className={styles.tag_name}>비밀번호 설정</div>
-            <div className={styles.tag_input}>
-              <input type="password" value={password} onChange={handlePasswordChange} />
-            </div>
-          </div>
-          <div className={styles.cpf_bottom}>
-            <div className={styles.tag_name}>비밀번호 확인</div>
-            <div className={styles.tag_input}>
-              <input
-                type="password"
-                value={confirmPassword}
-                onChange={handleConfirmPasswordChange}
-                onBlur={handleConfirmPasswordBlur}
-              />
-
-              {/* onBlur 이벤트 후에만 메시지 표시 */}
-              {isConfirmPasswordBlurred && (
-                <>
-                  {/* 비밀번호 매치 상태에 따른 메세지 */}
-                  {passwordsMatch ? (
-                    // 일치할경우
-                    <span className={styles.cpf_true}>비밀번호가 일치합니다.</span>
-                  ) : (
-                    // 불일치할경우
-                    <span className={styles.cpf_false}>비밀번호가 일치하지 않습니다.</span>
+              {/* //이름 영역 */}
+              {/* 회사명 영역 */}
+              <div className={styles.company_name_field}>
+                <div className={styles.tag_input}>
+                  <input type="text" placeholder="회사명" value={companyName ? companyName : ''} onChange={handleCompanyName} />
+                </div>
+              </div>
+              {/* //회사명 영역 */}
+              {/* 회사명 영역 */}
+              <div className={styles.company_date_field}>
+                <div className={styles.tag_input}>
+                  <input type="number" placeholder="설립날짜 ex) 20230101 " value={companyDate ? companyDate : ''} onChange={handleCompanyDate} />
+                </div>
+              </div>
+              {/* //회사명 영역 */}
+              {/* 사업자 등록번호 영역 */}
+              <div className={styles.company_num_field}>
+                <div className={styles.tag_input}>
+                  <input
+                    className={styles.numInput}
+                    type="number"
+                    value={corporateRegiNumber ? corporateRegiNumber : ''}
+                    placeholder="사업자 번호 - 기호는 생략해주세요."
+                    onChange={handleInputChange}
+                  />
+                  <button type="button" onClick={() => checkCorporateRegiNumber(corporateRegiNumber, companyDate, onerName, companyName)}>인증하기</button>
+                  {isConfirmRegiNumBlurred && (
+                    <>
+                      {isValid ? (
+                        <p className={styles.valid}>유효한 사업자 번호입니다.</p>
+                      ) : (
+                        <p className={styles.invalid}>올바른 사업자 번호가 아닙니다.</p>
+                      )}
+                    </>
                   )}
-                </>
-              )}
+                </div>
+
+              </div>
+              {/* //사업자 등록번호 영역 */}
+            </div>
+            <div className={styles.jwRight}>
+              {/* 회사 이메일 영역 */}
+              <div className={styles.company_email_field}>
+                <div className={styles.cef_top}>
+                  <div className={styles.tag_input}>
+                    <input
+                      type="text"
+                      name='email'
+                      placeholder="E-MAIL"
+                      ref={emailInput as React.RefObject<HTMLInputElement>}
+                      value={email ? email : ''}
+                      onChange={(e) => setEmail(e.target.value)}
+                      disabled={isClickedCefTopBtn}
+                      className={isClickedCefTopBtn ? styles.input_blur : ''}
+                    />
+                    <button type="button" onClick={handleClickedCefTopBtn}>인증하기</button>
+                  </div>
+                </div>
+                {isClickedCefTopBtn && (
+                  <div className={styles.cef_bottom}>
+                    <div className={styles.tag_input}>
+                      <input type="text" placeholder="인증번호 입력" value={code} onChange={handleChangeCode} />
+                      <button type="button" onClick={verifyEmail}>인증</button>
+                    </div>
+                  </div>
+                )}
+              </div>
+              {/* //회사 이메일 영역 */}
+              {/* 비밀번호 영역 */}
+              <div className={styles.company_password_field}>
+                <div className={styles.cpf_top}>
+                  <div className={styles.tag_input}>
+                    <input type="password" placeholder="비밀번호" value={password} onChange={handlePasswordChange} />
+                  </div>
+                </div>
+                <div className={styles.cpf_bottom}>
+                  <div className={styles.tag_input}>
+                    <input
+                      type="password"
+                      placeholder="비밀번호 확인"
+                      value={confirmPassword}
+                      onChange={handleConfirmPasswordChange}
+                      onBlur={handleConfirmPasswordBlur}
+                    />
+
+                    {/* onBlur 이벤트 후에만 메시지 표시 */}
+                    {isConfirmPasswordBlurred && (
+                      <>
+                        {password !== '' ? (
+                          <div>
+                            {passwordsMatch ? (
+                              // 일치할경우
+                              <span className={styles.cpf_true}>비밀번호가 일치합니다.</span>
+                            ) : (
+                              // 불일치할경우
+                              <span className={styles.cpf_false}>비밀번호가 일치하지 않습니다.</span>
+                            )}
+                          </div>
+                        ): null}
+                      </>
+                    )}
+                  </div>
+                </div>
+              </div>
+              {/* //비밀번호 영역 */}
+              {/* 회사 주소 영역 */}
+              <div className={styles.company_location_field}>
+                <div className={styles.tag_box}>
+                  {/* 우편번호 */}
+                  <input
+                    type="number"
+                    placeholder="우편번호"
+                    value={zipCode ? zipCode : ''}
+                    disabled
+                    className={`${styles.input_blur} ${styles.num_input}`}
+                  />
+                  {/* //우편번호 */}
+                  <AddressSearch onSelectAddress={handleAddressSelect} />
+                  {/* 도로명 주소 */}
+                  <input
+                    type="text"
+                    placeholder="주소"
+                    value={roadAddress ? roadAddress : ''}
+                    disabled
+                    className={`${styles.input_blur} ${styles.address_input}`}
+                  />
+                  {/* //도로명 주소 */}
+                  <input
+                    type="text"
+                    value={detailAddress ? detailAddress : ''}
+                    placeholder="상세 주소"
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {setDetailAddress(e.target.value)}}
+                  />
+                </div>
+              </div>
+              {/* //회사 주소 영역 */}
             </div>
           </div>
-        </div>
-        {/* //비밀번호 영역 */}
-        {/* 회사 주소 영역 */}
-        <div className={styles.company_location_field}>
-          <div className={styles.tag_name}>회사 주소</div>
-          <div className={styles.tag_box}>
-            {/* 우편번호 */}
-            <input
-              type="number"
-              placeholder=""
-              value={zipCode ? zipCode : ''}
-              disabled
-              className={`${styles.input_blur} ${styles.num_input}`}
-            />
-            {/* //우편번호 */}
-            <AddressSearch onSelectAddress={handleAddressSelect} />
-            {/* 도로명 주소 */}
-            <input
-              type="text"
-              placeholder="주소"
-              value={roadAddress ? roadAddress : ''}
-              disabled
-              className={`${styles.input_blur} ${styles.address_input}`}
-            />
-            {/* //도로명 주소 */}
-            <input
-              type="text"
-              value={detailAddress ? detailAddress : ''}
-              placeholder="상세 주소"
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {setDetailAddress(e.target.value)}}
-            />
-          </div>
-        </div>
-        {/* //회사 주소 영역 */}
-      </div>
-      <button className={`${styles.signUpBtn} ${jua.className}`} type='button' onClick={handleSignUpClick}>가입하기</button>
+          <button className={styles.signUpBtn} type='button' onClick={handleSignUpClick}>가입하기</button>
+        </article>
+      </section>
     </main>
   );
 };
