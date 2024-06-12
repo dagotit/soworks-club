@@ -1,8 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import { useDaumPostcodePopup } from 'react-daum-postcode';
-import { Jua } from 'next/font/google';
-
-const jua = Jua({weight: ["400"], subsets: ['latin']});
 interface AddressSearchProps {
   onSelectAddress: (addressData: { selectedAddress: string; selectedZipCode: string }) => void;
 }
@@ -32,7 +29,7 @@ const AddressSearch: React.FC<AddressSearchProps> = ({ onSelectAddress }) => {
   };
 
   return (
-    <button className={jua.className} type='button' onClick={handleClick}>
+    <button type='button' onClick={handleClick}>
       우편번호 검색
     </button>
   );
