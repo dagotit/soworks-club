@@ -16,7 +16,7 @@ export const useGetAdminCheck = (isfetch: boolean) => {
   return useQuery({
     queryKey: ['get-admin-check'],
     queryFn: apiGetAdminCheck,
-    staleTime: 60000, //  1분이 지난 후에 새로운 데이터가 필요한 상태
+    // staleTime: 60000, //  1분이 지난 후에 새로운 데이터가 필요한 상태
     enabled: isfetch, // true 일 경우만 api 실행
   });
 };

@@ -9,9 +9,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useGetSearchList } from '@/hooks/useGroup';
 import { useGetAdminCheck } from '@/hooks/useAdmin';
-import { isEmptyArr, isEmptyObj } from '@/utils/common';
-import { useGetAlarmList } from '@/hooks/useUser';
-import { useReceiveAlarmStore } from '@/store/useReceiveAlarm';
+import { isEmptyObj } from '@/utils/common';
 import AlarmIcon from '@/components/AlarmIcon';
 
 type HeaderProps = {
@@ -75,6 +73,7 @@ const Header = (props: HeaderProps) => {
       onSuccess: () => {
         setAccessToken('');
         setTokenExpires(0);
+        setIsAdmin(false);
         router.push('/login');
       },
       onError: () => {
@@ -120,14 +119,12 @@ const Header = (props: HeaderProps) => {
    * api 검색 성공
    **/
   function handleSearchSuccess(e: any) {
-    console.log('e:', e);
     if (e.respCode === '00') {
       const list = e.respBody.map((item: any, index: number) => {
         if (index < 6) {
           return item;
         }
       });
-      console.log(list);
       setSearchList(list);
     }
   }
