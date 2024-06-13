@@ -1,7 +1,6 @@
 import { NextResponse, NextFetchEvent } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { isEmptyObj } from '@/utils/common'
-import { apiLogout } from '@/services/authService';
 
 type RESPONSE_ERROR = {
   respCode: string;
@@ -90,39 +89,26 @@ export async function middleware(request: NextRequest, event: NextFetchEvent) {
   const { pathname, search } = request.nextUrl;
 
   // 메인화면 페이지 진입시 리프레시 토큰이 없을 경우 로그인 페이지로 이동
-  if (pathname === '/' && !refreshToken) {
+  if (!pathname.includes('login') && !refreshToken) {
     return NextResponse.redirect(new URL('/login', request.url));
   }
 
-  if (!refreshToken) {
-    return
-  }
+  const refererUrl = request.headers.get('referer');
 
-  // 이미 로그인이 되어있다면 로그인, 비밀번호 찾기, 회원가입 페이지 진입 불가
-  if (
-    pathname === '/login/' ||
-    pathname === '/join/' ||
-    pathname === '/passfind/'
-  ) {
-    if (search.includes('error')) {
-      // 에러 -> 리다이렉트
-      // @ts-ignore
-      await apiLogout() // TODO 이건 잘 모르겠음..
-      // request.cookies.delete('refreshToken');
-    } else {
-      return NextResponse.redirect(new URL('/', request.url));
+  if (!pathname.includes('login') && refererUrl === null) {
+    // 최초 진입일 경우
+    const token = await withoutAuth(refreshToken);
+
+    if (token.respCode === 'BIZ_018') {
+      return NextResponse.redirect(new URL('/login', request.url));
     }
   }
 
+  // 이미 로그인이 되어있다면 로그인, 비밀번호 찾기, 회원가입 페이지 진입 불가
   console.log('pathname', pathname)
-
 
   if (pathname === '/admin/') {
     // 어드민 페이지 진입시
-    const refererUrl = request.headers.get('referer');
-
-    console.log('middleware refererUrl =======>', refererUrl)
-
     if (refererUrl !== null) {
       // 새로고침이 아닐경우 정상경로
       return NextResponse.next();

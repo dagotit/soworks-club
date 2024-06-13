@@ -22,6 +22,12 @@ app.interceptors.request.use(
     if (accessToken) {
       res.headers['Authorization'] = `Bearer ${accessToken}`;
     }
+
+    if (res?.url?.includes('logout') && timeOut !== undefined) {
+      // 로그아웃 되면 토큰 타임아웃 제거
+      clearTimeout(timeOut);
+      timeOut = undefined;
+    }
     return res;
   },
   (err) => Promise.reject(err),
@@ -135,7 +141,7 @@ async function setAccessToken(requestUrl: string | undefined, respData: any) {
       expires: accessTokenExpiresIn,
     });
 
-    if (timeOut != undefined) {
+    if (timeOut !== undefined) {
       clearTimeout(timeOut);
       timeOut = undefined;
     }
