@@ -5,11 +5,36 @@
 }
 body {
   background-color: #fff;
-}html, body {
+}
+html, body {
   margin: 0;
   padding: 0;
 }
 
+/* 기본 브라우저의 선택 색상을 변경 */
+::selection {
+    background: transparent;
+}
+
+/* 자동완성된 입력 필드의 배경 색상을 변경 - 웹킷 기반 브라우저 (크롬, 사파리) */
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0px 1000px #fff inset !important;
+    -webkit-text-fill-color: #4d4d4d !important;
+}
+
+/* 자동완성된 입력 필드의 배경 색상을 변경 - 모질라 기반 브라우저 (파이어폭스) */
+input:-moz-autofill {
+    box-shadow: 0 0 0px 1000px #fff inset !important;
+    -moz-text-fill-color:  #4d4d4d !important;
+}
+input.input_blur,
+input:disabled {
+  background-color: #ddd !important;
+  -webkit-box-shadow: 0 0 0px 1000px #ddd inset !important;
+  -webkit-text-fill-color: #4d4d4d !important;
+  box-shadow: 0 0 0px 1000px #ddd inset !important;
+  -moz-text-fill-color:  #4d4d4d !important;
+}
  /* 캘린더 */
 .rbc-calendar .rbc-month-view {
   background-color: #fff ;

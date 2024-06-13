@@ -1,97 +1,84 @@
-
-.contents {
-    padding:35px 20px 0;
-    display: flex;
-    flex-direction: column;
+.passFindWrap {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+  background:linear-gradient(rgba(0, 0, 0, 0.527), rgba(0, 0, 0, 0.8)), url(../../../../public/images/joinBg.jpg) center / cover no-repeat;
 }
-.inputWrap {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-}
-.title {
-    display: none;
-}
-.inputText {
-    font-size: 14px;
-    display: block;
-    width: 15vw;
-    color: #fff;
-}
-.input {
-    width: 70vw;
-    padding: 15px 10px;
-    background-color: transparent;
-    border: none;
-    border-radius: 7px;
-    color: #fff;
-    box-shadow: 0 -1px 0 #fff, 0 1px 10px rgba(255, 255, 255, 0.6),
-    0 6px 1px rgba(255, 255, 255, 0.1), 0 0 5px rgba(255, 255, 255, 0.2),
-    0 1px 3px rgba(255, 255, 255, 0.3), 0 3px 5px rgba(255, 255, 255, 0.2),
-    0 7px 10px rgba(255, 255, 255, 0.25), 0 15px 10px rgba(255, 255, 255, 0.2),
-    0 25px 15px rgba(255, 255, 255, 0.15);
-}
-.input::placeholder {
-    color:  #b3b3b3;
+.passFindWrap .title {
+  font-family: 'Montserrat', sans-serif;
+  color:#4d4d4d;
+  font-size: 35px;
+  margin-bottom: 25px;
+  text-align: center;
 }
 
-.btn {
-    width: 50vw;
-    border-radius: 9px;
-    background-color: #136a8f;
-    border: none;
-    font-size: 16px;
-    padding: 18px 0;
-    margin: auto;
-    cursor: pointer;
+.passFindWrap .contents,
+.passFindWrap .complete {
+  width: 60%;
+  height: 80%;
+  background-color: #ffffff;
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 0 0 15px #fff;
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
 }
-.codeWrap {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: 20px;
+.passFindWrap .contents .inputWrap {
+  margin-bottom: 15px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
-.inputWrap.code {
-    width: 70%;
-    margin-bottom: 0;
+.passFindWrap .contents .inputWrap .input {
+  width: 80%;
+  border: none;
+  outline: none;
+  border-bottom: 1px solid #4d4d4d;
+  padding: 15px 20px 12px;
 }
-.btn.code {
-    width: 18%;
-    padding: 15px 0;
+.passFindWrap .contents .btn {
+  width: 80%;
+  padding: 15px 60px;
+  background-color: #ededed;
+  border: none;
+  font-weight: 500;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all .3s ease-in-out;
 }
-.time {
-    font-size: 14px;
-    text-align: end;
-    width: 70%;
-    margin-top: 5px;
-    color: #b60808;
+.passFindWrap .contents .btn:hover {
+  background-color: #4d4d4d;
+  color: #fff;
 }
-.complete{
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    justify-content: center;
-    align-items: center;
+
+.passFindWrap .complete .completeText {
+  color: #4d4d4d;
+  font-size: 20px;
+  text-align: center;
+  line-height: 35px;
+  margin-bottom: 35px;
 }
-.completeText {
-    font-size: 20px;
-    font-weight: bold;
-    margin-bottom: 5vh;
+.passFindWrap .complete .linkBtn {
+  width: 50%;
+  padding: 15px 60px;
+  background-color: #ededed;
+  border: none;
+  font-weight: 500;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all .3s ease-in-out;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+  color: #4d4d4d;
 }
-.linkBtn {
-    display: block;
-    width: 50vw;
-    border-radius: 9px;
-    background-color: #136a8f;
-    border: none;
-    font-size: 16px;
-    padding: 18px 0;
-    text-align: center;
-}
-.errorText{
-    font-size: 14px;
-    color: #b60808;
-    padding: 0 10px;
-    margin-top: 20px;
-    text-align: center;
+.passFindWrap .complete .linkBtn:hover {
+  background-color: #4d4d4d;
+  color: #fff;
 }

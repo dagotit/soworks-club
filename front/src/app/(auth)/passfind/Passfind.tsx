@@ -6,7 +6,6 @@ import { DateTime } from 'luxon';
 import React, { useEffect, useState } from 'react';
 import { useDialogStore } from '@/store/useDialog';
 import { usePostCreditsEmail, usePostChangePassword } from '@/hooks/useAuth';
-import BgMoon from '@/components/bgBox/Bg';
 import { EMAIL_REX } from '@/utils/constants';
 
 let intervalId: undefined | NodeJS.Timeout = undefined;
@@ -224,27 +223,24 @@ const PassFind = () => {
   }
 
   return (
-    <main>
-      <BgMoon />
-      <h1 className={styles.title}>패스워드 찾기</h1>
+    <main className={styles.passFindWrap}>
       {step === 1 && (
         <div className={styles.contents}>
+          <h1 className={styles.title}>Forgot Your Password?</h1>
           <label className={styles.inputWrap}>
-            <span className={styles.inputText}>이메일</span>
             <input
               className={styles.input}
               type="email"
-              placeholder="회사 e-mail을 입력해주세요."
+              placeholder="E-MAIL"
               value={email}
               onChange={handleChangeEmail}
             />
           </label>
           <label className={styles.inputWrap}>
-            <span className={styles.inputText}>이름</span>
             <input
               className={styles.input}
               type="text"
-              placeholder="실명"
+              placeholder="NAME"
               value={name}
               onChange={handleChangeName}
             />
@@ -289,7 +285,7 @@ const PassFind = () => {
         <div className={styles.complete}>
           <p className={styles.completeText}>
             임시비밀번호가 발급되었습니다. <br />
-            {email}를 확인하세요.
+            이메일을 확인하세요.
           </p>
           <Link
             className={styles.linkBtn}
