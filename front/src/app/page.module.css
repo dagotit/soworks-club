@@ -1,0 +1,140 @@
+.homeMain{background: #4151DF}
+.homeMain .mainSec01,
+.homeMain .mainSec02,
+.homeMain .mainSec03,
+.homeMain .mainSec04 {
+    width: 100%;
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+}
+.homeMain .mainSec01 .mainImgBox {
+    width: auto;
+    height: 100vh;
+    display: flex;
+    justify-content: flex-end;
+}
+.homeMain .mainSec01 .mainImgBox img {
+    width: 1024px;
+}
+.homeMain .mainSec01 .mainSec01Txt {
+    position: absolute;
+    top: 44%;
+    left: 5%;
+}
+.homeMain .mainSec01 .mainSec01Txt p {
+    font-family: 'BMJUA', sans-serif;
+    font-weight: 500;
+    color: #fff;
+    line-height: 1.24;
+    font-size: 2.7rem;
+}
+.homeMain .mainSec01 .mainSec01Txt p:last-child {
+    margin-top: 20px;
+}
+.homeMain .mainSec01 .mainSec01Txt p .mstBox {
+    display: inline-block;
+    border: 2px dashed #fff;
+    border-radius: 10px;
+    padding: 10px;
+}
+.homeMain .mainSec01 .mainSec01Txt p .mstBold {
+    color: #2EE9FF;
+    font-size: 3.5rem;
+    text-shadow: 4px 4px 20px rgba(0, 0, 0, .7);
+}
+.homeMain .mainSec02 {
+    height: 200vh;
+}
+.homeMain .mainSec02 .mstWordWrap{
+    position: absolute;
+    left: 5%;
+    top: 250px;
+    z-index: 31;
+}
+.homeMain .mainSec02 .mstWordWrap .mstwTit {
+    font-family: 'BMJUA', sans-serif;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.24;
+    font-size: 7rem;
+}
+.homeMain .mainSec02 .mstWordWrap .mstwTxt,
+.homeMain .mainSec03 .mstWordWrap .mstwTxt{
+    font-family: 'BMJUA', sans-serif;
+    font-weight: 500;
+    color: #fff;
+    line-height: 1.24;
+    font-size: 2.7rem;
+}
+.homeMain .mainSec02 .mstCreImg {
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    z-index: 30;
+    transform: translate(-50%, -50%);
+}
+.homeMain .mainSec03 {
+    display: flex;
+    justify-content: center;
+}
+.homeMain .mainSec03 .mstWordWrap{
+    position: absolute;
+    right: 5%;
+    top: 0;
+    text-align: right;
+    font-family: 'BMJUA', sans-serif;
+    color: #fff;
+}
+.homeMain .mainSec03 .mstWordWrap .mstwTit {
+    font-weight: 700;
+    line-height: 1.24;
+    font-size: 7rem;
+}
+.homeMain .mainSec03 .mstCreImg {
+    width: 600px;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 150px;
+}
+.homeMain .mainSec03 .mstCreImg img{
+    width: 100%;
+    object-fit: cover;
+}
+
+.homeMain .mainSec04 {
+    display: flex;
+    justify-content: center;
+    flex-flow: column;
+    align-items: center;
+}
+.homeMain .mainSec04 p {
+    font-family: 'BMJUA', sans-serif;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.24;
+    font-size: 7rem;
+    margin-bottom: 100px;
+}
+.homeMain .mainSec04 button {
+    font-family: 'BMJUA', sans-serif;
+    font-weight: 300;
+    color: #fff;
+    font-size: 2.4rem;
+    margin-right: 100px;
+    background: transparent;
+    border: 3px solid #fff;
+    border-radius: 10px;
+    padding: 30px;
+    transition: all .3s ease-in-out;
+    cursor: pointer;
+}
+.homeMain .mainSec04 button:last-child {
+    margin-right: 0;
+}
+.homeMain .mainSec04 button:hover {
+    background: #fff;
+    color: #4151DF;
+}
