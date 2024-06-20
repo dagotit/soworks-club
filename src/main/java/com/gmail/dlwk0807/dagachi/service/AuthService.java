@@ -76,7 +76,6 @@ public class AuthService {
                 .key(authentication.getName())
                 .value(tokenDto.getRefreshToken())
                 .build();
-
         refreshTokenRepository.save(refreshToken);
 
         // 4-1. 회원 최근 로그인 일시 업데이트

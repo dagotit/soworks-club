@@ -210,3 +210,7 @@
   background-color: #4d4d4d;
   color: #fff;
 }
+
+@media screen and (max-width: 768px) {
+  
+}

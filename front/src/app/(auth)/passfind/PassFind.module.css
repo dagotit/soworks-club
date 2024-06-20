@@ -50,6 +50,8 @@
   border-radius: 5px;
   cursor: pointer;
   transition: all .3s ease-in-out;
+  font-family: 'Montserrat', sans-serif;
+  word-break: keep-all;
 }
 .passFindWrap .contents .btn:hover {
   background-color: #4d4d4d;
@@ -77,8 +79,24 @@
   align-items: center;
   text-decoration: none;
   color: #4d4d4d;
+  font-family: 'Montserrat', sans-serif;
+  word-break: keep-all;
 }
 .passFindWrap .complete .linkBtn:hover {
   background-color: #4d4d4d;
   color: #fff;
+}
+
+@media screen and (max-width: 768px) {
+  .passFindWrap .contents,
+  .passFindWrap .complete {
+    width: 80%;
+    height: 90%;
+  }
+  .passFindWrap .contents .btn {
+    padding: 15px 10px;
+  }
+  .passFindWrap .complete .linkBtn {
+    padding: 15px 10px;
+  }
 }

@@ -251,7 +251,7 @@ const PassFind = () => {
             type="button"
             disabled={codeExpired}
           >
-            이메일 인증하기
+            VERIFY E-MAIL
           </button>
           {codeExpired && (
             <div className={styles.codeWrap}>
