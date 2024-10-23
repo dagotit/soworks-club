@@ -44,7 +44,7 @@ public class GroupService {
     private final GroupFileRepository groupFileRepository;
     private final MemberRepository memberRepository;
     private final GroupFileCloudService groupFileCloudService;
-    private final RedisTemplate<String, GroupResent> redisTemplate;
+    private final RedisTemplate<String, GroupRecent> redisTemplate;
     private final TitleRepository titleRepository;
 
     public GroupResponseDTO saveGroup(GroupSaveRequestDTO requestDto, MultipartFile groupImageFile) throws Exception {
@@ -251,15 +251,15 @@ public class GroupService {
         GroupResponseDTO of = GroupResponseDTO.of(group);
 
         //최근 본 모임 저장 [redis]
-        ZSetOperations<String, GroupResent> zSetOps = redisTemplate.opsForZSet();
+        ZSetOperations<String, GroupRecent> zSetOps = redisTemplate.opsForZSet();
         String key = setKey(getCurrentMemberId());
 
         Long size = zSetOps.size(key);
 
         if (size < 4) {
-            GroupResent groupResent = GroupResent.of(group);
+            GroupRecent groupRecent = GroupRecent.of(group);
             //4개 미만이면 redis 저장
-            zSetOps.add(key, groupResent, new java.util.Date().getTime()); // score은 타임스탬프(최신 읽은 순대로 정렬위해)
+            zSetOps.add(key, groupRecent, new java.util.Date().getTime()); // score은 타임스탬프(최신 읽은 순대로 정렬위해)
             redisTemplate.expireAt(key, Date.from(ZonedDateTime.now().plusDays(3).toInstant())); // 유효기간
         }
 
@@ -270,14 +270,14 @@ public class GroupService {
         return "userIdx::" + memberId;
     }
 
-    public List<GroupResent> recentList() {
+    public List<GroupRecent> recentList() {
 
         //최근 본 모임 조회 [redis]
-        ZSetOperations<String, GroupResent> zSetOps = redisTemplate.opsForZSet();
-        Set<GroupResent> groupResents = zSetOps.reverseRange(setKey(getCurrentMemberId()), 0, -1);
-        List<GroupResent> result = new ObjectMapper().convertValue(Objects.requireNonNull(groupResents),
+        ZSetOperations<String, GroupRecent> zSetOps = redisTemplate.opsForZSet();
+        Set<GroupRecent> groupRecents = zSetOps.reverseRange(setKey(getCurrentMemberId()), 0, -1);
+        List<GroupRecent> result = new ObjectMapper().convertValue(Objects.requireNonNull(groupRecents),
                 new TypeReference<>(){});
-        return result.stream().collect(Collectors.toList());
+        return new ArrayList<>(result);
     }
 
     private String processAttendYn(Long groupId, Long joinMemberId, String attendYn) {

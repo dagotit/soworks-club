@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.gmail.dlwk0807.dagachi.entity.GroupResent;
+import com.gmail.dlwk0807.dagachi.entity.GroupRecent;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,7 +29,7 @@ public class RedisConfig {
 
     @Bean(name = "redisTemplate")
     public RedisTemplate redisTemplate() {
-        RedisTemplate<String, GroupResent> redisTemplate = new RedisTemplate<>();
+        RedisTemplate<String, GroupRecent> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(redisConnectionFactory());
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer(objectMapper()));

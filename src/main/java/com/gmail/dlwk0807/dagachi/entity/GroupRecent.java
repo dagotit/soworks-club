@@ -14,7 +14,7 @@ import static com.gmail.dlwk0807.dagachi.util.SecurityUtils.getCurrentMemberId;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class GroupResent {
+public class GroupRecent {
     private Long groupId;
     private List<Category> categories;
     private String name;
@@ -31,8 +31,8 @@ public class GroupResent {
     private String masterYn;
     private String joinYn;
 
-    public static GroupResent of(Group group) {
-        return GroupResent.builder()
+    public static GroupRecent of(Group group) {
+        return GroupRecent.builder()
                 .groupId(group.getId())
                 .categories(group.getCategories())
                 .name(group.getName())
